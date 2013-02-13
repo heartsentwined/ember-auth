@@ -184,6 +184,7 @@ configurable options.
 # Contributing
 
 You are welcome! As usual:
+
 1. Fork
 2. Branch
 3. Hack
