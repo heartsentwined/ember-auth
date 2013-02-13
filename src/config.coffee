@@ -37,6 +37,8 @@ Auth.Config = Em.Object.create
   # Redirection config
   # =====================
 
+  # FIXME: redirect-after-sign-in not yet implemented
+
   # Implement this hook and return true to enable redirect.
   redirect: true
 
