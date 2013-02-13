@@ -20,7 +20,7 @@ Perhaps [you can help](https://github.com/heartsentwined/ember-auth#contributing
 
 # Installation
 
-`ember-auth` distribution files lives in `lib/`, both minified and readable.
+`ember-auth` distribution files lives in `lib/`.
 
 Coffeescript files are in `src/`.
 
@@ -49,17 +49,17 @@ will be relevant:
                       authentication
 * `404 Not Found`:    ah, good old 404.
 
-At present `ember-auth` only supports the `RESTAdapter`.
+At present `ember-auth` only supports `DS.RESTAdapter`.
 
 # Usage
 
 ## Config
 
 Let's say your server exposes a token authentication interface as follows:
-* `POST /api/sign_in` for token creation (sign in)
+* `POST /users/sign_in` for token creation (sign in)
   * expects `email` and `password` as params
   * sample response: `{user_id: 1, auth_token: jL3hbrhni82yxIHUD}`
-* `DELETE /api/sign_out` for token destruction (sign out)
+* `DELETE /users/sign_out` for token destruction (sign out)
   * expects `auth_token` as param
   * (no response requirement)
 
@@ -108,7 +108,7 @@ when "signed out".
 The sign in form:
 
 ```coffeescript
-App.SignInView = Ember.View.extend
+App.SignInView = Em.View.extend
   templateName: 'sign_in'
 
   email:    null
@@ -140,7 +140,7 @@ be passed to the API call.
 The sign out form:
 
 ```coffeescript
-App.SignOutView = Ember.View.extend
+App.SignOutView = Em.View.extend
   templateName: 'sign_out'
 
   submit: (evt, view) ->
@@ -183,7 +183,12 @@ configurable options.
 
 # Contributing
 
-You are welcome! As usual: fork, branch, commit, pull request.
+You are welcome! As usual:
+1. Fork
+2. Branch
+3. Hack
+4. Commit
+5. Pull request
 
 ## Todo
 
