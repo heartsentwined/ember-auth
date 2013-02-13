@@ -37,6 +37,9 @@ Auth.Config = Em.Object.create
   # Redirection config
   # =====================
 
+  # Implement this hook and return true to enable redirect.
+  redirect: true
+
   # You must implement this hook if you use smart redirect.
   # It should return the name of your sign in route.
   signInRoute: null
@@ -46,14 +49,14 @@ Auth.Config = Em.Object.create
   # if prev route not available (e.g. entry route is the sign in route),
   # then will use fallback sign in redirect route.
   # @see signInRedirectRoute
-  smartSignInRedirect: true
+  smartSignInRedirect: false
 
   # Whether we should use 'smart' redirects after signing out.
   # If this hook returns true, will remember and redirect to prev route;
   # if prev route not available (e.g. entry route is the sign out route),
   # then will use fallback sign out redirect route.
   # @see signOutRedirectRoute
-  smartSignOutRedirect: true
+  smartSignOutRedirect: false
 
   # Implement this hook to specify a fallback sign in redirect route
   # It should return the name of a route.
@@ -62,6 +65,3 @@ Auth.Config = Em.Object.create
   # Implement this hook to specify a fallback sign out redirect route
   # It should return the name of a route.
   signOutRedirectRoute: 'index'
-
-  # Implement this hook and return true to disable redirect.
-  disableRedirect: false
