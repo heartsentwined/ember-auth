@@ -58,7 +58,7 @@ At present `ember-auth` only supports `DS.RESTAdapter`.
 Let's say your server exposes a token authentication interface as follows:
 * `POST /users/sign_in` for token creation (sign in)
   * expects `email` and `password` as params
-  * sample response: `{user_id: 1, auth_token: jL3hbrhni82yxIHUD}`
+  * sample response: `{user_id: 1, auth_token: "jL3hbrhni82yxIHUD"}`
 * `DELETE /users/sign_out` for token destruction (sign out)
   * expects `auth_token` as param
   * (no response requirement)
