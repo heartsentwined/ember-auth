@@ -21,7 +21,7 @@ Auth.Config = Em.Object.create
   # You must implement this hook:
   # It should return the name of the key of auth token in your API's response.
   # e.g.
-  #   if POST /api/token returns {auth_token: 'fjlja8hfhf4'},
+  #   if POST /api/token returns {auth_token: "fjlja8hfhf4"},
   #   set this to 'auth_token'
   tokenKey: null
 
@@ -37,19 +37,19 @@ Auth.Config = Em.Object.create
   # Redirection config
   # =====================
 
-  # FIXME: redirect-after-sign-in not yet implemented
-
-  # Implement this hook and return true to enable redirect.
-  redirect: true
-
-  # You must implement this hook if you use smart redirect.
+  # You must implement this hook if you use any redirect function.
   # It should return the name of your sign in route.
   signInRoute: null
+
+  # If this hook returns true, visiting an Auth.Route before authentification
+  # will redirect to the @signInRoute
+  authRedirect: true
 
   # Whether we should use 'smart' redirects after signing in.
   # If this hook returns true, will remember and redirect to prev route;
   # if prev route not available (e.g. entry route is the sign in route),
   # then will use fallback sign in redirect route.
+  # If this hook returns false, it will always use the fallback route.
   # @see signInRedirectRoute
   smartSignInRedirect: false
 
@@ -57,13 +57,14 @@ Auth.Config = Em.Object.create
   # If this hook returns true, will remember and redirect to prev route;
   # if prev route not available (e.g. entry route is the sign out route),
   # then will use fallback sign out redirect route.
+  # If this hook returns false, it will always use the fallback route.
   # @see signOutRedirectRoute
   smartSignOutRedirect: false
 
   # Implement this hook to specify a fallback sign in redirect route
   # It should return the name of a route.
-  signInRedirectRoute:  'index'
+  signInFallbackRoute: 'index'
 
   # Implement this hook to specify a fallback sign out redirect route
   # It should return the name of a route.
-  signOutRedirectRoute: 'index'
+  signOutFallbackRoute: 'index'

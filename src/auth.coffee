@@ -34,6 +34,8 @@ window.Auth = Em.Object.create
         @set 'currentUserId', json[Auth.Config.get('idKey')]
       error: (json) =>
         @set 'error', json
+      complete: =>
+        @set 'prevRoute', null
 
   # Sign out method
   #
@@ -56,18 +58,12 @@ window.Auth = Em.Object.create
         @set 'currentUserId', null
       error: (json) =>
         @set 'error', json
+      complete: =>
+        @set 'prevRoute', null
 
   # =====================
   # End of Public API
   # =====================
-
-  # Resovles sign in redirect destination
-  resolveSignInRedirectRoute: ->
-    @resolveRedirectRoute 'signIn'
-
-  # Resovles sign out redirect destination
-  resolveSignOutRedirectRoute: ->
-    @resolveRedirectRoute 'signOut'
 
   # Resolves redirect destination
   # @param {type} string 'signIn' or 'signOut'
@@ -76,14 +72,14 @@ window.Auth = Em.Object.create
 
     typeClassCase = "#{type[0].toUpperCase()}#{type.slice(1)}"
     isSmart  = Auth.Config.get "smart#{typeClassCase}Redirect"
-    fallback = Auth.Config.get "#{type}RedirectRoute"
+    fallback = Auth.Config.get "#{type}FallbackRoute"
 
     return fallback unless isSmart
 
-    if @prevRoute != Auth.Config.get('signInRoute')
-      @prevRoute
-    else
+    if !@prevRoute? || @prevRoute == Auth.Config.get('signInRoute')
       fallback
+    else
+      @prevRoute
 
   ajax: (url, type, hash) ->
     hash.url         = url

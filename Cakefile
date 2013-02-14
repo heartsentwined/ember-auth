@@ -2,7 +2,14 @@ fs     = require 'fs'
 {exec} = require 'child_process'
 util   = require 'util'
 
-appFiles = ['auth', 'config', 'route', 'rest-adapter']
+appFiles = [
+  'auth',
+  'config',
+  'routes/auth',
+  'controllers/sign-in',
+  'controllers/sign-out',
+  'rest-adapter'
+]
 
 task 'build', 'Build single application file from source files', ->
   appContents = new Array remaining = appFiles.length
