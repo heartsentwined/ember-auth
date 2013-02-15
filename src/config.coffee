@@ -43,7 +43,7 @@ Auth.Config = Em.Object.create
 
   # If this hook returns true, visiting an Auth.Route before authentification
   # will redirect to the @signInRoute
-  authRedirect: true
+  authRedirect: false
 
   # Whether we should use 'smart' redirects after signing in.
   # If this hook returns true, will remember and redirect to prev route;
