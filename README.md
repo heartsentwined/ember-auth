@@ -84,7 +84,13 @@ App.Store = DS.Store.extend
 
 ## Sign in/out views and templates
 
-Make a `view` and `template` for the authorization form area:
+### 1. Widget style
+
+"Widget" style sign in/out forms, for example at the end of a navigation bar.
+The distinctive characteristic is that they do not have dedicated routes;
+and that they are contained in a small view area within the app.
+
+Make a `view` and a `template` for the authorization form area:
 
 ```coffeescript
 App.AuthView = Em.View.extend
@@ -163,6 +169,78 @@ at the key specified in `Auth.Config.tokenKey`.
 The [FAQ](https://github.com/heartsentwined/ember-auth/wiki/FAQ) has an
 explanation of this default behavior.
 
+### 2. Full page style
+
+"Full page" style, e.g. a "sign_in" route where the sign in form itself
+is the main content of the whole page.
+The distinctive characteristic is that sign in / out pages have their own routes.
+
+Make a `route`, a `controller` and a `template` for the sign in page:
+
+```coffeescript
+App.Router.map ->
+  @route 'sign_in'
+```
+
+```coffeescript
+App.SignInRoute = Ember.Route.extend()
+```
+
+```coffeescript
+App.SignInController = Ember.ObjectController.extend
+  email: null
+  password: null
+
+  signIn: ->
+    Auth.signIn
+      email:    @get 'email'
+      password: @get 'password'
+```
+
+```html
+<script type="text/x-handlebars" data-template-name="sign_in">
+  <form>
+    <label>Email</label>
+    {{view Ember.TextField valueBinding="email" valueBinding="email"}}
+    <label>Password</label>
+    {{view Ember.TextField valueBinding="password" valueBinding="password"}}
+    <button {{action "signIn"}}>Sign In</button>
+  </form>
+</script>
+```
+
+We register a `signIn` action to our Sign In button, and then use the
+`Auth.signIn` helper to sign the user in.  The `Auth.signIn` helper is
+explained in the Widget style section.
+
+The sign out page:
+
+```coffeescript
+App.Router.map ->
+  @route 'sign_out'
+```
+
+```coffeescript
+App.SignOutRoute = Ember.Route.extend()
+```
+
+```coffeescript
+App.SignOutController = Ember.ObjectController.extend
+  signOut: ->
+    Auth.signOut()
+```
+
+```html
+<script type="text/x-handlebars" data-template-name="sign_in">
+  <form>
+    <button {{action "signOut"}}>Sign Out</button>
+  </form>
+</script>
+```
+
+Again, we register a `signOut` action on the button; the `Auth.signOut` helper
+is explained in the Widget style section.
+
 ## Auth-only routes
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
@@ -193,7 +271,6 @@ You are welcome! As usual:
 
 ## Todo
 
-* smart-redirecting sign in routes
 * a full-blown rails + devise + ember-auth tutorial
 
 # License
