@@ -2,6 +2,7 @@
   "name": "ember-auth",
   "summary": "Provides token authentication support to ember.js.",
   "description": "Provides token authentication support to ember.js.",
+  "keywords": ["ember", "emberjs", "ember.js", "auth", "authentication"]
   "homepage": "https://github.com/heartsentwined/ember-auth",
   "author": "heartsentwined <heartsentwined@cogito-lab.com>",
   "version": "1.0.1",
