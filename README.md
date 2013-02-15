@@ -210,8 +210,8 @@ App.SignInController = Ember.ObjectController.extend
 ```
 
 We register a `signIn` action to our Sign In button, and then use the
-`Auth.signIn` helper to sign the user in.  The `Auth.signIn` helper is
-explained in the Widget style section.
+`Auth.signIn` helper to sign the user in. The `Auth.signIn` helper is
+explained in the [Widget style section](#1-widget-style).
 
 The sign out page:
 
@@ -239,7 +239,7 @@ App.SignOutController = Ember.ObjectController.extend
 ```
 
 Again, we register a `signOut` action on the button; the `Auth.signOut` helper
-is explained in the Widget style section.
+is explained in the [Widget style section](#1-widget-style).
 
 ## Auth-only routes
 
@@ -261,7 +261,7 @@ Auth.Route.reopen
   # do something
 ```
 
-However, see Redirect section below for built-in redirection support.
+However, see Redirects section right below for built-in redirection support.
 
 ## Redirects
 
@@ -329,7 +329,8 @@ Auth.Config.reopen
   signInRedirectFallbackRoute: 'account' # defaults to 'index'
 ```
 
-Same modification to `controller` as the fixed route redirect.
+Same modification to `controller` as the
+[post- sign in fixed route redirect](#post--sign-in-redirect-fixed-route).
 
 ### Post- sign out redirect: fixed route
 
@@ -373,7 +374,8 @@ Auth.Config.reopen
   signOutRedirectFallbackRoute: 'home' # defaults to 'index'
 ```
 
-Same modification to `controller` as the fixed route redirect.
+Same modification to `controller` as the
+[post- sign out fixed route redirect](#post--sign-out-redirect-fixed-route).
 
 ## Further use cases
 
