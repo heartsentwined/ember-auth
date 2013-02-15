@@ -14,8 +14,8 @@ token upon sign out.
 
 ## Is `ember-auth` production-ready?
 
-No. The module isn't even finished; and in any case, I haven't learnt how to
-write proper unit tests for ember modules yet.
+Partial. I haven't learnt how to write proper unit tests for ember modules yet,
+but it should works fine in my own project.
 Perhaps [you can help](#contributing)?
 
 # Installation
