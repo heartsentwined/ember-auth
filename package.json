@@ -1,0 +1,19 @@
+{
+  "name": "ember-auth",
+  "summary": "Provides token authentication support to ember.js.",
+  "description": "Provides token authentication support to ember.js.",
+  "homepage": "https://github.com/heartsentwined/ember-auth",
+  "author": "heartsentwined <heartsentwined@cogito-lab.com>",
+  "version": "1.0.0",
+  "main": "lib/main.js",
+
+  "directories": {
+    "lib": "lib"
+  },
+
+  "bpm:build": {
+    "bpm_libs.js": {
+      "files": ["lib"]
+    }
+  }
+}
