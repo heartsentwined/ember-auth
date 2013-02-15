@@ -11,6 +11,14 @@
     "type": "git",
     "url": "https://github.com/heartsentwined/ember-auth"
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/heartsentwined/ember-auth"
+    }
+  ],
+  "github": "https://github.com/heartsentwined/ember-auth",
+
   "engines": { "node": "*" },
 
   "directories": {
@@ -22,5 +30,15 @@
     }
   },
 
-  "license": "GPL-3.0"
+  "jam": {
+    "main": "lib/main.js"
+  },
+
+  "license": "GPL-3.0",
+  "licenses": [
+    {
+      "type": "GPL-3.0",
+      "url": "http://opensource.org/licenses/GPL-3.0"
+    }
+  ]
 }
