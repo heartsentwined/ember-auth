@@ -324,7 +324,7 @@ route to be `account`
 
 ```coffeescript
 Auth.Config.reopen
-  signInRoute: sign_in
+  signInRoute: 'sign_in'
   smartSignInRedirect: true
   signInRedirectFallbackRoute: 'account' # defaults to 'index'
 ```
@@ -369,7 +369,7 @@ route to be `home`
 
 ```coffeescript
 Auth.Config.reopen
-  signOutRoute: sign_out
+  signOutRoute: 'sign_out'
   smartSignOutRedirect: true
   signOutRedirectFallbackRoute: 'home' # defaults to 'index'
 ```
