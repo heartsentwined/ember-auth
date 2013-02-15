@@ -253,9 +253,131 @@ be a protected route:
 App.PanelRoute = Auth.Route.extend()
 ```
 
+`Auth.Route` does nothing by default. It is there to provide a center place for
+implement any `route`- and authentication-related logic:
+
+```coffeescript
+Auth.Route.reopen
+  # do something
+```
+
+However, see Redirect section below for built-in redirection support.
+
+## Redirects
+
+`ember-auth` provides five kinds of redirects to assist in building your UI.
+All these require a `route` to redirect to, so they won't make sense if you
+are using only the widget-style UI. ([Why?](https://github.com/heartsentwined/ember-auth/wiki/FAQ))
+
+### Auth-only routes
+
+You can have non-authenticated ("not signed in") users redirected to a
+sign in route - let's say, named `sign_in` - when they visit an `Auth.Route`:
+
+```coffeescript
+Auth.Config.reopen
+  signInRoute: 'sign_in'
+  authRedirect: true
+```
+
+It is a good idea to make your sign out route auth-only with redirection:
+non-authenticated users should not try to sign out; and in any case your
+server API should reject sign out request from non-authenticated users anyway.
+
+```coffeescript
+App.SignOutRoute = Auth.Route.extend()
+```
+
+### Post- sign in redirect: fixed route
+
+You can have the user redirected to a specified route - let's say, 'account' -
+after signing in.
+
+```coffeescript
+Auth.Config.reopen
+  signInRedirectFallbackRoute: 'account' # defaults to 'index'
+```
+
+You will need to modify your controller. Extend from `Auth.SignInController`,
+and call its `registerRedirect` method from your sign in action.
+
+```coffeescript
+App.SignInController = Auth.SignInController.extend # changed here
+  email: null
+  password: null
+
+  signIn: ->
+    @registerRedirect() # and here
+    Auth.signIn
+      email:    @get 'email'
+      password: @get 'password'
+```
+
+### Post- sign in redirect: smart mode
+
+"Smart" redirect. After sign in, the user is redirected to:
+* one's previous route, unless one comes from the `signInRoute`
+* the fallback route otherwise
+
+Let's say your sign in route is called `sign_in`, and you want the fallback
+route to be `account`
+
+```coffeescript
+Auth.Config.reopen
+  signInRoute: sign_in
+  smartSignInRedirect: true
+  signInRedirectFallbackRoute: 'account' # defaults to 'index'
+```
+
+Same modification to `controller` as the fixed route redirect.
+
+### Post- sign out redirect: fixed route
+
+You can have the user redirected to a specified route - let's say, 'home' -
+after signing out.
+
+```coffeescript
+Auth.Config.reopen
+  signOutRedirectFallbackRoute: 'home' # defaults to 'index'
+```
+
+You will need to modify your controller. Extend from `Auth.SignOutController`,
+and call its `registerRedirect` method from your sign in action.
+
+```coffeescript
+App.LogOutController = Auth.SignOutController.extend # changed here
+  signOut: ->
+    @registerRedirect() # and here
+    Auth.signOut()
+```
+
+### Post- sign out redirect: smart mode
+
+This is rather awkward.
+Do you really have a use case, where you will implement a logic that
+auto-redirects the user to your sign out route in the first place,
+such that "smart" redirecting the user back from one's previous route will
+make sense? Anyway, here it is:
+
+"Smart" redirect. After sign out, the user is redirected to:
+* one's previous route, unless one comes from the `signOutRoute`
+* the fallback route otherwise
+
+Let's say your sign out route is called `sign_out`, and you want the fallback
+route to be `home`
+
+```coffeescript
+Auth.Config.reopen
+  signOutRoute: sign_out
+  smartSignOutRedirect: true
+  signOutRedirectFallbackRoute: 'home' # defaults to 'index'
+```
+
+Same modification to `controller` as the fixed route redirect.
+
 ## Further use cases
 
-The source codes at `src/auth.coffee` is a comprehensive list of public API
+The source code at `src/auth.coffee` is a comprehensive list of public API
 and helper methods; `src/config.coffee` contains an exhaustive list of
 configurable options.
 
