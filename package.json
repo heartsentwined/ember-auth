@@ -16,10 +16,11 @@
   "directories": {
     "lib": "lib"
   },
-
   "bpm:build": {
     "bpm_libs.js": {
       "files": ["lib"]
     }
-  }
+  },
+
+  "license": "GPL-3.0"
 }
