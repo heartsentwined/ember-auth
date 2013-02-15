@@ -71,12 +71,13 @@ window.Auth = Em.Object.create
     return null unless type in ['signIn', 'signOut']
 
     typeClassCase = "#{type[0].toUpperCase()}#{type.slice(1)}"
-    isSmart  = Auth.Config.get "smart#{typeClassCase}Redirect"
-    fallback = Auth.Config.get "#{type}FallbackRoute"
+    isSmart   = Auth.Config.get "smart#{typeClassCase}Redirect"
+    fallback  = Auth.Config.get "#{type}RedirectFallbackRoute"
+    sameRoute = Auth.Config.get "#{type}Route"
 
     return fallback unless isSmart
 
-    if !@prevRoute? || @prevRoute == Auth.Config.get('signInRoute')
+    if !@prevRoute? || @prevRoute == sameRoute
       fallback
     else
       @prevRoute

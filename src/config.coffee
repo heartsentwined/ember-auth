@@ -37,9 +37,16 @@ Auth.Config = Em.Object.create
   # Redirection config
   # =====================
 
-  # You must implement this hook if you use any redirect function.
+  # This hooks is used in some redirect mode calculations:
+  #   * auth-only route redirect
+  #   * smart post-sign in redirect
   # It should return the name of your sign in route.
   signInRoute: null
+
+  # This hooks is used in some redirect mode calculations:
+  #   * smart post-sign out redirect
+  # It should return the name of your sign out route.
+  signOutRoute: null
 
   # If this hook returns true, visiting an Auth.Route before authentification
   # will redirect to the @signInRoute
@@ -63,8 +70,8 @@ Auth.Config = Em.Object.create
 
   # Implement this hook to specify a fallback sign in redirect route
   # It should return the name of a route.
-  signInFallbackRoute: 'index'
+  signInRedirectFallbackRoute: 'index'
 
   # Implement this hook to specify a fallback sign out redirect route
   # It should return the name of a route.
-  signOutFallbackRoute: 'index'
+  signOutRedirectFallbackRoute: 'index'
