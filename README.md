@@ -20,9 +20,7 @@ Perhaps [you can help](#contributing)?
 
 # Installation
 
-`ember-auth` distribution files lives in `lib/`.
-
-Coffeescript files are in `src/`.
+Read [the installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install)
 
 # Pre-req
 
