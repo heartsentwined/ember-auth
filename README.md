@@ -241,7 +241,7 @@ App.SignOutController = Ember.ObjectController.extend
 Again, we register a `signOut` action on the button; the `Auth.signOut` helper
 is explained in the [Widget style section](#1-widget-style).
 
-## Auth-only routes
+## Authenticated-only routes
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
 extension of `Ember.Route`.
@@ -269,7 +269,7 @@ However, see Redirects section right below for built-in redirection support.
 All these require a `route` to redirect to, so they won't make sense if you
 are using only the widget-style UI. ([Why?](https://github.com/heartsentwined/ember-auth/wiki/FAQ))
 
-### Auth-only routes
+### Authenticated-only routes
 
 You can have non-authenticated ("not signed in") users redirected to a
 sign in route - let's say, named `sign_in` - when they visit an `Auth.Route`:
@@ -280,7 +280,7 @@ Auth.Config.reopen
   authRedirect: true
 ```
 
-It is a good idea to make your sign out route auth-only with redirection:
+It is a good idea to make your sign out route authenticated-only with redirection:
 non-authenticated users should not try to sign out; and in any case your
 server API should reject sign out request from non-authenticated users anyway.
 
