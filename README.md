@@ -16,7 +16,7 @@ token upon sign out.
 
 No. The module isn't even finished; and in any case, I haven't learnt how to
 write proper unit tests for ember modules yet.
-Perhaps [you can help](https://github.com/heartsentwined/ember-auth#contributing)?
+Perhaps [you can help](#contributing)?
 
 # Installation
 
