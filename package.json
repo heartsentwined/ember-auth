@@ -7,6 +7,12 @@
   "version": "1.0.0",
   "main": "lib/main.js",
 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heartsentwined/ember-auth"
+  },
+  "engines": { "node": "*" },
+
   "directories": {
     "lib": "lib"
   },
