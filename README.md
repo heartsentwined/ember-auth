@@ -378,6 +378,15 @@ Auth.Config.reopen
 Same modification to `controller` as the
 [post- sign out fixed route redirect](#post--sign-out-redirect-fixed-route).
 
+## User-registration, forgot password, change password, etc
+
+These are operations on your user model, and they all follow the same pattern:
+*do they require authentication?* If yes, put them under an `Auth.Route`.
+
+Then just treat them as a normal ember model, with create, edit, etc actions.
+You may want to set up some dedicated API end points at your server for
+non-RESTful cases, e.g. the "forgot password" functionality.
+
 ## Further use cases
 
 The source code at `src/auth.coffee` is a comprehensive list of public API
