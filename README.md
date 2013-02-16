@@ -23,7 +23,7 @@ Perhaps [you can help](#contributing)?
 
 # Installation
 
-Read [the installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install)
+Read the [installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install).
 
 # Pre-req
 
