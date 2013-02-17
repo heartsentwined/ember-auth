@@ -75,12 +75,12 @@ Auth.Config.reopen
 ## Persistence adapter
 
 Persistence adapter setup: you will use `Auth.RESTAdapeter`; it is an
-extension of `DS.RESTAdapter`.
+instance of `DS.RESTAdapter`.
 
 ```coffeescript
 App.Store = DS.Store.extend
   revision: 11 # or whatever suitable
-  adapter: Auth.RESTAdapter.create()
+  adapter: Auth.RESTAdapter.reopen()
 ```
 
 ## Sign in/out views and templates

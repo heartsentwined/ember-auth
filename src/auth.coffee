@@ -27,7 +27,7 @@ window.Auth = Em.Object.create
   #
   # @param {data} object params to pass to API end point in ajax call
   signIn: (data = {}) ->
-    @ajax Auth.Config.get('tokenCreateUrl'), 'POST',
+    @ajax @resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST',
       data: data
       success: (json) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
@@ -51,7 +51,7 @@ window.Auth = Em.Object.create
   # @param {data} object params to pass to API end point in ajax call
   signOut: (data = {}) ->
     data[Auth.Config.get('tokenKey')] = @get('authToken')
-    @ajax Auth.Config.get('tokenDestroyUrl'), 'DELETE',
+    @ajax @resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE',
       data: data
       success: (json) =>
         @set 'authToken', null
@@ -64,6 +64,13 @@ window.Auth = Em.Object.create
   # =====================
   # End of Public API
   # =====================
+
+  resolveUrl: (path) ->
+    base = Auth.RESTAdapter.get('url')
+    if base[base.length-1] == '/'
+      base = base.substr(0, base.length - 1)
+
+    [base, path].join('/')
 
   # Resolves redirect destination
   # @param {type} string 'signIn' or 'signOut'

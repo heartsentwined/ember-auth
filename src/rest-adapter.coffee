@@ -1,4 +1,4 @@
-Auth.RESTAdapter = DS.RESTAdapter.extend
+Auth.RESTAdapter = DS.RESTAdapter.create
   ajax: (url, type, hash) ->
     if token = Auth.get('authToken')
       hash.data ||= {}
