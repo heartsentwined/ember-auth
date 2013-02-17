@@ -1,4 +1,8 @@
 window.Auth = Em.Object.create
+  init: ->
+    @_super()
+    Auth.Module.setUp()
+
   # =====================
   # Public API
   # =====================
