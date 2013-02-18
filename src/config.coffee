@@ -33,6 +33,14 @@ Auth.Config = Em.Object.create
   #   set this to 'user_id'
   idKey: null
 
+  # Implement this hook if base url for authentication API end points is
+  # different from ember application host.
+  # e.g.
+  #   your API lives at http://api.example.com/,
+  #   but your ember application lives at http://example.com/,
+  #   then set this to 'http://api.example.com'
+  baseUrl: null
+
   # =====================
   # Redirection config
   # =====================
