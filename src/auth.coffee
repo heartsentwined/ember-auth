@@ -1,7 +1,6 @@
 window.Auth = Em.Object.create
-  init: ->
-    @_super()
-    Auth.Module.setUp()
+  #init: ->
+    #Auth.Module.setUp()
 
   # =====================
   # Public API
@@ -69,9 +68,10 @@ window.Auth = Em.Object.create
   # End of Public API
   # =====================
 
+  # different base url support
   resolveUrl: (path) ->
-    base = Auth.RESTAdapter.get('url')
-    if base[base.length-1] == '/'
+    base = Auth.Config.get('baseUrl')
+    if base && base[base.length-1] == '/'
       base = base.substr(0, base.length - 1)
     if path[0] == '/'
       path = path.substr(1, path.length)
