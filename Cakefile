@@ -5,6 +5,7 @@ util   = require 'util'
 appFiles = [
   'auth',
   'config',
+  'module',
   'routes/auth',
   'controllers/sign-in',
   'controllers/sign-out',

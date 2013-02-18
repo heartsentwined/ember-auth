@@ -1,2 +1,3 @@
 Auth.Module = Em.Object.create
-  setUp: ->
+  init: ->
+    # set up modules here
