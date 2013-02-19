@@ -3,20 +3,17 @@ fs     = require 'fs'
 util   = require 'util'
 
 appFiles = [
-  'auth',
-  'config',
-  'routes/auth',
-  'controllers/sign-in',
-  'controllers/sign-out',
-  'rest-adapter'
-  #'modules/remember-me'
-]
-jsFiles = [
-  'vendor/jquery.cookie'
+  'auth'
+  , 'config'
+  , 'routes/auth'
+  , 'controllers/sign-in'
+  , 'controllers/sign-out'
+  , 'rest-adapter'
+  , 'module'
+  , 'modules/remember-me'
 ]
 
 appFiles = ("src/#{file}.coffee" for file in appFiles)
-jsFiles = ("#{file}.js" for file in jsFiles)
 
 # helpers
 
@@ -31,18 +28,18 @@ concatFile = (files, output, callback) ->
   write = ->
     fs.writeFile output, contents.join('\n\n'), 'utf8', (err) ->
       throw err if err
-      callback()
+      callback?()
 
 unlink = (file, callback) ->
   fs.unlink file, (err) ->
     throw err if err
-    callback()
+    callback?()
 
 shell = (cmd, callback) ->
   exec cmd, (err, stdout, stderr) ->
     throw err if err
     util.log stdout + stderr if stdout || stderr
-    callback()
+    callback?()
 
 # tasks
 
@@ -52,17 +49,10 @@ task 'build', 'Build single application file from source files', ->
   compile = ->
     shell 'coffee --compile lib/ember-auth.coffee', -> cleanUpApp()
   cleanUpApp = ->
-    unlink 'lib/ember-auth.coffee', -> concatJs()
-  concatJs = ->
-    jsFiles.push('lib/ember-auth.js')
-    concatFile jsFiles, 'lib/tmp-js.js', -> minify()
+    unlink 'lib/ember-auth.coffee', -> minify()
   minify = ->
-    shell 'uglifyjs lib/tmp-js.js -o lib/ember-auth.min.js', -> cleanUpJs()
-  cleanUpJs = ->
-    unlink 'lib/ember-auth.js', ->
-      fs.rename 'lib/tmp-js.js', 'lib/ember-auth.js', (err) ->
-        throw err if err
-        util.log 'Application file built.'
+    shell 'uglifyjs lib/ember-auth.js -o lib/ember-auth.min.js'
+    util.log 'Application file built.'
 
 task 'watch', 'Watch source files to invoke build task on change', ->
   util.log 'Watching application directory for changes...'

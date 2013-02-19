@@ -83,3 +83,27 @@ Auth.Config = Em.Object.create
   # Implement this hook to specify a fallback sign out redirect route
   # It should return the name of a route.
   signOutRedirectFallbackRoute: 'index'
+
+  # =====================
+  # Remember me
+  # =====================
+
+  # Implement this hook and return true to enable remember me feature.
+  rememberMe: false
+
+  # REQUIRED if you want to use remember me
+  # Your token creation API end point should accept polymorphic parameters:
+  #   either the regular set of sign in credentials,
+  #   or a remember me token.
+  # This hook should return the name of the key of remember token in your API,
+  # both in response and in accepted params.
+  # e.g.
+  #   if POST /api/token accepts {remember_token: "fjlja8hfhf4"}
+  #                  and returns {remember_token: "fjlja8hfhf4"},
+  #   set this to 'remember_token'
+  rememberTokenKey: null
+
+  # Implement this hook to customize the remember cookie valid period.
+  # It should return the number of days to remember a user for.
+  # Defaults to two weeks.
+  rememberPeriod: 14

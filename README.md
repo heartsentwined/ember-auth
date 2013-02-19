@@ -378,6 +378,51 @@ Auth.Config.reopen
 Same modification to `controller` as the
 [post- sign out fixed route redirect](#post--sign-out-redirect-fixed-route).
 
+## Remember me
+
+Your token creation API end point should accept polymorphic parameters:
+either the regular set of sign in credentials, or a remember me token. e.g.,
+`POST /api/token` expects either of these sets of params:
+* `{email: foo@example.com, password: foag8wuef9aiwe}`, or
+* `{remember_token: "fjlja8hfhf4"}`
+
+The API end point should also return a remember me token, using the same key,
+in its successful authentication response, e.g.
+`{remember_token: "fjlja8hfhf4"}`
+
+```coffeescript
+Auth.Config.reopen
+  rememberMe: true
+  rememberTokenKey: 'remember_token'
+  rememberPeriod: 14 # days
+```
+
+`rememberTokenKey` is the key for the remember me token, in both the API
+response and the expected param.
+`rememberPeriod`, in days, is the valid period for the remember cookie.
+Defaults to two weeks (14 days).
+
+You should then call `Auth.Module.RememberMe.recall()` when you want to
+(attempt to) auto-sign in the user from the local cookie. You can, for example,
+implement this in the `didInsertElement` hook of your `ApplicationView` if
+you want this behavior to be applied site-wide.
+
+```coffeescript
+App.ApplicationView = Em.View.extend
+  didInsertElement: ->
+    Auth.Module.RememberMe.recall()
+```
+
+The built-in behavior is to set the local remember me cookie on sign in
+success, and destroy any local remember me cookie on sign out, and on any
+sign in error. If you want to access these behaviors elsewhere, use the
+following low-level methods:
+
+* `Auth.Module.RememberMe.remember()`: set local remember me cookie
+* `Auth.Module.RememberMe.forget()`: destroy local remember me cookie
+
+Bear in mind some [security caveats](https://github.com/heartsentwined/ember-auth/wiki/Security).
+
 ## User-registration, forgot password, change password, etc
 
 These are operations on your user model, and they all follow the same pattern:
