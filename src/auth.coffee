@@ -1,4 +1,6 @@
-window.Auth = Em.Object.create
+evented = Em.Object.extend(Em.Evented)
+
+window.Auth = evented.create
   # =====================
   # Public API
   # =====================
@@ -32,10 +34,13 @@ window.Auth = Em.Object.create
       success: (json) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
         @set 'currentUserId', json[Auth.Config.get('idKey')]
+        @trigger 'signInSuccess'
       error: (json) =>
         @set 'error', json
+        @trigger 'signInError'
       complete: =>
         @set 'prevRoute', null
+        @trigger 'signInComplete'
 
   # Sign out method
   #
@@ -56,10 +61,13 @@ window.Auth = Em.Object.create
       success: (json) =>
         @set 'authToken', null
         @set 'currentUserId', null
+        @trigger 'signOutSuccess'
       error: (json) =>
         @set 'error', json
+        @trigger 'signOutError'
       complete: =>
         @set 'prevRoute', null
+        @trigger 'signOutComplete'
 
   # =====================
   # End of Public API

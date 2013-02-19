@@ -8,8 +8,8 @@ appFiles = [
   'routes/auth',
   'controllers/sign-in',
   'controllers/sign-out',
-  'rest-adapter',
-  'modules/remember-me'
+  'rest-adapter'
+  #'modules/remember-me'
 ]
 jsFiles = [
   'vendor/jquery.cookie'
