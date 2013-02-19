@@ -11,8 +11,8 @@ window.Auth = evented.create
   # Holds current user ID
   currentUserId: null
 
-  # Holds error from token API requests
-  error: null
+  # Holds jqxhr object from token API resonses
+  jqxhr: null
 
   # Holds prev route for smart redirect.
   prevRoute: null
@@ -24,22 +24,24 @@ window.Auth = evented.create
   # On success:
   #   It will store auth token in @authToken
   #   and its associated user model ID in @currentUserId.
-  # On error:
-  #   It will store the response body, unaltered, in @error.
+  #
+  # It will store the jqxhr object in @jqxhr regardless of success.
   #
   # @param {data} object params to pass to API end point in ajax call
   signIn: (data = {}) ->
     @ajax @resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST',
       data: data
-      success: (json) =>
+      success: (json, status, jqxhr) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
         @set 'currentUserId', json[Auth.Config.get('idKey')]
+        @set 'jqxhr', jqxhr
         @trigger 'signInSuccess'
-      error: (json) =>
-        @set 'error', json
+      error: (jqxhr) =>
+        @set 'jqxhr', jqxhr
         @trigger 'signInError'
-      complete: =>
+      complete: (jqxhr) =>
         @set 'prevRoute', null
+        @set 'jqxhr', jqxhr
         @trigger 'signInComplete'
 
   # Sign out method
@@ -50,23 +52,25 @@ window.Auth = evented.create
   #
   # On success:
   #   It will set @authToken and @currentUserId to null.
-  # On error:
-  #   It will store the response body, unaltered, in @error.
+  #
+  # It will store the jqxhr object in @jqxhr regardless of success.
   #
   # @param {data} object params to pass to API end point in ajax call
   signOut: (data = {}) ->
     data[Auth.Config.get('tokenKey')] = @get('authToken')
     @ajax @resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE',
       data: data
-      success: (json) =>
+      success: (json, status, jqxhr) =>
         @set 'authToken', null
         @set 'currentUserId', null
+        @set 'jqxhr', jqxhr
         @trigger 'signOutSuccess'
-      error: (json) =>
-        @set 'error', json
+      error: (jqxhr) =>
+        @set 'jqxhr', jqxhr
         @trigger 'signOutError'
-      complete: =>
+      complete: (jqxhr) =>
         @set 'prevRoute', null
+        @set 'jqxhr', jqxhr
         @trigger 'signOutComplete'
 
   # =====================
