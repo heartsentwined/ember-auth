@@ -398,6 +398,7 @@ non-RESTful cases, e.g. the "forgot password" functionality.
 * `signOutComplete`
 
 All correspond to their `jQuery.ajax` namesakes, i.e.
+
 ```coffeescript
 jQuery.ajax ->
   # ...
@@ -415,6 +416,8 @@ Subscribing to these events:
 Auth.on 'signInSuccess', ->
   # do something
 ```
+
+You can access the token API response jqxhr object via `Auth.get('jqxhr')`.
 
 ## Further use cases
 
