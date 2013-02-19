@@ -67,7 +67,7 @@ task 'build', 'Build single application file from source files', ->
 task 'watch', 'Watch source files to invoke build task on change', ->
   util.log 'Watching application directory for changes...'
   for file in appFiles then do (file) ->
-    fs.watchFile "src/#{file}.coffee", (curr, prev) ->
+    fs.watchFile file, (curr, prev) ->
       if +curr.mtime != +prev.mtime
-        util.log "[src/#{file}.coffee] modified. Running build task."
+        util.log "[#{file}] modified. Running build task."
         invoke 'build'
