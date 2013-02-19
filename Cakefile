@@ -5,30 +5,64 @@ util   = require 'util'
 appFiles = [
   'auth',
   'config',
-  'module',
   'routes/auth',
   'controllers/sign-in',
   'controllers/sign-out',
-  'rest-adapter'
+  'rest-adapter',
+  'modules/remember-me'
+]
+jsFiles = [
+  'vendor/jquery.cookie'
 ]
 
+appFiles = ("src/#{file}.coffee" for file in appFiles)
+jsFiles = ("#{file}.js" for file in jsFiles)
+
+# helpers
+
+concatFile = (files, output, callback) ->
+  contents = []
+  remaining = files.length
+  for file, index in files then do (file, index) ->
+    fs.readFile file, 'utf8', (err, fileContents) ->
+      throw err if err
+      contents[index] = fileContents
+      write() if --remaining == 0
+  write = ->
+    fs.writeFile output, contents.join('\n\n'), 'utf8', (err) ->
+      throw err if err
+      callback()
+
+unlink = (file, callback) ->
+  fs.unlink file, (err) ->
+    throw err if err
+    callback()
+
+shell = (cmd, callback) ->
+  exec cmd, (err, stdout, stderr) ->
+    throw err if err
+    util.log stdout + stderr if stdout || stderr
+    callback()
+
+# tasks
+
 task 'build', 'Build single application file from source files', ->
-  appContents = new Array remaining = appFiles.length
-  for file, index in appFiles then do (file, index) ->
-    fs.readFile "src/#{file}.coffee", 'utf8', (err, fileContents) ->
-      throw err if err
-      appContents[index] = fileContents
-      process() if --remaining is 0
-  process = ->
-    fs.writeFile 'lib/ember-auth.coffee', appContents.join('\n\n'), 'utf8', (err) ->
-      throw err if err
-      exec 'coffee --compile lib/ember-auth.coffee', (err, stdout, stderr) ->
+  do concatApp = ->
+    concatFile appFiles, 'lib/ember-auth.coffee', -> compile()
+  compile = ->
+    shell 'coffee --compile lib/ember-auth.coffee', -> cleanUpApp()
+  cleanUpApp = ->
+    unlink 'lib/ember-auth.coffee', -> concatJs()
+  concatJs = ->
+    jsFiles.push('lib/ember-auth.js')
+    concatFile jsFiles, 'lib/tmp-js.js', -> minify()
+  minify = ->
+    shell 'uglifyjs lib/tmp-js.js -o lib/ember-auth.min.js', -> cleanUpJs()
+  cleanUpJs = ->
+    unlink 'lib/ember-auth.js', ->
+      fs.rename 'lib/tmp-js.js', 'lib/ember-auth.js', (err) ->
         throw err if err
-        util.log stdout + stderr if stdout || stderr
-        fs.unlink 'lib/ember-auth.coffee', (err) ->
-          throw err if err
-          exec 'uglifyjs lib/ember-auth.js -o lib/ember-auth.min.js'
-          util.log 'Application file built.'
+        util.log 'Application file built.'
 
 task 'watch', 'Watch source files to invoke build task on change', ->
   util.log 'Watching application directory for changes...'
