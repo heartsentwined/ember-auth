@@ -387,6 +387,35 @@ Then just treat them as a normal ember model, with create, edit, etc actions.
 You may want to set up some dedicated API end points at your server for
 non-RESTful cases, e.g. the "forgot password" functionality.
 
+## Events
+
+`ember-auth` offers the following events for public API subscriptions:
+* `signInSuccess`
+* `signInError`
+* `signInComplete`
+* `signOutSuccess`
+* `signOutError`
+* `signOutComplete`
+
+All correspond to their `jQuery.ajax` namesakes, i.e.
+```coffeescript
+jQuery.ajax ->
+  # ...
+  success: =>
+    # 'success' event triggered here
+  error: =>
+    # 'error' event triggered here
+  complete: =>
+    # 'complete' event triggered here
+```
+
+Subscribing to these events:
+
+```coffeescript
+Auth.on 'signInSuccess', ->
+  # do something
+```
+
 ## Further use cases
 
 The source code at `src/auth.coffee` is a comprehensive list of public API
