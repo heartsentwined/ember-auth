@@ -35,7 +35,7 @@ be posted soon in the wiki.*
 The token authentication API should expose two end points:
 * a `POST` route for token creation
   * This should return the authentication token and the user model ID
-    upon successful token creation in a JSON hash.
+    upon successful token creation in a JSON object.
 * a `DELETE` route for token destruction
 
 Your server should also use proper HTTP status codes, i.e. the 2xx series for
@@ -135,13 +135,13 @@ App.SignInView = Em.View.extend
     <label>Email</label>
     {{view Ember.TextField valueBinding="view.email"}}
     <label>Password</label>
-    {{view Ember.TextField valueBinding="view.password"}}
+    {{view Ember.TextField type="password" valueBinding="view.password"}}
     <button>Sign In</button>
   </form>
 </script>
 ```
 
-Here we use the `Auth.signIn` helper. It accepts a hash of params that will
+Here we use the `Auth.signIn` helper. It accepts an object of params that will
 be passed to the API call.
 
 The sign out form:
@@ -204,7 +204,7 @@ App.SignInController = Ember.ObjectController.extend
     <label>Email</label>
     {{view Ember.TextField valueBinding="view.email"}}
     <label>Password</label>
-    {{view Ember.TextField valueBinding="view.password"}}
+    {{view Ember.TextField type="password" valueBinding="view.password"}}
     <button {{action "signIn"}}>Sign In</button>
   </form>
 </script>
