@@ -133,9 +133,9 @@ App.SignInView = Em.View.extend
 <script type="text/x-handlebars" data-template-name="sign_in">
   <form>
     <label>Email</label>
-    {{view Ember.TextField valueBinding="email" valueBinding="view.email"}}
+    {{view Ember.TextField valueBinding="view.email"}}
     <label>Password</label>
-    {{view Ember.TextField valueBinding="password" valueBinding="view.password"}}
+    {{view Ember.TextField valueBinding="view.password"}}
     <button>Sign In</button>
   </form>
 </script>
@@ -202,9 +202,9 @@ App.SignInController = Ember.ObjectController.extend
 <script type="text/x-handlebars" data-template-name="sign_in">
   <form>
     <label>Email</label>
-    {{view Ember.TextField valueBinding="email" valueBinding="email"}}
+    {{view Ember.TextField valueBinding="view.email"}}
     <label>Password</label>
-    {{view Ember.TextField valueBinding="password" valueBinding="password"}}
+    {{view Ember.TextField valueBinding="view.password"}}
     <button {{action "signIn"}}>Sign In</button>
   </form>
 </script>
