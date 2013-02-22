@@ -434,7 +434,10 @@ non-RESTful cases, e.g. the "forgot password" functionality.
 
 ## Events
 
-`ember-auth` offers the following events for public API subscriptions:
+### Token authentication API events
+
+The following events are emitted during token authentication API calls:
+
 * `signInSuccess`
 * `signInError`
 * `signInComplete`
@@ -463,6 +466,27 @@ Auth.on 'signInSuccess', ->
 ```
 
 You can access the token API response jqxhr object via `Auth.get('jqxhr')`.
+
+### Auth.Route
+
+`Auth.Route` emits the event
+
+* `authAccess`
+
+when an unauthenticated user accesses the `Auth.Route`, before redirection
+(if you uses this feature).
+
+Subscribing to this event:
+
+```coffeescript
+App.SecretsRoute = Auth.Route.extend
+  init: ->
+    @on 'authAccess', ->
+      # display an overlay sign in form, for example
+
+  model: ->
+    App.Secret.find()
+```
 
 ## Further use cases
 

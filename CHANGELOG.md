@@ -1,3 +1,7 @@
+# 2.1.0 (23 Feb 2013)
+
+* Added an `authAccess` event on `Auth.Route`
+
 # 2.0.0 (20 Feb 2013)
 
 * Remember me feature - requires [jquery.cookie](https://github.com/carhartl/jquery-cookie)
