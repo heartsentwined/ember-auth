@@ -473,8 +473,8 @@ You can access the token API response jqxhr object via `Auth.get('jqxhr')`.
 
 * `authAccess`
 
-when an unauthenticated user accesses the `Auth.Route`, before redirection
-(if you uses this feature).
+when an unauthenticated user accesses the `Auth.Route`. If you uses
+redirection, the event is emitted before redirection.
 
 Subscribing to this event:
 
