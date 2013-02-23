@@ -25,12 +25,15 @@ Perhaps [you can help](#contributing)?
 
 Read the [installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install).
 
+# Getting started
+
+A [demo and tutorial](https://github.com/heartsentwined/ember-auth-rails-demo)
+for rails + devise + ember-auth is available.
+
 # Pre-req
 
 `ember-auth` expects your server to provide an API interface with
 token authentication support.
-*An example of setting up token authentication in rails and devise will
-be posted soon in the wiki.*
 
 The token authentication API should expose two end points:
 * a `POST` route for token creation
@@ -503,10 +506,6 @@ You are welcome! As usual:
 3. Hack
 4. Commit
 5. Pull request
-
-## Todo
-
-* a full-blown rails + devise + ember-auth tutorial
 
 # License
 
