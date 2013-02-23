@@ -23,7 +23,7 @@ Auth.Module.RememberMe = Em.Object.create
     json = JSON.parse (Auth.get 'jqxhr').responseText
     token = json[Auth.Config.get('rememberTokenKey')]
     curToken = $.cookie 'ember-auth-remember-me'
-    if token != curToken
+    if token && token != curToken
       $.cookie 'ember-auth-remember-me', token,
         expires: Auth.Config.get 'rememberPeriod'
 

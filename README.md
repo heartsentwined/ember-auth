@@ -424,6 +424,11 @@ following low-level methods:
 * `Auth.Module.RememberMe.remember()`: set local remember me cookie
 * `Auth.Module.RememberMe.forget()`: destroy local remember me cookie
 
+`ember-auth` follows the common practice of "opt-in" remember me: if you have
+turned on the remember me feature, but does not want to use it for a particular
+sign in, simply *do not* return a remember token from the server response.
+`ember-auth` will then simply skip setting the remember me cookie.
+
 Bear in mind some [security caveats](https://github.com/heartsentwined/ember-auth/wiki/Security).
 
 ## User-registration, forgot password, change password, etc
