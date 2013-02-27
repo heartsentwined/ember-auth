@@ -1,3 +1,15 @@
+# 2.2.2 (27 Feb 2013)
+
+* Remember me should not attempt to sign in user if one is already signed in
+
+# 2.2.1 (23 Feb 2013)
+
+* Remember me should be opt-in only
+
+# 2.2.0 (23 Feb 2013)
+
+* `Auth.Route.authAccess` event should not depend on redirection feature
+
 # 2.1.0 (23 Feb 2013)
 
 * Added an `authAccess` event on `Auth.Route`

@@ -12,7 +12,7 @@ Auth.Module.RememberMe = Em.Object.create
   # try to sign in user from local remember me cookie
   recall: ->
     return unless Auth.Config.get 'rememberMe'
-    if token = $.cookie('ember-auth-remember-me')
+    if !Auth.get('authToken') && token = $.cookie('ember-auth-remember-me')
       data = {}
       data[Auth.Config.get('rememberTokenKey')] = token
       Auth.signIn data
