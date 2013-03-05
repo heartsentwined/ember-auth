@@ -77,7 +77,7 @@ Auth.Config.reopen
 
 ## Persistence adapter
 
-Persistence adapter setup: you will use `Auth.RESTAdapeter`; it is an
+Persistence adapter setup: you will use `Auth.RESTAdapter`; it is an
 extension of `DS.RESTAdapter`.
 
 ```coffeescript
