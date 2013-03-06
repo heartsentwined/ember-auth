@@ -235,7 +235,7 @@ App.SignOutController = Ember.ObjectController.extend
 ```
 
 ```html
-<script type="text/x-handlebars" data-template-name="sign_in">
+<script type="text/x-handlebars" data-template-name="sign_out">
   <form>
     <button {{action "signOut"}}>Sign Out</button>
   </form>
