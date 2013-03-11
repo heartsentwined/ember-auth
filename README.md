@@ -205,9 +205,9 @@ App.SignInController = Ember.ObjectController.extend
 <script type="text/x-handlebars" data-template-name="sign_in">
   <form>
     <label>Email</label>
-    {{view Ember.TextField valueBinding="view.email"}}
+    {{view Ember.TextField valueBinding="email"}}
     <label>Password</label>
-    {{view Ember.TextField type="password" valueBinding="view.password"}}
+    {{view Ember.TextField type="password" valueBinding="password"}}
     <button {{action "signIn"}}>Sign In</button>
   </form>
 </script>
@@ -235,7 +235,7 @@ App.SignOutController = Ember.ObjectController.extend
 ```
 
 ```html
-<script type="text/x-handlebars" data-template-name="sign_in">
+<script type="text/x-handlebars" data-template-name="sign_out">
   <form>
     <button {{action "signOut"}}>Sign Out</button>
   </form>
