@@ -75,6 +75,13 @@ Auth.Config.reopen
   idKey: 'user_id'
 ```
 
+You can specify a different API host with `baseUrl`:
+
+```coffeescript
+Auth.Config.reopen
+  baseUrl: 'https://api.example.com'
+```
+
 ## Persistence adapter
 
 Persistence adapter setup: you will use `Auth.RESTAdapter`; it is an
