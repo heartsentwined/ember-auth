@@ -1,3 +1,7 @@
+# 2.3.0 (30 Mar 2013)
+
+* Remember me now auto-recalls user session upon visiting an `Auth.Route`
+
 # 2.2.2 (27 Feb 2013)
 
 * Remember me should not attempt to sign in user if one is already signed in
