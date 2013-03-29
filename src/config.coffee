@@ -107,3 +107,9 @@ Auth.Config = Em.Object.create
   # It should return the number of days to remember a user for.
   # Defaults to two weeks.
   rememberPeriod: 14
+
+  # Implement this hook and return false if you want to disable auto-recall.
+  # By default, autoRecall is enabled, and Remember Me will try to sign in the
+  # user from local cookie whenever one accesses an Auth.Route (only if one
+  # is not already signed in).
+  rememberAutoRecall: true

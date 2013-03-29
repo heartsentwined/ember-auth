@@ -10,10 +10,13 @@ Auth.Module.RememberMe = Em.Object.create
       @forget()
 
   # try to sign in user from local remember me cookie
-  recall: ->
+  # @param {opts} recall options
+  #   opts.async = false to send a synchronous sign in request
+  recall: (opts = {}) ->
     return unless Auth.Config.get 'rememberMe'
     if !Auth.get('authToken') && token = $.cookie('ember-auth-remember-me')
       data = {}
+      data['async'] = opts.async if opts.async?
       data[Auth.Config.get('rememberTokenKey')] = token
       Auth.signIn data
 
@@ -31,3 +34,10 @@ Auth.Module.RememberMe = Em.Object.create
   forget: ->
     return unless Auth.Config.get 'rememberMe'
     $.removeCookie 'ember-auth-remember-me'
+
+# monkey-patch Auth.Route to recall session (if any) before redirecting
+Auth.Route.reopen
+  redirect: ->
+    if Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')
+      Auth.Module.RememberMe.recall { async: false }
+    @_super()

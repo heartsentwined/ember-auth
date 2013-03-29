@@ -28,9 +28,14 @@ window.Auth = evented.create
   # It will store the jqxhr object in @jqxhr regardless of success.
   #
   # @param {data} object params to pass to API end point in ajax call
+  #   data.async = false for synchronous request;
+  #     it will be stripped from final POST data
   signIn: (data = {}) ->
+    async = if data.async? then data.async else true
+    delete data['async'] if data.async?
     @ajax @resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST',
       data: data
+      async: async
       success: (json, status, jqxhr) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
         @set 'currentUserId', json[Auth.Config.get('idKey')]
@@ -56,10 +61,15 @@ window.Auth = evented.create
   # It will store the jqxhr object in @jqxhr regardless of success.
   #
   # @param {data} object params to pass to API end point in ajax call
+  #   data.async = false for synchronous request;
+  #     it will be stripped from final POST data
   signOut: (data = {}) ->
     data[Auth.Config.get('tokenKey')] = @get('authToken')
+    async = if data.async? then data.async else true
+    delete data['async'] if data.async?
     @ajax @resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE',
       data: data
+      async: async
       success: (json, status, jqxhr) =>
         @set 'authToken', null
         @set 'currentUserId', null

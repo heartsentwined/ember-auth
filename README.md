@@ -274,6 +274,8 @@ Auth.Route.reopen
 
 However, see Redirects section right below for built-in redirection support.
 
+The Remember Me module also adds behavior to `Auth.Route`.
+
 ## Redirects
 
 `ember-auth` provides five kinds of redirects to assist in building your UI.
@@ -405,22 +407,39 @@ Auth.Config.reopen
   rememberMe: true
   rememberTokenKey: 'remember_token'
   rememberPeriod: 14 # days
+  rememberAutoRecall: true
 ```
 
 `rememberTokenKey` is the key for the remember me token, in both the API
 response and the expected param.
 `rememberPeriod`, in days, is the valid period for the remember cookie.
 Defaults to two weeks (14 days).
+`rememberAutoRecall` controls whether Remember Me should attempt to auto-sign in
+the user from local cookie. (see below) Defaults to true.
 
-You should then call `Auth.Module.RememberMe.recall()` when you want to
-(attempt to) auto-sign in the user from the local cookie. You can, for example,
-implement this in the `didInsertElement` hook of your `ApplicationView` if
-you want this behavior to be applied site-wide.
+Remember Me will (attempt to) auto-sign in the user from the local cookie
+when the user accesses an `Auth.Route` (only if one is not already signed in).
+If you want to implement this behavior elsewhere, set `rememberAutoRecall` to
+`false` in `Auth.Config`, and call `Auth.Module.RememberMe.recall()` elsewhere.
+
+For example, if you want to delay until the application has finished loading
+before attempting the recall (long network round-trip concern, perhaps?), then
+you can implement this in the `didInsertElement` hook of your `ApplicationView`
+if you want this behavior to be applied site-wide.
 
 ```coffeescript
 App.ApplicationView = Em.View.extend
   didInsertElement: ->
     Auth.Module.RememberMe.recall()
+```
+
+`Auth.Module.RememberMe.recall()` accepts an object of options.
+Currently, only `async` (=`true`/`false`) is supported. Normally you wouldn't
+use this option; it is utilized internally to implement the recall behavior
+before any redirection calculations:
+
+```coffeescript
+Auth.Module.RememberMe.recall { async: false }
 ```
 
 The built-in behavior is to set the local remember me cookie on sign in
@@ -481,6 +500,9 @@ Auth.on 'signInSuccess', ->
 ```
 
 You can access the token API response jqxhr object via `Auth.get('jqxhr')`.
+
+Auto signing in through Remember Me's `recall()` will also trigger the
+`signIn*` family of events.
 
 ### Auth.Route
 
