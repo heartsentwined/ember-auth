@@ -55,6 +55,7 @@ task 'build', 'Build single application file from source files', ->
     util.log 'Application file built.'
 
 task 'watch', 'Watch source files to invoke build task on change', ->
+  invoke 'build'
   util.log 'Watching application directory for changes...'
   for file in appFiles then do (file) ->
     fs.watchFile file, (curr, prev) ->
