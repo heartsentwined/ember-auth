@@ -33,6 +33,15 @@ Auth.Config = Em.Object.create
   #   set this to 'user_id'
   idKey: null
 
+  # Implement this hook and return your user model
+  # if you want to auto-load the current user object in Auth.currentUser.
+  # ember-auth will call find() with Auth.currentUserId to auto-load.
+  # e.g.
+  #   if your user model is App.User,
+  #   set this to App.User.
+  #   (**not** a string 'App.User')
+  userModel: null
+
   # Implement this hook if base url for authentication API end points is
   # different from ember application host.
   # e.g.

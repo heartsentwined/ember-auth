@@ -11,6 +11,9 @@ window.Auth = evented.create
   # Holds current user ID
   currentUserId: null
 
+  # Holds current user model
+  currentUser: null
+
   # Holds jqxhr object from token API resonses
   jqxhr: null
 
@@ -39,6 +42,8 @@ window.Auth = evented.create
       success: (json, status, jqxhr) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
         @set 'currentUserId', json[Auth.Config.get('idKey')]
+        if model = Auth.Config.get('userModel')
+          @set 'currentUser', model.find(@get 'currentUserId')
         @set 'jqxhr', jqxhr
         @trigger 'signInSuccess'
       error: (jqxhr) =>

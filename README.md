@@ -59,6 +59,8 @@ At present `ember-auth` only supports `DS.RESTAdapter`.
 
 ## Config
 
+### Minimum requirement
+
 Let's say your server exposes a token authentication interface as follows:
 * `POST /users/sign_in` for token creation (sign in)
   * expects `email` and `password` as params
@@ -74,6 +76,23 @@ Auth.Config.reopen
   tokenKey: 'auth_token'
   idKey: 'user_id'
 ```
+
+### Auto-load current user object
+
+Let's say you have defined the corresponding user model as `App.User`.
+You can have `ember-auth` auto-load the current user object with `userModel`:
+
+```coffeescript
+Auth.Config.reopen
+  userModel: App.User
+```
+
+(Note that it is *not* a string `'App.User'`.)
+
+`ember-auth` will call `App.User.find()` with `Auth.currentUserId`, which
+would ultimately come from the user ID key in your server's JSON response.
+
+### Different base URL
 
 You can specify a different API host with `baseUrl`:
 

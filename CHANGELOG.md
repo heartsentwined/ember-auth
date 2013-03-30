@@ -1,3 +1,7 @@
+# 2.4.0 (30 Mar 2013)
+
+* Feature: auto-load current user
+
 # 2.3.0 (30 Mar 2013)
 
 * Remember me now auto-recalls user session upon visiting an `Auth.Route`
