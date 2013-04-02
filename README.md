@@ -283,6 +283,23 @@ For example, you can make the following call from inside any controller:
 Auth.ajax('/api/non_standard_route', POST, {})
 ```
 
+### Request headers
+
+You can also use a request header instead of a parameter to send the auth token 
+with each authenticated request. There are two configuration parameters that 
+need to be set to enable this:
+
+```coffeescript
+Auth.Config.reopen
+  requestHeaderAuthorization: true
+  requestHeaderKey: 'X-API-TOKEN'
+```
+
+Using this configuration the auth token will automatically be sent using a 
+request header instead of a param. 
+
+E.g. headers { "X-API-TOKEN": Auth.get('authToken') }
+
 ## Authenticated-only routes
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
