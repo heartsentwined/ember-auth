@@ -121,6 +121,10 @@ window.Auth = evented.create
       @prevRoute
 
   ajax: (url, type, hash) ->
+    if token = @get('authToken')
+      hash.data ||= {}
+      hash.data[Auth.Config.get('tokenKey')] = @get('authToken')
+      
     hash.url         = url
     hash.type        = type
     hash.dataType    = 'json'
