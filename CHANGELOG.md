@@ -1,3 +1,7 @@
+# 2.4.1 (2 Apr 2013)
+
+* Bugfix: set `Auth.currentUser` to `null` on sign out
+
 # 2.4.0 (30 Mar 2013)
 
 * Feature: auto-load current user
