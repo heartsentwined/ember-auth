@@ -122,8 +122,12 @@ window.Auth = evented.create
 
   ajax: (url, type, hash) ->
     if token = @get('authToken')
-      hash.data ||= {}
-      hash.data[Auth.Config.get('tokenKey')] = @get('authToken')
+      if Auth.Config.get('requestHeaderAuthorization')
+        hash.headers ||= {}
+        hash.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
+      else
+        hash.data ||= {}
+        hash.data[Auth.Config.get('tokenKey')] = @get('authToken')
       
     hash.url         = url
     hash.type        = type
