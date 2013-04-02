@@ -39,5 +39,9 @@ Auth.Module.RememberMe = Em.Object.create
 Auth.Route.reopen
   redirect: ->
     if Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')
-      Auth.Module.RememberMe.recall { async: false }
+      if request = Auth.Module.RememberMe.recall(async: false)
+        self = @
+        callback = @_super
+        return request.always ->
+          callback.call(self)
     @_super()

@@ -39,17 +39,17 @@ window.Auth = evented.create
     @ajax @resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST',
       data: data
       async: async
-      success: (json, status, jqxhr) =>
+    .done (json, status, jqxhr) =>
         @set 'authToken', json[Auth.Config.get('tokenKey')]
         @set 'currentUserId', json[Auth.Config.get('idKey')]
         if model = Auth.Config.get('userModel')
           @set 'currentUser', model.find(@get 'currentUserId')
         @set 'jqxhr', jqxhr
         @trigger 'signInSuccess'
-      error: (jqxhr) =>
+    .fail (jqxhr) =>
         @set 'jqxhr', jqxhr
         @trigger 'signInError'
-      complete: (jqxhr) =>
+    .always (jqxhr) =>
         @set 'prevRoute', null
         @set 'jqxhr', jqxhr
         @trigger 'signInComplete'
@@ -75,15 +75,15 @@ window.Auth = evented.create
     @ajax @resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE',
       data: data
       async: async
-      success: (json, status, jqxhr) =>
+    .done (json, status, jqxhr) =>
         @set 'authToken', null
         @set 'currentUserId', null
         @set 'jqxhr', jqxhr
         @trigger 'signOutSuccess'
-      error: (jqxhr) =>
+    .fail (jqxhr) =>
         @set 'jqxhr', jqxhr
         @trigger 'signOutError'
-      complete: (jqxhr) =>
+    .always (jqxhr) =>
         @set 'prevRoute', null
         @set 'jqxhr', jqxhr
         @trigger 'signOutComplete'
