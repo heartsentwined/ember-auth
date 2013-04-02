@@ -44,6 +44,7 @@ window.Auth = evented.create
         @set 'currentUserId', json[Auth.Config.get('idKey')]
         if model = Auth.Config.get('userModel')
           @set 'currentUser', model.find(@get 'currentUserId')
+        @set 'json', json
         @set 'jqxhr', jqxhr
         @trigger 'signInSuccess'
       error: (jqxhr) =>

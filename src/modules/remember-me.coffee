@@ -23,8 +23,7 @@ Auth.Module.RememberMe = Em.Object.create
   # set local remember me cookie
   remember: ->
     return unless Auth.Config.get 'rememberMe'
-    json = JSON.parse (Auth.get 'jqxhr').responseText
-    token = json[Auth.Config.get('rememberTokenKey')]
+    token = Auth.get('json')[Auth.Config.get('rememberTokenKey')]
     curToken = $.cookie 'ember-auth-remember-me'
     if token && token != curToken
       $.cookie 'ember-auth-remember-me', token,
