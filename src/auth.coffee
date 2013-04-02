@@ -78,6 +78,7 @@ window.Auth = evented.create
       success: (json, status, jqxhr) =>
         @set 'authToken', null
         @set 'currentUserId', null
+        @set 'currentUser', null
         @set 'jqxhr', jqxhr
         @trigger 'signOutSuccess'
       error: (jqxhr) =>
