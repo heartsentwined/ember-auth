@@ -124,7 +124,7 @@ window.Auth = evented.create
     if token = @get('authToken')
       if Auth.Config.get('requestHeaderAuthorization')
         hash.headers ||= {}
-        hash.headers['Authorization'] = 'token ' + @get('authToken')
+        hash.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
       else
         hash.data ||= {}
         hash.data[Auth.Config.get('tokenKey')] = @get('authToken')

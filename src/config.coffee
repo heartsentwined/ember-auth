@@ -53,6 +53,13 @@ Auth.Config = Em.Object.create
   # If this hook returns true, the auth token will be passed in the request 
   # header instead the data hash.
   requestHeaderAuthorization: false
+  
+  # You must implement this hook if requestHeaderAuthorization returns true:
+  # It should return the name of the header to use for sending the auth token.
+  # e.g. 
+  #   if you set this to 'X-API-TOKEN' a header will automatically be sent with 
+  #   each request: headers { "X-API-TOKEN": Auth.get('authToken') }
+  requestHeaderKey: null
 
   # =====================
   # Redirection config
