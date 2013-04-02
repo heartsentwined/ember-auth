@@ -271,6 +271,18 @@ App.SignOutController = Ember.ObjectController.extend
 Again, we register a `signOut` action on the button; the `Auth.signOut` helper
 is explained in the [Widget style section](#1-widget-style).
 
+## Authenticated requests
+
+Using the Auth.RESTAdapter ensures all requests are authenticated by passing the 
+auth token as a parameter. If you need to make an authenticated request that 
+does not use the adapter you can call Auth.ajax directly.
+
+For example, you can make the following call from inside any controller:
+
+```coffeescript
+Auth.ajax('/api/non_standard_route', POST, {})
+```
+
 ## Authenticated-only routes
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
