@@ -49,6 +49,10 @@ Auth.Config = Em.Object.create
   #   but your ember application lives at http://example.com/,
   #   then set this to 'http://api.example.com'
   baseUrl: null
+  
+  # If this hook returns true, the auth token will be passed in the request 
+  # header instead the data hash.
+  requestHeaderAuthorization: false
 
   # =====================
   # Redirection config
