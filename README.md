@@ -271,6 +271,35 @@ App.SignOutController = Ember.ObjectController.extend
 Again, we register a `signOut` action on the button; the `Auth.signOut` helper
 is explained in the [Widget style section](#1-widget-style).
 
+## Authenticated requests
+
+Using the Auth.RESTAdapter ensures all requests are authenticated by passing the 
+auth token as a parameter. If you need to make an authenticated request that 
+does not use the adapter you can call Auth.ajax directly.
+
+For example, you can make the following call from inside any controller:
+
+```coffeescript
+Auth.ajax('/api/non_standard_route', POST, {})
+```
+
+### Request headers
+
+You can also use a request header instead of a parameter to send the auth token 
+with each authenticated request. There are two configuration parameters that 
+need to be set to enable this:
+
+```coffeescript
+Auth.Config.reopen
+  requestHeaderAuthorization: true
+  requestHeaderKey: 'X-API-TOKEN'
+```
+
+Using this configuration the auth token will automatically be sent using a 
+request header instead of a param. 
+
+E.g. headers { "X-API-TOKEN": Auth.get('authToken') }
+
 ## Authenticated-only routes
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
@@ -427,6 +456,7 @@ Auth.Config.reopen
   rememberTokenKey: 'remember_token'
   rememberPeriod: 14 # days
   rememberAutoRecall: true
+  rememberUsingLocalStorage: true
 ```
 
 `rememberTokenKey` is the key for the remember me token, in both the API
@@ -435,6 +465,9 @@ response and the expected param.
 Defaults to two weeks (14 days).
 `rememberAutoRecall` controls whether Remember Me should attempt to auto-sign in
 the user from local cookie. (see below) Defaults to true.
+`rememberUsingLocalStorage` controls whether the remember token is stored in a 
+local storage instead of a cookie. This removes the dependency of jquery.cookie.
+
 
 Remember Me will (attempt to) auto-sign in the user from the local cookie
 when the user accesses an `Auth.Route` (only if one is not already signed in).
