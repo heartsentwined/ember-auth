@@ -1,3 +1,10 @@
+# 2.6.0 (4 Apr 2013)
+
+* Feature: use `localStorage` instead of cookie for `RememberMe`
+* Feature: pass authentication token in request header
+* Bugfix: empty `responseText` on a successful JSONP request
+* Bugfix: proper JSONP redirect support
+
 # 2.5.0 (3 Apr 2013)
 
 * Feature: Authenticated requests available for non `ember-data` requests
