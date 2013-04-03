@@ -4,5 +4,5 @@ Auth.SignOutController = Em.ObjectController.extend
 
   smartSignOutRedirect: ->
     if !Auth.get('authToken')
-      @get('target.router').transitionTo Auth.resolveRedirectRoute('signOut')
+      @transitionToRoute Auth.resolveRedirectRoute('signOut')
       Auth.removeObserver 'authToken', this, 'smartSignOutRedirect'

@@ -4,5 +4,5 @@ Auth.SignInController = Em.ObjectController.extend
 
   smartSignInRedirect: ->
     if Auth.get('authToken')
-      @get('target.router').transitionTo Auth.resolveRedirectRoute('signIn')
+      @transitionToRoute Auth.resolveRedirectRoute('signIn')
       Auth.removeObserver 'authToken', this, 'smartSignInRedirect'
