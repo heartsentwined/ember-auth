@@ -23,8 +23,7 @@ Auth.Module.RememberMe = Em.Object.create
   # set local remember me cookie
   remember: ->
     return unless Auth.Config.get 'rememberMe'
-    json = JSON.parse (Auth.get 'jqxhr').responseText
-    token = json[Auth.Config.get('rememberTokenKey')]
+    token = Auth.get('json')[Auth.Config.get('rememberTokenKey')]
     @storeToken(token) if token && token != @retrieveToken()
 
   # destroy local remember me cookie
@@ -49,7 +48,7 @@ Auth.Module.RememberMe = Em.Object.create
       localStorage.removeItem 'ember-auth-remember-me'
     else
       $.removeCookie 'ember-auth-remember-me'
-       
+
 # monkey-patch Auth.Route to recall session (if any) before redirecting
 Auth.Route.reopen
   redirect: ->
