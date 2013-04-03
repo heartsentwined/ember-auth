@@ -456,6 +456,7 @@ Auth.Config.reopen
   rememberTokenKey: 'remember_token'
   rememberPeriod: 14 # days
   rememberAutoRecall: true
+  rememberUsingLocalStorage: true
 ```
 
 `rememberTokenKey` is the key for the remember me token, in both the API
@@ -464,6 +465,9 @@ response and the expected param.
 Defaults to two weeks (14 days).
 `rememberAutoRecall` controls whether Remember Me should attempt to auto-sign in
 the user from local cookie. (see below) Defaults to true.
+`rememberUsingLocalStorage` controls whether the remember token is stored in a 
+local storage instead of a cookie. This removes the dependency of jquery.cookie.
+
 
 Remember Me will (attempt to) auto-sign in the user from the local cookie
 when the user accesses an `Auth.Route` (only if one is not already signed in).

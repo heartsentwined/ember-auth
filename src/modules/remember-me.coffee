@@ -14,7 +14,7 @@ Auth.Module.RememberMe = Em.Object.create
   #   opts.async = false to send a synchronous sign in request
   recall: (opts = {}) ->
     return unless Auth.Config.get 'rememberMe'
-    if !Auth.get('authToken') && token = $.cookie('ember-auth-remember-me')
+    if !Auth.get('authToken') && token = @retrieveToken()
       data = {}
       data['async'] = opts.async if opts.async?
       data[Auth.Config.get('rememberTokenKey')] = token
@@ -25,16 +25,31 @@ Auth.Module.RememberMe = Em.Object.create
     return unless Auth.Config.get 'rememberMe'
     json = JSON.parse (Auth.get 'jqxhr').responseText
     token = json[Auth.Config.get('rememberTokenKey')]
-    curToken = $.cookie 'ember-auth-remember-me'
-    if token && token != curToken
-      $.cookie 'ember-auth-remember-me', token,
-        expires: Auth.Config.get 'rememberPeriod'
+    @storeToken(token) if token && token != @retrieveToken()
 
   # destroy local remember me cookie
   forget: ->
     return unless Auth.Config.get 'rememberMe'
-    $.removeCookie 'ember-auth-remember-me'
+    @removeToken()
 
+  retrieveToken: ->
+    if Auth.Config.get 'rememberUsingLocalStorage'
+      localStorage.getItem 'ember-auth-remember-me'
+    else
+      $.cookie 'ember-auth-remember-me'
+
+  storeToken: (token) ->
+    if Auth.Config.get 'rememberUsingLocalStorage'
+      localStorage.setItem 'ember-auth-remember-me', token
+    else
+      $.cookie 'ember-auth-remember-me', token, expires: Auth.Config.get('rememberPeriod')
+
+  removeToken: ->
+    if Auth.Config.get 'rememberUsingLocalStorage'
+      localStorage.removeItem 'ember-auth-remember-me'
+    else
+      $.removeCookie 'ember-auth-remember-me'
+       
 # monkey-patch Auth.Route to recall session (if any) before redirecting
 Auth.Route.reopen
   redirect: ->

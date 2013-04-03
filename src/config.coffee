@@ -133,3 +133,7 @@ Auth.Config = Em.Object.create
   # user from local cookie whenever one accesses an Auth.Route (only if one
   # is not already signed in).
   rememberAutoRecall: true
+
+  # Implement this hook and return true to use local storage instead of jquery.cookie
+  # Local Storage does not support an expiry date.
+  rememberUsingLocalStorage: false
