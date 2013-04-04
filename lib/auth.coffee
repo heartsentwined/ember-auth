@@ -43,20 +43,20 @@ window.Auth = evented.create
       data: data
       async: async
     .done (json, status, jqxhr) =>
-        @set 'authToken', json[Auth.Config.get('tokenKey')]
-        @set 'currentUserId', json[Auth.Config.get('idKey')]
-        if model = Auth.Config.get('userModel')
-          @set 'currentUser', model.find(@get 'currentUserId')
-        @set 'json', json
-        @set 'jqxhr', jqxhr
-        @trigger 'signInSuccess'
+      @set 'authToken', json[Auth.Config.get('tokenKey')]
+      @set 'currentUserId', json[Auth.Config.get('idKey')]
+      if model = Auth.Config.get('userModel')
+        @set 'currentUser', model.find(@get 'currentUserId')
+      @set 'json', json
+      @set 'jqxhr', jqxhr
+      @trigger 'signInSuccess'
     .fail (jqxhr) =>
-        @set 'jqxhr', jqxhr
-        @trigger 'signInError'
+      @set 'jqxhr', jqxhr
+      @trigger 'signInError'
     .always (jqxhr) =>
-        @set 'prevRoute', null
-        @set 'jqxhr', jqxhr
-        @trigger 'signInComplete'
+      @set 'prevRoute', null
+      @set 'jqxhr', jqxhr
+      @trigger 'signInComplete'
 
   # Sign out method
   #
@@ -80,25 +80,26 @@ window.Auth = evented.create
       data: data
       async: async
     .done (json, status, jqxhr) =>
-        @set 'authToken', null
-        @set 'currentUserId', null
-        @set 'currentUser', null
-        @set 'jqxhr', jqxhr
-        @set 'json', json
-        @trigger 'signOutSuccess'
+      @set 'authToken', null
+      @set 'currentUserId', null
+      @set 'currentUser', null
+      @set 'jqxhr', jqxhr
+      @set 'json', json
+      @trigger 'signOutSuccess'
     .fail (jqxhr) =>
-        @set 'jqxhr', jqxhr
-        @trigger 'signOutError'
+      @set 'jqxhr', jqxhr
+      @trigger 'signOutError'
     .always (jqxhr) =>
-        @set 'prevRoute', null
-        @set 'jqxhr', jqxhr
-        @trigger 'signOutComplete'
+      @set 'prevRoute', null
+      @set 'jqxhr', jqxhr
+      @trigger 'signOutComplete'
 
   # =====================
   # End of Public API
   # =====================
 
   # different base url support
+  # @param {path} string the path for resolving full URL
   resolveUrl: (path) ->
     base = Auth.Config.get('baseUrl')
     if base && base[base.length-1] == '/'
