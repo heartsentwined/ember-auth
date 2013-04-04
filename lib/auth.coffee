@@ -20,6 +20,9 @@ window.Auth = evented.create
   # Holds prev route for smart redirect.
   prevRoute: null
 
+  # Holds JSON object on successful API responses
+  json: null
+
   # Sign in method
   #
   # This will make an API call to retrieve auth token.
@@ -81,6 +84,7 @@ window.Auth = evented.create
         @set 'currentUserId', null
         @set 'currentUser', null
         @set 'jqxhr', jqxhr
+        @set 'json', json
         @trigger 'signOutSuccess'
     .fail (jqxhr) =>
         @set 'jqxhr', jqxhr
