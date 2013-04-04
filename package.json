@@ -6,7 +6,7 @@
   "homepage": "https://github.com/heartsentwined/ember-auth",
   "author": "heartsentwined <heartsentwined@cogito-lab.com>",
   "version": "2.6.0",
-  "main": "lib/main.js",
+  "main": "dist/ember-auth.js",
 
   "repository": {
     "type": "git",
@@ -23,16 +23,16 @@
   "engines": { "node": "*" },
 
   "directories": {
-    "lib": "lib"
+    "lib": "dist"
   },
   "bpm:build": {
     "bpm_libs.js": {
-      "files": ["lib"]
+      "files": ["dist"]
     }
   },
 
   "jam": {
-    "main": "lib/main.js"
+    "main": "dist/ember-auth.js"
   },
 
   "license": "GPL-3.0",
