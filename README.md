@@ -13,14 +13,6 @@ token upon sign out.
 **Important!** `ember-auth` is no replacement for secure server-side API code.
 Read the [security page](https://github.com/heartsentwined/ember-auth/wiki/Security) for more information.
 
-# Status
-
-## Is `ember-auth` production-ready?
-
-Partial. I haven't learnt how to write proper unit tests for ember modules yet,
-but it works fine in my own project.
-Perhaps [you can help](#contributing)?
-
 # Installation
 
 Read the [installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install).
@@ -273,8 +265,8 @@ is explained in the [Widget style section](#1-widget-style).
 
 ## Authenticated requests
 
-Using the Auth.RESTAdapter ensures all requests are authenticated by passing the 
-auth token as a parameter. If you need to make an authenticated request that 
+Using the Auth.RESTAdapter ensures all requests are authenticated by passing the
+auth token as a parameter. If you need to make an authenticated request that
 does not use the adapter you can call Auth.ajax directly.
 
 For example, you can make the following call from inside any controller:
@@ -285,8 +277,8 @@ Auth.ajax('/api/non_standard_route', POST, {})
 
 ### Request headers
 
-You can also use a request header instead of a parameter to send the auth token 
-with each authenticated request. There are two configuration parameters that 
+You can also use a request header instead of a parameter to send the auth token
+with each authenticated request. There are two configuration parameters that
 need to be set to enable this:
 
 ```coffeescript
@@ -295,8 +287,8 @@ Auth.Config.reopen
   requestHeaderKey: 'X-API-TOKEN'
 ```
 
-Using this configuration the auth token will automatically be sent using a 
-request header instead of a param. 
+Using this configuration the auth token will automatically be sent using a
+request header instead of a param.
 
 E.g. headers { "X-API-TOKEN": Auth.get('authToken') }
 
@@ -465,7 +457,7 @@ response and the expected param.
 Defaults to two weeks (14 days).
 `rememberAutoRecall` controls whether Remember Me should attempt to auto-sign in
 the user from local cookie. (see below) Defaults to true.
-`rememberUsingLocalStorage` controls whether the remember token is stored in a 
+`rememberUsingLocalStorage` controls whether the remember token is stored in a
 local storage instead of a cookie. This removes the dependency of jquery.cookie.
 
 
@@ -590,8 +582,26 @@ You are welcome! As usual:
 1. Fork
 2. Branch
 3. Hack
-4. Commit
-5. Pull request
+4. **Test**
+5. Commit
+6. Pull request
+
+## Tests
+
+`ember-auth` tests are written in [jasmine](http://pivotal.github.com/jasmine/),
+run on a mini rails app.
+
+1. Grab a copy of ruby 1.9+. [RVM](http://rvm.io/) recommended.
+2. `bundle install` to install dependencies.
+3. `guard` to run tests.
+
+`ember-auth` has been setup with [guard](https://github.com/guard/guard),
+which will continuously monitor lib and spec files for changes and re-run
+the tests automatically.
+
+## Building dist files
+
+`rake dist`
 
 # License
 
