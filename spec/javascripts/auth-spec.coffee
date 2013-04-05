@@ -153,6 +153,14 @@ describe 'Auth', ->
         expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
           .not.toBeDefined()
 
+    describe 'customizable', ->
+      beforeEach ->
+        spyOn jQuery, 'ajax'
+        Auth.ajax 'bar', 'GET', { contentType: 'foo' }
+      it 'overrides preset values', ->
+        expect(jQuery.ajax.calls[0].args[0].type).toBe 'GET'
+        expect(jQuery.ajax.calls[0].args[0].contentType).toBe 'foo'
+
   describe 'API calls', ->
     beforeEach ->
       Auth.Config.reopen
@@ -399,4 +407,5 @@ describe 'Auth', ->
           Auth.signOut { foo: 'bar', async: false }
           expect(success).toBe 0
           expect(error).toBe 1
+          expect(complete).toBe 1
           expect(complete).toBe 1

@@ -126,21 +126,28 @@ window.Auth = evented.create
     else
       @prevRoute
 
+  # ajax calls with auth token
+  # Default settings overridable via the hash param
+  # @param {url} string destination URL
+  # @param {type} string HTTP request type
+  # @param {hash} jQuery.ajax options
   ajax: (url, type, hash) ->
+    def = {}
     if token = @get('authToken')
       if Auth.Config.get('requestHeaderAuthorization')
-        hash.headers ||= {}
-        hash.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
+        def.headers ||= {}
+        def.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
       else
-        hash.data ||= {}
-        hash.data[Auth.Config.get('tokenKey')] = @get('authToken')
+        def.data ||= {}
+        def.data[Auth.Config.get('tokenKey')] = @get('authToken')
 
-    hash.url         = url
-    hash.type        = type
-    hash.dataType    = 'json'
-    hash.contentType = 'application/json; charset=utf-8'
+    def.url         = url
+    def.type        = type
+    def.dataType    = 'json'
+    def.contentType = 'application/json; charset=utf-8'
 
-    if hash.data && type != 'GET'
-      hash.data = JSON.stringify(hash.data)
+    if def.data && type != 'GET'
+      def.data = JSON.stringify(hash.data)
 
-    jQuery.ajax(hash)
+    opts = jQuery.extend def, hash
+    jQuery.ajax(opts)
