@@ -39,7 +39,9 @@ window.Auth = evented.create
   signIn: (data = {}) ->
     async = if data.async? then data.async else true
     delete data['async'] if data.async?
-    @ajax @resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST',
+    @ajax
+      url: @resolveUrl Auth.Config.get 'tokenCreateUrl'
+      type: 'POST'
       data: data
       async: async
     .done (json, status, jqxhr) =>
@@ -76,7 +78,9 @@ window.Auth = evented.create
     data[Auth.Config.get('tokenKey')] = @get('authToken')
     async = if data.async? then data.async else true
     delete data['async'] if data.async?
-    @ajax @resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE',
+    @ajax
+      url: @resolveUrl Auth.Config.get 'tokenDestroyUrl'
+      type: 'DELETE'
       data: data
       async: async
     .done (json, status, jqxhr) =>
@@ -127,11 +131,9 @@ window.Auth = evented.create
       @prevRoute
 
   # ajax calls with auth token
-  # Default settings overridable via the hash param
-  # @param {url} string destination URL
-  # @param {type} string HTTP request type
-  # @param {hash} jQuery.ajax options
-  ajax: (url, type, hash) ->
+  # @param {settings} jQuery.ajax options
+  #   Defaults will be overrided by those set in this param
+  ajax: (settings) ->
     def = {}
     if token = @get('authToken')
       if Auth.Config.get('requestHeaderAuthorization')
@@ -141,13 +143,11 @@ window.Auth = evented.create
         def.data ||= {}
         def.data[Auth.Config.get('tokenKey')] = @get('authToken')
 
-    def.url         = url
-    def.type        = type
     def.dataType    = 'json'
     def.contentType = 'application/json; charset=utf-8'
 
-    if def.data && type != 'GET'
-      def.data = JSON.stringify(hash.data)
+    if def.data && settings.type != 'GET'
+      def.data = JSON.stringify(settings.data)
 
-    opts = jQuery.extend def, hash
-    jQuery.ajax(opts)
+    settings = jQuery.extend def, settings
+    jQuery.ajax(settings)

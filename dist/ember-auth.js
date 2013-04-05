@@ -114,7 +114,9 @@
       if (data.async != null) {
         delete data['async'];
       }
-      return this.ajax(this.resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST', {
+      return this.ajax({
+        url: this.resolveUrl(Auth.Config.get('tokenCreateUrl')),
+        type: 'POST',
         data: data,
         async: async
       }).done(function(json, status, jqxhr) {
@@ -149,7 +151,9 @@
       if (data.async != null) {
         delete data['async'];
       }
-      return this.ajax(this.resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE', {
+      return this.ajax({
+        url: this.resolveUrl(Auth.Config.get('tokenDestroyUrl')),
+        type: 'DELETE',
         data: data,
         async: async
       }).done(function(json, status, jqxhr) {
@@ -199,8 +203,8 @@
         return this.prevRoute;
       }
     },
-    ajax: function(url, type, hash) {
-      var def, opts, token;
+    ajax: function(settings) {
+      var def, token;
 
       def = {};
       if (token = this.get('authToken')) {
@@ -212,15 +216,13 @@
           def.data[Auth.Config.get('tokenKey')] = this.get('authToken');
         }
       }
-      def.url = url;
-      def.type = type;
       def.dataType = 'json';
       def.contentType = 'application/json; charset=utf-8';
-      if (def.data && type !== 'GET') {
-        def.data = JSON.stringify(hash.data);
+      if (def.data && settings.type !== 'GET') {
+        def.data = JSON.stringify(settings.data);
       }
-      opts = jQuery.extend(def, hash);
-      return jQuery.ajax(opts);
+      settings = jQuery.extend(def, settings);
+      return jQuery.ajax(settings);
     }
   });
 
@@ -294,9 +296,11 @@
 }).call(this);
 (function() {
   Auth.RESTAdapter = DS.RESTAdapter.extend({
-    ajax: function(url, type, hash) {
-      hash.context = this;
-      return Auth.ajax(url, type, hash);
+    ajax: function(url, type, settings) {
+      settings.url = url;
+      settings.type = type;
+      settings.context = this;
+      return Auth.ajax(settings);
     }
   });
 

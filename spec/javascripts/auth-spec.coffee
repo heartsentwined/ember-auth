@@ -121,7 +121,7 @@ describe 'Auth', ->
         beforeEach ->
           Auth.Config.reopen { requestHeaderAuthorization: false }
           spyOn jQuery, 'ajax'
-          Auth.ajax 'bar', 'GET', {}
+          Auth.ajax { url: 'bar', type: 'GET' }
         it 'sends auth token as param', ->
           expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
             .toBe 'token-value'
@@ -133,7 +133,7 @@ describe 'Auth', ->
         beforeEach ->
           Auth.Config.reopen { requestHeaderAuthorization: true }
           spyOn jQuery, 'ajax'
-          Auth.ajax 'bar', 'GET', {}
+          Auth.ajax { url: 'bar', type: 'GET' }
         it 'sends auth token as header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
             .toBe 'token-value'
@@ -145,7 +145,7 @@ describe 'Auth', ->
       beforeEach ->
         Auth.set 'authToken', null
         spyOn jQuery, 'ajax'
-        Auth.ajax 'bar', 'GET', {}
+        Auth.ajax { url: 'bar', type: 'GET' }
       it 'does not tamper with params', ->
         expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
           .not.toBeDefined()
@@ -156,7 +156,7 @@ describe 'Auth', ->
     describe 'customizable', ->
       beforeEach ->
         spyOn jQuery, 'ajax'
-        Auth.ajax 'bar', 'GET', { contentType: 'foo' }
+        Auth.ajax { url: 'bar', type: 'GET', contentType: 'foo' }
       it 'overrides preset values', ->
         expect(jQuery.ajax.calls[0].args[0].type).toBe 'GET'
         expect(jQuery.ajax.calls[0].args[0].contentType).toBe 'foo'
@@ -196,20 +196,20 @@ describe 'Auth', ->
             Auth.signIn { foo: 'bar', async: true }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[2].async).toBe true
+            expect(Auth.ajax.calls[0].args[0].async).toBe true
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[2].data).toEqual { foo: 'bar' }
+            expect(Auth.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
 
         describe '= false', ->
           beforeEach ->
             Auth.signIn { foo: 'bar', async: false }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[2].async).toBe false
+            expect(Auth.ajax.calls[0].args[0].async).toBe false
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[2].data).toEqual { foo: 'bar' }
+            expect(Auth.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
 
       describe 'success', ->
         beforeEach ->
@@ -320,10 +320,10 @@ describe 'Auth', ->
             Auth.signOut { foo: 'bar', async: true }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[2].async).toBe true
+            expect(Auth.ajax.calls[0].args[0].async).toBe true
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[2].data).toEqual
+            expect(Auth.ajax.calls[0].args[0].data).toEqual
               foo: 'bar'
               auth_token: 'foo'
 
@@ -332,10 +332,10 @@ describe 'Auth', ->
             Auth.signOut { foo: 'bar', async: false }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[2].async).toBe false
+            expect(Auth.ajax.calls[0].args[0].async).toBe false
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[2].data).toEqual
+            expect(Auth.ajax.calls[0].args[0].data).toEqual
               foo: 'bar'
               auth_token: 'foo'
 
