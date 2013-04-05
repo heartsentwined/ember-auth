@@ -134,6 +134,8 @@ Auth.Config = Em.Object.create
   # is not already signed in).
   rememberAutoRecall: true
 
-  # Implement this hook and return true to use local storage instead of jquery.cookie
-  # Local Storage does not support an expiry date.
-  rememberUsingLocalStorage: false
+  # Which storage medium to use for storing the remember me session.
+  # Valid values are 'cookie' and 'localStorage'
+  # Defaults to 'cookie'
+  # - Note: localStorage does not support an expiry date.
+  rememberStorage: 'cookie'

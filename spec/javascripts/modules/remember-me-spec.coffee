@@ -33,7 +33,7 @@ describe 'Auth.Module.RememberMe', ->
     afterEach ->
       Auth.Config.reopen
         rememberPeriod: 14
-        rememberUsingLocalStorage: false
+        rememberStorage: 'cookie'
 
     describe '#retrieveToken', ->
       beforeEach ->
@@ -41,14 +41,14 @@ describe 'Auth.Module.RememberMe', ->
         spyOn jQuery, 'cookie'
 
       it 'supports local storage', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: true }
+        Auth.Config.reopen { rememberStorage: 'localStorage' }
         Auth.Module.RememberMe.retrieveToken()
         expect(localStorage.getItem)
           .toHaveBeenCalledWith 'ember-auth-remember-me'
         expect(jQuery.cookie).not.toHaveBeenCalled()
 
       it 'supports cookie', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: false }
+        Auth.Config.reopen { rememberStorage: 'cookie' }
         Auth.Module.RememberMe.retrieveToken()
         expect(jQuery.cookie).toHaveBeenCalledWith 'ember-auth-remember-me'
         expect(localStorage.getItem).not.toHaveBeenCalled()
@@ -59,14 +59,14 @@ describe 'Auth.Module.RememberMe', ->
         spyOn jQuery, 'cookie'
 
       it 'supports local storage', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: true }
+        Auth.Config.reopen { rememberStorage: 'localStorage' }
         Auth.Module.RememberMe.storeToken('foo')
         expect(localStorage.setItem)
           .toHaveBeenCalledWith 'ember-auth-remember-me', 'foo'
         expect(jQuery.cookie).not.toHaveBeenCalled()
 
       it 'supports cookie', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: false }
+        Auth.Config.reopen { rememberStorage: 'cookie' }
         Auth.Module.RememberMe.storeToken('foo')
         expect(jQuery.cookie)
           .toHaveBeenCalledWith 'ember-auth-remember-me', 'foo',
@@ -79,14 +79,14 @@ describe 'Auth.Module.RememberMe', ->
         spyOn jQuery, 'removeCookie'
 
       it 'supports local storage', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: true }
+        Auth.Config.reopen { rememberStorage: 'localStorage' }
         Auth.Module.RememberMe.removeToken()
         expect(localStorage.removeItem)
           .toHaveBeenCalledWith 'ember-auth-remember-me'
         expect(jQuery.removeCookie).not.toHaveBeenCalled()
 
       it 'supports cookie', ->
-        Auth.Config.reopen { rememberUsingLocalStorage: false }
+        Auth.Config.reopen { rememberStorage: 'cookie' }
         Auth.Module.RememberMe.removeToken()
         expect(jQuery.removeCookie)
           .toHaveBeenCalledWith 'ember-auth-remember-me'
