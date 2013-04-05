@@ -1,3 +1,73 @@
+# 3.0.0 (6 Apr 2013)
+
+* Major rewrite:
+    * Mini Rails app for dev environment
+    * Distribution files now built with `sprockets`
+    * `rake` tasks substituted `cake` tasks
+    * Added test suites, using `jasmine`
+    * Moved distribution files from `lib/` to `dist/`
+    * Moved source files from `src/` to `lib/`
+    * Removed `component.json` in favor of auto-generation with git tags
+    * Versioning centralized in `package.json`
+* Feature: `Auth.ajax` now customizable
+* Feature: Authorization header supported
+* BC Break: `Auth.ajax` signature changed
+* BC Break: `Auth.Config.rememberUsingLocalStorage` is now
+    `Auth.Config.rememberStorage`, with possible values
+    `cookie` (default) and `localStorage`
+* BC Break: `Auth.Config.requestHeaderAuthorization` is now
+    `Auth.Config.requestTokenLocation`, with possible values
+    `param` (default), `authHeader` and `customHeader`
+
+Upgrade Guide
+-------------
+
+### Auth.ajax
+
+Before:
+
+```cofreescript
+Auth.ajax('/url', 'POST', { foo: 'bar' })
+```
+
+After:
+
+```coffeescript
+Auth.ajax({ url: '/url', type: 'POST', foo: 'bar' })
+```
+
+### Auth.Config.rememberUsingLocalStorage
+
+Before:
+
+```coffeescript
+Auth.Config.reopen { rememberUsingLocalStorage: false }
+Auth.Config.reopen { rememberUsingLocalStorage: true }
+```
+
+After:
+
+```coffeescript
+Auth.Config.reopen { rememberStorage: 'cookie' } # or omit - default value
+Auth.Config.reopen { rememberStorage: 'localStorage' }
+```
+
+### Auth.Config.requestHeaderAuthorization
+
+Before:
+
+```coffeescript
+Auth.Config.reopen { requestHeaderAuthorization: false }
+Auth.Config.reopen { requestHeaderAuthorization: true }
+```
+
+After:
+
+```coffeescript
+Auth.Config.reopen { requestTokenLocation: 'param' } # or omit - default value
+Auth.Config.reopen { requestTokenLocation: 'customHeader' }
+```
+
 # 2.6.0 (4 Apr 2013)
 
 * Feature: use `localStorage` instead of cookie for `RememberMe`
