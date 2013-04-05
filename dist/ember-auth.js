@@ -208,12 +208,18 @@
 
       def = {};
       if (token = this.get('authToken')) {
-        if (Auth.Config.get('requestHeaderAuthorization')) {
-          def.headers || (def.headers = {});
-          def.headers[Auth.Config.get('requestHeaderKey')] = this.get('authToken');
-        } else {
-          def.data || (def.data = {});
-          def.data[Auth.Config.get('tokenKey')] = this.get('authToken');
+        switch (Auth.Config.get('requestTokenLocation')) {
+          case 'param':
+            def.data || (def.data = {});
+            def.data[Auth.Config.get('tokenKey')] = this.get('authToken');
+            break;
+          case 'authHeader':
+            def.headers || (def.headers = {});
+            def.headers['Authorization'] = "" + (Auth.Config.get('requestHeaderKey')) + " " + (this.get('authToken'));
+            break;
+          case 'customHeader':
+            def.headers || (def.headers = {});
+            def.headers[Auth.Config.get('requestHeaderKey')] = this.get('authToken');
         }
       }
       def.dataType = 'json';
@@ -235,7 +241,7 @@
     idKey: null,
     userModel: null,
     baseUrl: null,
-    requestHeaderAuthorization: false,
+    requestTokenLocation: 'param',
     requestHeaderKey: null,
     signInRoute: null,
     signOutRoute: null,
@@ -248,7 +254,7 @@
     rememberTokenKey: null,
     rememberPeriod: 14,
     rememberAutoRecall: true,
-    rememberUsingLocalStorage: false
+    rememberStorage: 'cookie'
   });
 
 }).call(this);
@@ -360,26 +366,29 @@
       return this.removeToken();
     },
     retrieveToken: function() {
-      if (Auth.Config.get('rememberUsingLocalStorage')) {
-        return localStorage.getItem('ember-auth-remember-me');
-      } else {
-        return jQuery.cookie('ember-auth-remember-me');
+      switch (Auth.Config.get('rememberStorage')) {
+        case 'localStorage':
+          return localStorage.getItem('ember-auth-remember-me');
+        case 'cookie':
+          return jQuery.cookie('ember-auth-remember-me');
       }
     },
     storeToken: function(token) {
-      if (Auth.Config.get('rememberUsingLocalStorage')) {
-        return localStorage.setItem('ember-auth-remember-me', token);
-      } else {
-        return jQuery.cookie('ember-auth-remember-me', token, {
-          expires: Auth.Config.get('rememberPeriod')
-        });
+      switch (Auth.Config.get('rememberStorage')) {
+        case 'localStorage':
+          return localStorage.setItem('ember-auth-remember-me', token);
+        case 'cookie':
+          return jQuery.cookie('ember-auth-remember-me', token, {
+            expires: Auth.Config.get('rememberPeriod')
+          });
       }
     },
     removeToken: function() {
-      if (Auth.Config.get('rememberUsingLocalStorage')) {
-        return localStorage.removeItem('ember-auth-remember-me');
-      } else {
-        return jQuery.removeCookie('ember-auth-remember-me');
+      switch (Auth.Config.get('rememberStorage')) {
+        case 'localStorage':
+          return localStorage.removeItem('ember-auth-remember-me');
+        case 'cookie':
+          return jQuery.removeCookie('ember-auth-remember-me');
       }
     }
   });
