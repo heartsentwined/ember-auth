@@ -31,29 +31,34 @@ Auth.Module.RememberMe = Em.Object.create
     return unless Auth.Config.get 'rememberMe'
     @removeToken()
 
+  # delegate to different token retrieval methods
   retrieveToken: ->
     if Auth.Config.get 'rememberUsingLocalStorage'
       localStorage.getItem 'ember-auth-remember-me'
     else
-      $.cookie 'ember-auth-remember-me'
+      jQuery.cookie 'ember-auth-remember-me'
 
+  # delegate to different token storage methods
   storeToken: (token) ->
     if Auth.Config.get 'rememberUsingLocalStorage'
       localStorage.setItem 'ember-auth-remember-me', token
     else
-      $.cookie 'ember-auth-remember-me', token, expires: Auth.Config.get('rememberPeriod')
+      jQuery.cookie 'ember-auth-remember-me', token,
+        expires: Auth.Config.get('rememberPeriod')
 
+  # delegate to different token removal methods
   removeToken: ->
     if Auth.Config.get 'rememberUsingLocalStorage'
       localStorage.removeItem 'ember-auth-remember-me'
     else
-      $.removeCookie 'ember-auth-remember-me'
+      jQuery.removeCookie 'ember-auth-remember-me'
 
 # monkey-patch Auth.Route to recall session (if any) before redirecting
 Auth.Route.reopen
   redirect: ->
     if Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')
       if request = Auth.Module.RememberMe.recall(async: false)
+        # TODO polish this
         self = @
         callback = @_super
         return request.always ->
