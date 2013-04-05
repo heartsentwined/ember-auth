@@ -50,15 +50,23 @@ Auth.Config = Em.Object.create
   #   then set this to 'http://api.example.com'
   baseUrl: null
 
-  # If this hook returns true, the auth token will be passed in the request
-  # header instead the data hash.
-  requestHeaderAuthorization: false
+  # Where to include the authentication token on API requests
+  # Valid values are 'param', 'authHeader' and 'customHeader'
+  # - 'param': include in data/param hash, e.g. POST body
+  # - 'authHeader': send an Authorization Header (RFC 1945)
+  # - 'customHeader': send a custom Header, e.g. X-prefixed header
+  # Defaults to 'param'.
+  requestTokenLocation: 'param'
 
-  # You must implement this hook if requestHeaderAuthorization returns true:
-  # It should return the name of the header to use for sending the auth token.
-  # e.g.
-  #   if you set this to 'X-API-TOKEN' a header will automatically be sent with
-  #   each request: headers { "X-API-TOKEN": Auth.get('authToken') }
+  # You must implement this hook if you use any of the *Header settings in
+  # requestTokenLocation.
+  # Polymorphic effects:
+  # - requestTokenLocation = 'authHeader': treated as Authorization Method.
+  #   e.g. if this is set to 'TOKEN', the following header will be sent:
+  #   "Authorization: TOKEN auth_token_value"
+  # - requestTokenLocation = 'customHeader': treated as Header Key.
+  #   e.g. if this is set to 'X-API-TOKEN', the following header will be sent:
+  #   "X-API-TOKEN: auth_token_value"
   requestHeaderKey: null
 
   # =====================

@@ -110,36 +110,57 @@ describe 'Auth', ->
       Auth.Config.reopen
         tokenKey: null
         requestHeaderKey: null
-        requestHeaderAuthorization: false
+        requestTokenLocation: 'param'
       Auth.set 'authToken', null
 
     describe 'Auth.authToken set', ->
       beforeEach ->
         Auth.set 'authToken', 'token-value'
 
-      describe 'Auth.Config.requestHeaderAuthorization set to false', ->
+      describe "Auth.Config.requestTokenLocation = 'param'", ->
         beforeEach ->
-          Auth.Config.reopen { requestHeaderAuthorization: false }
+          Auth.Config.reopen { requestTokenLocation: 'param' }
           spyOn jQuery, 'ajax'
           Auth.ajax { url: 'bar', type: 'GET' }
         it 'sends auth token as param', ->
           expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
             .toBe 'token-value'
-        it 'does not tamper with headers', ->
+        it 'does not send Authorization header', ->
+          expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
+            .not.toBeDefined()
+        it 'does not send custom header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
             .not.toBeDefined()
 
-      describe 'Auth.Config.requestHeaderAuthorization set to true', ->
+      describe "Auth.Config.requestTokenLocation = 'authHeader'", ->
         beforeEach ->
-          Auth.Config.reopen { requestHeaderAuthorization: true }
+          Auth.Config.reopen { requestTokenLocation: 'authHeader' }
           spyOn jQuery, 'ajax'
           Auth.ajax { url: 'bar', type: 'GET' }
-        it 'sends auth token as header', ->
-          expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-            .toBe 'token-value'
         it 'does not tamper with params', ->
           expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
             .not.toBeDefined()
+        it 'sends Authorization header', ->
+          expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
+            .toBe 'headerKey token-value'
+        it 'does not send custom header', ->
+          expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
+            .not.toBeDefined()
+
+      describe "Auth.Config.requestTokenLocation = 'customHeader'", ->
+        beforeEach ->
+          Auth.Config.reopen { requestTokenLocation: 'customHeader' }
+          spyOn jQuery, 'ajax'
+          Auth.ajax { url: 'bar', type: 'GET' }
+        it 'does not tamper with params', ->
+          expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
+            .not.toBeDefined()
+        it 'does not send Authorization header', ->
+          expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
+            .not.toBeDefined()
+        it 'sends custom header', ->
+          expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
+            .toBe 'token-value'
 
     describe 'Auth.authToken = null', ->
       beforeEach ->

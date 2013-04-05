@@ -136,12 +136,17 @@ window.Auth = evented.create
   ajax: (settings) ->
     def = {}
     if token = @get('authToken')
-      if Auth.Config.get('requestHeaderAuthorization')
-        def.headers ||= {}
-        def.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
-      else
-        def.data ||= {}
-        def.data[Auth.Config.get('tokenKey')] = @get('authToken')
+      switch Auth.Config.get 'requestTokenLocation'
+        when 'param'
+          def.data ||= {}
+          def.data[Auth.Config.get('tokenKey')] = @get('authToken')
+        when 'authHeader'
+          def.headers ||= {}
+          def.headers['Authorization'] =
+            "#{Auth.Config.get('requestHeaderKey')} #{@get('authToken')}"
+        when 'customHeader'
+          def.headers ||= {}
+          def.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
 
     def.dataType    = 'json'
     def.contentType = 'application/json; charset=utf-8'
