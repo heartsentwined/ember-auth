@@ -5,7 +5,7 @@
   "keywords": ["ember", "emberjs", "ember.js", "auth", "authentication"],
   "homepage": "https://github.com/heartsentwined/ember-auth",
   "author": "heartsentwined <heartsentwined@cogito-lab.com>",
-  "version": "2.6.0",
+  "version": "3.0.0",
   "main": "dist/ember-auth.js",
 
   "repository": {
