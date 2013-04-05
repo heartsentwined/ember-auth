@@ -1,8 +1,11 @@
 describe 'Auth', ->
+
   it 'supports events', ->
     expect(Auth.on).toBeDefined()
 
   describe '#resolveUrl', ->
+    afterEach ->
+      Auth.Config.reopen { baseUrl: null }
 
     describe 'Auth.Config.baseUrl defined with trialing slash', ->
       beforeEach ->
@@ -41,6 +44,13 @@ describe 'Auth', ->
         signOutRoute: 'sign-out'
         signOutRedirectFallbackRoute: 'sign-out-fallback'
 
+    afterEach ->
+      Auth.Config.reopen
+        signInRoute: null
+        signInRedirectFallbackRoute: 'index'
+        signOutRoute: null
+        signOutRedirectFallbackRoute: 'index'
+
     describe 'smart redirect off', ->
       beforeEach ->
         Auth.Config.reopen
@@ -55,6 +65,12 @@ describe 'Auth', ->
         Auth.Config.reopen
           smartSignInRedirect: true
           smartSignOutRedirect: true
+
+      afterEach ->
+        Auth.Config.reopen
+          smartSignInRedirect: false
+          smartSignOutRedirect: false
+        Auth.set 'prevRoute', null
 
       describe 'Auth.prevRoute set', ->
         beforeEach ->
@@ -89,6 +105,13 @@ describe 'Auth', ->
       Auth.Config.reopen
         tokenKey: 'tokenKey'
         requestHeaderKey: 'headerKey'
+
+    afterEach ->
+      Auth.Config.reopen
+        tokenKey: null
+        requestHeaderKey: null
+        requestHeaderAuthorization: false
+      Auth.set 'authToken', null
 
     describe 'Auth.authToken set', ->
       beforeEach ->
