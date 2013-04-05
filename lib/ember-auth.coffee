@@ -1,3 +1,4 @@
+#= require jquery.cookie
 #= require auth
 #= require config
 #= require_tree ./routes
