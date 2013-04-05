@@ -1,9 +1,11 @@
-# ember-auth
+ember-auth
+==========
 
 `ember-auth` provides token authentication support to
 [ember.js](http://emberjs.com/).
 
-# Overview
+Overview
+========
 
 `ember-auth` expects your server to implement token authentication.
 It will then query for this token upon sign in; append this token for every
@@ -13,16 +15,19 @@ token upon sign out.
 **Important!** `ember-auth` is no replacement for secure server-side API code.
 Read the [security page](https://github.com/heartsentwined/ember-auth/wiki/Security) for more information.
 
-# Installation
+Installation
+============
 
 Read the [installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install).
 
-# Getting started
+Getting started
+===============
 
 A [demo and tutorial](https://github.com/heartsentwined/ember-auth-rails-demo)
 for rails + devise + ember-auth is available.
 
-# Pre-req
+Pre-req
+=======
 
 `ember-auth` expects your server to provide an API interface with
 token authentication support.
@@ -47,9 +52,11 @@ will be relevant:
 
 At present `ember-auth` only supports `DS.RESTAdapter`.
 
-# Usage
+Usage
+=====
 
-## Config
+Config
+------
 
 ### Minimum requirement
 
@@ -93,7 +100,8 @@ Auth.Config.reopen
   baseUrl: 'https://api.example.com'
 ```
 
-## Persistence adapter
+Persistence adapter
+-------------------
 
 Persistence adapter setup: you will use `Auth.RESTAdapter`; it is an
 extension of `DS.RESTAdapter`.
@@ -104,7 +112,8 @@ App.Store = DS.Store.extend
   adapter: Auth.RESTAdapter.create()
 ```
 
-## Sign in/out views and templates
+Sign in/out views and templates
+-------------------------------
 
 ### 1. Widget style
 
@@ -263,7 +272,8 @@ App.SignOutController = Ember.ObjectController.extend
 Again, we register a `signOut` action on the button; the `Auth.signOut` helper
 is explained in the [Widget style section](#1-widget-style).
 
-## Authenticated requests
+Authenticated requests
+----------------------
 
 Using the Auth.RESTAdapter ensures all requests are authenticated by passing the
 auth token as a parameter. If you need to make an authenticated request that
@@ -292,7 +302,8 @@ request header instead of a param.
 
 E.g. headers { "X-API-TOKEN": Auth.get('authToken') }
 
-## Authenticated-only routes
+Authenticated-only routes
+-------------------------
 
 Authenticated-only routes setup: you will use `Auth.Route`; it is an
 extension of `Ember.Route`.
@@ -316,7 +327,8 @@ However, see Redirects section right below for built-in redirection support.
 
 The Remember Me module also adds behavior to `Auth.Route`.
 
-## Redirects
+Redirects
+---------
 
 `ember-auth` provides five kinds of redirects to assist in building your UI.
 All these require a `route` to redirect to, so they won't make sense if you
@@ -430,7 +442,8 @@ Auth.Config.reopen
 Same modification to `controller` as the
 [post- sign out fixed route redirect](#post--sign-out-redirect-fixed-route).
 
-## Remember me
+Remember me
+-----------
 
 Your token creation API end point should accept polymorphic parameters:
 either the regular set of sign in credentials, or a remember me token. e.g.,
@@ -501,7 +514,8 @@ sign in, simply *do not* return a remember token from the server response.
 
 Bear in mind some [security caveats](https://github.com/heartsentwined/ember-auth/wiki/Security).
 
-## User-registration, forgot password, change password, etc
+User-registration, forgot password, change password, etc
+--------------------------------------------------------
 
 These are operations on your user model, and they all follow the same pattern:
 *do they require authentication?* If yes, put them under an `Auth.Route`.
@@ -510,7 +524,8 @@ Then just treat them as a normal ember model, with create, edit, etc actions.
 You may want to set up some dedicated API end points at your server for
 non-RESTful cases, e.g. the "forgot password" functionality.
 
-## Events
+Events
+------
 
 ### Token authentication API events
 
@@ -569,13 +584,15 @@ App.SecretsRoute = Auth.Route.extend
     App.Secret.find()
 ```
 
-## Further use cases
+Further use cases
+-----------------
 
 The source code at `src/auth.coffee` is a comprehensive list of public API
 and helper methods; `src/config.coffee` contains an exhaustive list of
 configurable options.
 
-# Contributing
+Contributing
+============
 
 You are welcome! As usual:
 
@@ -586,7 +603,8 @@ You are welcome! As usual:
 5. Commit
 6. Pull request
 
-## Tests
+Tests
+-----
 
 `ember-auth` tests are written in [jasmine](http://pivotal.github.com/jasmine/),
 run on a mini rails app.
@@ -599,10 +617,12 @@ run on a mini rails app.
 which will continuously monitor lib and spec files for changes and re-run
 the tests automatically.
 
-## Building dist files
+Building dist files
+-------------------
 
 `rake dist`
 
-# License
+License
+=======
 
 GPL 3.0
