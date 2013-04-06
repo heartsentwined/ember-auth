@@ -206,6 +206,9 @@
     ajax: function(settings) {
       var def, token;
 
+      if (settings == null) {
+        settings = {};
+      }
       def = {};
       if (token = this.get('authToken')) {
         switch (Auth.Config.get('requestTokenLocation')) {
@@ -223,9 +226,9 @@
         }
       }
       def.dataType = 'json';
-      def.contentType = 'application/json; charset=utf-8';
-      if (def.data && settings.type !== 'GET') {
-        def.data = JSON.stringify(settings.data);
+      if (settings.data && (settings.contentType == null) && settings.type !== 'GET') {
+        def.contentType = 'application/json; charset=utf-8';
+        settings.data = JSON.stringify(settings.data);
       }
       settings = jQuery.extend(def, settings);
       return jQuery.ajax(settings);

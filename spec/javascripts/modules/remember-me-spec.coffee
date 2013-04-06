@@ -338,7 +338,7 @@ describe 'Auth.Module.RememberMe', ->
               $.mockjax
                 url: '/api/sign-in'
                 type: 'post'
-                data: { r_key: 'bar' }
+                data: JSON.stringify { r_key: 'bar' }
                 status: 201
                 responseText: { auth_token: 'foo', user_id: 1 }
 

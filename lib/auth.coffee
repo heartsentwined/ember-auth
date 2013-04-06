@@ -133,7 +133,7 @@ window.Auth = evented.create
   # ajax calls with auth token
   # @param {settings} jQuery.ajax options
   #   Defaults will be overrided by those set in this param
-  ajax: (settings) ->
+  ajax: (settings = {}) ->
     def = {}
     if token = @get('authToken')
       switch Auth.Config.get 'requestTokenLocation'
@@ -148,11 +148,11 @@ window.Auth = evented.create
           def.headers ||= {}
           def.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
 
-    def.dataType    = 'json'
-    def.contentType = 'application/json; charset=utf-8'
+    def.dataType = 'json'
 
-    if def.data && settings.type != 'GET'
-      def.data = JSON.stringify(settings.data)
+    if settings.data && !settings.contentType? && settings.type != 'GET'
+      def.contentType = 'application/json; charset=utf-8'
+      settings.data = JSON.stringify(settings.data)
 
     settings = jQuery.extend def, settings
     jQuery.ajax(settings)

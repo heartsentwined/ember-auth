@@ -174,6 +174,66 @@ describe 'Auth', ->
         expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
           .not.toBeDefined()
 
+    describe 'default content type', ->
+      beforeEach ->
+        spyOn jQuery, 'ajax'
+
+      describe 'data not given', ->
+        beforeEach ->
+          Auth.ajax()
+
+        it 'does not set contentType', ->
+          expect(jQuery.ajax.calls[0].args[0].contentType).not.toBeDefined()
+        it 'does not set data', ->
+          expect(jQuery.ajax.calls[0].args[0].data).not.toBeDefined()
+
+      describe 'data given', ->
+
+        describe 'contentType given', ->
+          beforeEach ->
+            Auth.ajax { data: { foo: 'bar' }, contentType: 'foo' }
+
+          it 'uses given contentType', ->
+            expect(jQuery.ajax.calls[0].args[0].contentType).toBe 'foo'
+          it 'uses given data', ->
+            expect(jQuery.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
+
+        describe 'contentType not given', ->
+
+          describe 'type given', ->
+
+            describe "= 'GET'", ->
+              beforeEach ->
+                Auth.ajax { data: { foo: 'bar' }, type: 'GET' }
+
+              it 'does not set contentType', ->
+                expect(jQuery.ajax.calls[0].args[0].contentType)
+                  .not.toBeDefined()
+              it 'uses given data', ->
+                expect(jQuery.ajax.calls[0].args[0].data)
+                  .toEqual { foo: 'bar' }
+
+            describe "!= 'GET'", ->
+              beforeEach ->
+                Auth.ajax { data: { foo: 'bar' }, type: 'FOO' }
+
+              it 'sets contentType to json', ->
+                expect(jQuery.ajax.calls[0].args[0].contentType)
+                  .toBe 'application/json; charset=utf-8'
+              it 'serializes data to json string', ->
+                expect(jQuery.ajax.calls[0].args[0].data)
+                  .toBe '{"foo":"bar"}'
+
+          describe 'type not given', ->
+            beforeEach ->
+              Auth.ajax { data: { foo: 'bar' } }
+
+            it 'sets contentType to json', ->
+              expect(jQuery.ajax.calls[0].args[0].contentType)
+                .toBe 'application/json; charset=utf-8'
+            it 'serializes data to json string', ->
+              expect(jQuery.ajax.calls[0].args[0].data).toBe '{"foo":"bar"}'
+
     describe 'customizable', ->
       beforeEach ->
         spyOn jQuery, 'ajax'
@@ -220,7 +280,8 @@ describe 'Auth', ->
             expect(Auth.ajax.calls[0].args[0].async).toBe true
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
+            expect(Auth.ajax.calls[0].args[0].data)
+              .toBe JSON.stringify { foo: 'bar' }
 
         describe '= false', ->
           beforeEach ->
@@ -230,14 +291,15 @@ describe 'Auth', ->
             expect(Auth.ajax.calls[0].args[0].async).toBe false
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
+            expect(Auth.ajax.calls[0].args[0].data)
+              .toBe JSON.stringify { foo: 'bar' }
 
       describe 'success', ->
         beforeEach ->
           $.mockjax
             url: '/api/sign-in'
             type: 'post'
-            data: { username: 'user', password: 'pass' }
+            data: JSON.stringify { username: 'user', password: 'pass' }
             status: 201
             responseText: { auth_token: 'foo', user_id: 1 }
 
@@ -344,9 +406,8 @@ describe 'Auth', ->
             expect(Auth.ajax.calls[0].args[0].async).toBe true
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data).toEqual
-              foo: 'bar'
-              auth_token: 'foo'
+            expect(Auth.ajax.calls[0].args[0].data)
+              .toBe JSON.stringify { foo: 'bar', auth_token: 'foo' }
 
         describe '= false', ->
           beforeEach ->
@@ -356,16 +417,15 @@ describe 'Auth', ->
             expect(Auth.ajax.calls[0].args[0].async).toBe false
 
           it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data).toEqual
-              foo: 'bar'
-              auth_token: 'foo'
+            expect(Auth.ajax.calls[0].args[0].data)
+              .toBe JSON.stringify { foo: 'bar', auth_token: 'foo' }
 
       describe 'success', ->
         beforeEach ->
           $.mockjax
             url: '/api/sign-out'
             type: 'delete'
-            data: { auth_token: 'foo', foo: 'bar' }
+            data: JSON.stringify { foo: 'bar', auth_token: 'foo' }
             status: 201
             responseText: { bar: 'baz' }
 
