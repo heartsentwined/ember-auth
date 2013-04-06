@@ -1,6 +1,8 @@
 ember-auth
 ==========
 
+[![Build Status](https://secure.travis-ci.org/heartsentwined/ember-auth.png)](http://travis-ci.org/heartsentwined/ember-auth)
+
 `ember-auth` provides token authentication support to
 [ember.js](http://emberjs.com/).
 
