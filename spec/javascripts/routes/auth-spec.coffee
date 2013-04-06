@@ -1,11 +1,8 @@
 describe 'Auth.Route', ->
-
-  it 'supports events', ->
-    expect(Auth.on).toBeDefined()
+  it 'supports events', -> expect(Auth.on).toBeDefined()
 
   describe '#redirect', ->
     App = null
-
     beforeEach ->
       Em.run ->
         App = Em.Application.create()
@@ -15,7 +12,6 @@ describe 'Auth.Route', ->
           @route 'sign-in'
         App.FooRoute = Auth.Route.extend()
         App.SignInRoute = Em.Route.extend()
-
     afterEach ->
       Em.run ->
         App.destroy()
@@ -23,14 +19,12 @@ describe 'Auth.Route', ->
 
     describe 'authAccess event', ->
       triggered = null
-
       beforeEach ->
         triggered = 0
         App.FooRoute.reopen
           init: ->
             @on 'authAccess', -> triggered++
         Em.run App, 'advanceReadiness'
-
       afterEach ->
         triggered = 0
         Auth.set 'authToken', null
@@ -51,14 +45,9 @@ describe 'Auth.Route', ->
 
       describe 'Auth.Config.authRedirect = true', ->
         beforeEach ->
-          Auth.Config.reopen
-            authRedirect: true
-            signInRoute: 'sign-in'
-
+          Auth.Config.reopen { authRedirect: true, signInRoute: 'sign-in' }
         afterEach ->
-          Auth.Config.reopen
-            authRedirect: false
-            signInRoute: null
+          Auth.Config.reopen { authRedirect: false, signInRoute: null }
           Auth.set 'prevRoute', null
 
         it 'sets Auth.prevRoute with current route name', ->
@@ -78,14 +67,9 @@ describe 'Auth.Route', ->
 
       describe 'Auth.Config.authRedirect = false', ->
         beforeEach ->
-          Auth.Config.reopen
-            authRedirect: false
-            signInRoute: 'sign-in'
-
+          Auth.Config.reopen { authRedirect: false, signInRoute: 'sign-in' }
         afterEach ->
-          Auth.Config.reopen
-            authRedirect: false
-            signInRoute: null
+          Auth.Config.reopen { authRedirect: false, signInRoute: null }
           Auth.set 'prevRoute', null
 
         it 'does not set Auth.prevRoute', ->

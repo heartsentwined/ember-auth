@@ -1,11 +1,9 @@
 describe 'Auth.SignInController', ->
   controller = null
-
   beforeEach ->
     controller = Em.Controller.extend(Auth.SignInController).create()
     spyOn controller, 'transitionToRoute'
-    spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-r"
-
+    spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-route"
   afterEach ->
     Auth.set 'authToken', null
     Auth.removeObserver 'authToken'
@@ -20,7 +18,8 @@ describe 'Auth.SignInController', ->
     describe 'Auth.authToken changes to different token', ->
       it 'redirects', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signIn-route'
 
     describe 'Auth.authToken changes to same token', ->
       it 'does not redirect', ->
@@ -35,7 +34,8 @@ describe 'Auth.SignInController', ->
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signIn-route'
         Auth.set 'authToken', 'baz'
         expect(controller.transitionToRoute.calls.length).toEqual 1
 
@@ -47,7 +47,8 @@ describe 'Auth.SignInController', ->
     describe 'Auth.authToken changes to different token', ->
       it 'redirects', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signIn-route'
 
     describe 'Auth.authToken changes to same token (null)', ->
       it 'does not redirect', ->
@@ -57,6 +58,7 @@ describe 'Auth.SignInController', ->
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signIn-route'
         Auth.set 'authToken', 'baz'
         expect(controller.transitionToRoute.calls.length).toEqual 1

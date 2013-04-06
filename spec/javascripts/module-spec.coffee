@@ -1,3 +1,2 @@
 describe 'Auth.Module', ->
-  it 'is defined', ->
-    expect(Auth.Module).toBeDefined()
+  it 'is defined', -> expect(Auth.Module).toBeDefined()

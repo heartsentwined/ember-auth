@@ -1,11 +1,9 @@
 describe 'Auth.SignOutController', ->
   controller = null
-
   beforeEach ->
     controller = Em.Controller.extend(Auth.SignOutController).create()
     spyOn controller, 'transitionToRoute'
-    spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-r"
-
+    spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-route"
   afterEach ->
     Auth.set 'authToken', null
     Auth.removeObserver 'authToken'
@@ -30,12 +28,14 @@ describe 'Auth.SignOutController', ->
     describe 'Auth.authToken changes to null', ->
       it 'redirects', ->
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signOut-route'
 
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signOut-route'
         Auth.set 'authToken', 'bar'
         Auth.set 'authToken', null
         expect(controller.transitionToRoute.calls.length).toEqual 1
@@ -61,7 +61,8 @@ describe 'Auth.SignOutController', ->
         expect(controller.transitionToRoute).not.toHaveBeenCalled()
         Auth.set 'authToken', 'bar'
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
+        expect(controller.transitionToRoute.calls[0].args[0])
+          .toEqual 'signOut-route'
         expect(controller.transitionToRoute.calls.length).toEqual 1
         Auth.set 'authToken', 'baz'
         Auth.set 'authToken', null

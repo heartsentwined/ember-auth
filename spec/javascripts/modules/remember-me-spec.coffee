@@ -1,13 +1,8 @@
 describe 'Auth.Module.RememberMe', ->
   beforeEach ->
-    Auth.Config.reopen
-      rememberMe: true
-      rememberTokenKey: 'r_key'
-
+    Auth.Config.reopen { rememberMe: true, rememberTokenKey: 'r_key' }
   afterEach ->
-    Auth.Config.reopen
-      rememberMe: false
-      rememberTokenKey: null
+    Auth.Config.reopen { rememberMe: false, rememberTokenKey: null }
     Auth.set 'authToken', null
 
   describe 'default actions', ->
@@ -27,13 +22,9 @@ describe 'Auth.Module.RememberMe', ->
       expect(Auth.Module.RememberMe.forget).toHaveBeenCalled()
 
   describe 'token proxy methods', ->
-    beforeEach ->
-      Auth.Config.reopen { rememberPeriod: 7 }
-
+    beforeEach -> Auth.Config.reopen { rememberPeriod: 7 }
     afterEach ->
-      Auth.Config.reopen
-        rememberPeriod: 14
-        rememberStorage: 'cookie'
+      Auth.Config.reopen { rememberPeriod: 14, rememberStorage: 'cookie' }
 
     describe '#retrieveToken', ->
       beforeEach ->
@@ -93,8 +84,7 @@ describe 'Auth.Module.RememberMe', ->
         expect(localStorage.removeItem).not.toHaveBeenCalled()
 
   describe '#recall', ->
-    beforeEach ->
-      spyOn Auth, 'signIn'
+    beforeEach -> spyOn Auth, 'signIn'
 
     describe 'supports async option', ->
       beforeEach ->
@@ -117,16 +107,14 @@ describe 'Auth.Module.RememberMe', ->
           expect(Auth.signIn.calls[0].args[0].async).toBeUndefined()
 
     describe 'Auth.Config.rememberMe = false', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: false }
+      beforeEach -> Auth.Config.reopen { rememberMe: false }
 
       it 'does not attempt a sign in', ->
         Auth.Module.RememberMe.recall()
         expect(Auth.signIn).not.toHaveBeenCalled()
 
     describe 'Auth.authToken present', ->
-      beforeEach ->
-        Auth.set 'authToken', 'foo'
+      beforeEach -> Auth.set 'authToken', 'foo'
 
       it 'does not attempt a sign in', ->
         Auth.Module.RememberMe.recall()
@@ -141,12 +129,10 @@ describe 'Auth.Module.RememberMe', ->
         expect(Auth.signIn).not.toHaveBeenCalled()
 
     describe 'Auth.Config.rememberMe = true', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: true }
+      beforeEach -> Auth.Config.reopen { rememberMe: true }
 
       describe 'Auth.authToken absent', ->
-        beforeEach ->
-          Auth.set 'authToken', null
+        beforeEach -> Auth.set 'authToken', null
 
         describe 'retrieveToken succeeds', ->
           beforeEach ->
@@ -157,34 +143,26 @@ describe 'Auth.Module.RememberMe', ->
             expect(Auth.signIn.calls[0].args[0]).toEqual { r_key: 'foo' }
 
   describe '#remember', ->
-    beforeEach ->
-      spyOn Auth.Module.RememberMe, 'storeToken'
+    beforeEach -> spyOn Auth.Module.RememberMe, 'storeToken'
 
     describe 'Auth.Config.rememberMe = false', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: false }
+      beforeEach -> Auth.Config.reopen { rememberMe: false }
 
       it 'does not attempt to remember session', ->
         Auth.Module.RememberMe.remember()
         expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
 
     describe 'no remember token in Auth.json', ->
-      beforeEach ->
-        Auth.set 'json', { foo: 'bar' }
-
-      afterEach ->
-        Auth.set 'json', null
+      beforeEach -> Auth.set 'json', { foo: 'bar' }
+      afterEach -> Auth.set 'json', null
 
       it 'does not attempt to remember session', ->
         Auth.Module.RememberMe.remember()
         expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
 
     describe 'remember token in Auth.json is empty', ->
-      beforeEach ->
-        Auth.set 'json', { r_key: '' }
-
-      afterEach ->
-        Auth.set 'json', null
+      beforeEach -> Auth.set 'json', { r_key: '' }
+      afterEach -> Auth.set 'json', null
 
       it 'does not attempt to remember session', ->
         Auth.Module.RememberMe.remember()
@@ -194,24 +172,18 @@ describe 'Auth.Module.RememberMe', ->
       beforeEach ->
         Auth.set 'json', { r_key: 'foo' }
         spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn 'foo'
-
-      afterEach ->
-        Auth.set 'json', null
+      afterEach -> Auth.set 'json', null
 
       it 'does not attempt to remember session', ->
         Auth.Module.RememberMe.remember()
         expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
 
     describe 'Auth.Config.rememberMe = true', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: true }
+      beforeEach -> Auth.Config.reopen { rememberMe: true }
 
       describe 'remember token present in Auth.json', ->
-        beforeEach ->
-          Auth.set 'json', { r_key: 'foo' }
-
-        afterEach ->
-          Auth.set 'json', null
+        beforeEach -> Auth.set 'json', { r_key: 'foo' }
+        afterEach -> Auth.set 'json', null
 
         describe 'local session is empty', ->
           beforeEach ->
@@ -232,20 +204,17 @@ describe 'Auth.Module.RememberMe', ->
               .toEqual 'foo'
 
   describe '#forget', ->
-    beforeEach ->
-      spyOn Auth.Module.RememberMe, 'removeToken'
+    beforeEach -> spyOn Auth.Module.RememberMe, 'removeToken'
 
     describe 'Auth.Config.rememberMe = false', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: false }
+      beforeEach -> Auth.Config.reopen { rememberMe: false }
 
       it 'does not attempt to clear session', ->
         Auth.Module.RememberMe.forget()
         expect(Auth.Module.RememberMe.removeToken).not.toHaveBeenCalled()
 
     describe 'Auth.Config.rememberMe = true', ->
-      beforeEach ->
-        Auth.Config.reopen { rememberMe: true }
+      beforeEach -> Auth.Config.reopen { rememberMe: true }
 
       it 'clears session', ->
         Auth.Module.RememberMe.forget()
@@ -253,7 +222,6 @@ describe 'Auth.Module.RememberMe', ->
 
   describe 'auto recall session', ->
     App = null
-
     beforeEach ->
       Em.run ->
         App = Em.Application.create()
@@ -264,7 +232,6 @@ describe 'Auth.Module.RememberMe', ->
         App.FooRoute = Auth.Route.extend()
         App.SignInRoute = Em.Route.extend()
       spyOn(Auth.Module.RememberMe, 'recall').andCallThrough()
-
     afterEach ->
       Em.run ->
         App.destroy()
@@ -333,6 +300,7 @@ describe 'Auth.Module.RememberMe', ->
           $.mockjaxClear()
 
         describe 'JSON response', ->
+
           describe 'success', ->
             beforeEach ->
               $.mockjax
@@ -378,6 +346,15 @@ describe 'Auth.Module.RememberMe', ->
                 .toEqual { async: false }
               expect(Auth.get 'authToken').toEqual null
 
+            it 'preserves Auth.Route functionalities', ->
+              triggered = 0
+              App.FooRoute.reopen
+                init: ->
+                  @on 'authAccess', -> triggered++
+              Em.run App, 'advanceReadiness'
+              Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
+              expect(triggered).toEqual 1
+
             describe 'Auth.Route redirection', ->
               beforeEach ->
                 Auth.Config.reopen
@@ -399,15 +376,6 @@ describe 'Auth.Module.RememberMe', ->
                 Em.run -> App.__container__.lookup('router:main')
                   .handleURL 'foo'
                 expect(currentPath).toEqual 'sign-in'
-
-            it 'preserves Auth.Route functionalities', ->
-              triggered = 0
-              App.FooRoute.reopen
-                init: ->
-                  @on 'authAccess', -> triggered++
-              Em.run App, 'advanceReadiness'
-              Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-              expect(triggered).toEqual 1
 
         # TODO
         #describe 'JSONP response', ->
