@@ -1,4 +1,4 @@
-Auth.SignOutController = Em.ObjectController.extend
+Auth.SignOutController = Em.Mixin.create
   registerRedirect: ->
     Auth.addObserver 'authToken', this, 'smartSignOutRedirect'
 

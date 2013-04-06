@@ -12,6 +12,8 @@
     * Packaged as source gem
 * Feature: `Auth.ajax` now customizable
 * Feature: Authorization header supported
+* Feature: Userland sign-in and sign-out controllers now extensible from any
+    base controller, instead of being restricted to `Ember.ObjectController`
 * BC Break: `Auth.ajax` signature changed
 * BC Break: `Auth.Config.rememberUsingLocalStorage` is now
     `Auth.Config.rememberStorage`, with possible values
@@ -19,6 +21,7 @@
 * BC Break: `Auth.Config.requestHeaderAuthorization` is now
     `Auth.Config.requestTokenLocation`, with possible values
     `param` (default), `authHeader` and `customHeader`
+* BC Break: `Auth.SignInController` and `Auth.SignOutController` are now mixins
 
 Upgrade Guide
 -------------
@@ -67,6 +70,24 @@ After:
 ```coffeescript
 Auth.Config.reopen { requestTokenLocation: 'param' } # or omit - default value
 Auth.Config.reopen { requestTokenLocation: 'customHeader' }
+```
+
+### Auth.SignInController / Auth.SignOutController
+
+Before:
+
+```coffeescript
+App.SignInController = Auth.SignInController.extend({})
+App.SignOutController = Auth.SignOutController.extend({})
+```
+
+After:
+
+```coffeescript
+App.SignInController = Em.ObjectController.extend(Auth.SignInController, {})
+App.SignOutController = Em.ObjectController.extend(Auth.SignOutController, {})
+
+# or use another base controller, e.g. Em.ArrayController
 ```
 
 # 2.6.0 (4 Apr 2013)

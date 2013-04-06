@@ -385,16 +385,18 @@ Auth.Config.reopen
   signInRedirectFallbackRoute: 'account' # defaults to 'index'
 ```
 
-You will need to modify your controller. Extend from `Auth.SignInController`,
-and call its `registerRedirect` method from your sign in action.
+You will need to modify your controller. Include the mixin
+`Auth.SignInController`, and call its `registerRedirect` method from your
+sign in action.
 
 ```coffeescript
-App.SignInController = Auth.SignInController.extend # changed here
+# first line changed
+App.SignInController = Ember.ObjectController.extend Auth.SignInController,
   email: null
   password: null
 
   signIn: ->
-    @registerRedirect() # and here
+    @registerRedirect() # also changed here
     Auth.signIn
       email:    @get 'email'
       password: @get 'password'
@@ -429,13 +431,15 @@ Auth.Config.reopen
   signOutRedirectFallbackRoute: 'home' # defaults to 'index'
 ```
 
-You will need to modify your controller. Extend from `Auth.SignOutController`,
-and call its `registerRedirect` method from your sign in action.
+You will need to modify your controller. Include the mixin
+`Auth.SignOutController`, and call its `registerRedirect` method from your
+sign out action.
 
 ```coffeescript
-App.LogOutController = Auth.SignOutController.extend # changed here
+# first line changed
+App.SignOutController = Ember.ObjectController.extend Auth.SignOutController,
   signOut: ->
-    @registerRedirect() # and here
+    @registerRedirect() # also changed here
     Auth.signOut()
 ```
 

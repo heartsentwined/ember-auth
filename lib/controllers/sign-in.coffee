@@ -1,4 +1,4 @@
-Auth.SignInController = Em.ObjectController.extend
+Auth.SignInController = Em.Mixin.create
   registerRedirect: ->
     Auth.addObserver 'authToken', this, 'smartSignInRedirect'
 

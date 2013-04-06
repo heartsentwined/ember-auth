@@ -2,7 +2,7 @@ describe 'Auth.SignInController', ->
   controller = null
 
   beforeEach ->
-    controller = Auth.SignInController.create()
+    controller = Em.Controller.extend(Auth.SignInController).create()
     spyOn controller, 'transitionToRoute'
     spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-r"
 

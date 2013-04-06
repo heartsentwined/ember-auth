@@ -2,7 +2,7 @@ describe 'Auth.SignOutController', ->
   controller = null
 
   beforeEach ->
-    controller = Auth.SignOutController.create()
+    controller = Em.Controller.extend(Auth.SignOutController).create()
     spyOn controller, 'transitionToRoute'
     spyOn(Auth, 'resolveRedirectRoute').andCallFake (arg) -> "#{arg}-r"
 
