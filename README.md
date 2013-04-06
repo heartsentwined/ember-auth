@@ -663,7 +663,7 @@ Tests
 `ember-auth` tests are written in [jasmine](http://pivotal.github.com/jasmine/),
 run on a mini rails app.
 
-1. Grab a copy of ruby 1.9+. [RVM](http://rvm.io/) recommended.
+1. Grab a copy of ruby. [RVM](http://rvm.io/) recommended.
 2. `bundle install` to install dependencies.
 3. `guard` to run tests.
 
