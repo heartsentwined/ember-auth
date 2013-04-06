@@ -59,7 +59,7 @@ GEM
       guard (>= 1.1.0)
       multi_json
       thor
-    haml (4.0.1)
+    haml (4.0.2)
       tilt
     handlebars-source (1.0.9)
     hike (1.2.1)
