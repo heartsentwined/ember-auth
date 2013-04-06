@@ -1,3 +1,6 @@
+# bundler tasks
+require 'bundler/gem_tasks'
+
 # jasmine rake tasks
 begin
   require 'jasmine'
