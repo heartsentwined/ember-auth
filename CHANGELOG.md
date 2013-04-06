@@ -9,6 +9,7 @@
     * Moved source files from `src/` to `lib/`
     * Removed `component.json` in favor of auto-generation with git tags
     * Versioning centralized in `package.json`
+    * Packaged as source gem
 * Feature: `Auth.ajax` now customizable
 * Feature: Authorization header supported
 * BC Break: `Auth.ajax` signature changed
