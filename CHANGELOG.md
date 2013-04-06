@@ -1,8 +1,6 @@
-# 3.0.1 (6 Apr 2013)
+# 3.0.0/3.0.1 (6 Apr 2013)
 
-* Fixup: errors in 3.0.0 release
-
-# 3.0.0 (6 Apr 2013)
+\* `3.0.0` contained errors. This has been fixed in `3.0.1` already.
 
 * Major rewrite:
     * Mini Rails app for dev environment
