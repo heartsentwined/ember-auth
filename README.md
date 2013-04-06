@@ -682,7 +682,7 @@ run on a mini rails app.
 
 1. Grab a copy of ruby. [RVM](http://rvm.io/) recommended.
 2. `bundle install` to install dependencies.
-3. `guard` to run tests.
+3. `guard-jasmine` to run tests, or `guard` for continuous integration testing.
 
 `ember-auth` has been setup with [guard](https://github.com/guard/guard),
 which will continuously monitor lib and spec files for changes and re-run
