@@ -104,12 +104,12 @@ describe 'Auth.Module.RememberMe', ->
       describe '= true', ->
         it 'sets async option', ->
           Auth.Module.RememberMe.recall async: true
-          expect(Auth.signIn.calls[0].args[0].async).toBe true
+          expect(Auth.signIn.calls[0].args[0].async).toEqual true
 
       describe '= false', ->
         it 'sets async option', ->
           Auth.Module.RememberMe.recall async: false
-          expect(Auth.signIn.calls[0].args[0].async).toBe false
+          expect(Auth.signIn.calls[0].args[0].async).toEqual false
 
       describe 'undefined', ->
         it 'does not set async option', ->
@@ -220,7 +220,7 @@ describe 'Auth.Module.RememberMe', ->
           it 'stores local session', ->
             Auth.Module.RememberMe.remember()
             expect(Auth.Module.RememberMe.storeToken.calls[0].args[0])
-              .toBe 'foo'
+              .toEqual 'foo'
 
         describe 'remember token different from local one', ->
           beforeEach ->
@@ -229,7 +229,7 @@ describe 'Auth.Module.RememberMe', ->
           it 'stores local session', ->
             Auth.Module.RememberMe.remember()
             expect(Auth.Module.RememberMe.storeToken.calls[0].args[0])
-              .toBe 'foo'
+              .toEqual 'foo'
 
   describe '#forget', ->
     beforeEach ->
@@ -287,7 +287,7 @@ describe 'Auth.Module.RememberMe', ->
             @on 'authAccess', -> triggered++
         Em.run App, 'advanceReadiness'
         Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-        expect(triggered).toBe 1
+        expect(triggered).toEqual 1
 
     describe 'Auth.Config.rememberAutoRecall = false', ->
       beforeEach ->
@@ -306,7 +306,7 @@ describe 'Auth.Module.RememberMe', ->
             @on 'authAccess', -> triggered++
         Em.run App, 'advanceReadiness'
         Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-        expect(triggered).toBe 1
+        expect(triggered).toEqual 1
 
     describe 'Auth.Config.rememberMe = true', ->
       beforeEach ->
@@ -347,7 +347,7 @@ describe 'Auth.Module.RememberMe', ->
               Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
               expect(Auth.Module.RememberMe.recall.calls[0].args[0])
                 .toEqual { async: false }
-              expect(Auth.get 'authToken').toBe 'foo'
+              expect(Auth.get 'authToken').toEqual 'foo'
 
             it 'prevents redirect', ->
               currentPath = null
@@ -357,7 +357,7 @@ describe 'Auth.Module.RememberMe', ->
                 ).observes('currentPath')
               Em.run App, 'advanceReadiness'
               Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-              expect(currentPath).toBe 'foo'
+              expect(currentPath).toEqual 'foo'
 
             # nothing would have been done, cannot test
             #it 'preserves Auth.Route functionalities', ->
@@ -376,7 +376,7 @@ describe 'Auth.Module.RememberMe', ->
               Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
               expect(Auth.Module.RememberMe.recall.calls[0].args[0])
                 .toEqual { async: false }
-              expect(Auth.get 'authToken').toBe null
+              expect(Auth.get 'authToken').toEqual null
 
             describe 'Auth.Route redirection', ->
               beforeEach ->
@@ -398,7 +398,7 @@ describe 'Auth.Module.RememberMe', ->
                 Em.run App, 'advanceReadiness'
                 Em.run -> App.__container__.lookup('router:main')
                   .handleURL 'foo'
-                expect(currentPath).toBe 'sign-in'
+                expect(currentPath).toEqual 'sign-in'
 
             it 'preserves Auth.Route functionalities', ->
               triggered = 0
@@ -407,7 +407,7 @@ describe 'Auth.Module.RememberMe', ->
                   @on 'authAccess', -> triggered++
               Em.run App, 'advanceReadiness'
               Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-              expect(triggered).toBe 1
+              expect(triggered).toEqual 1
 
         # TODO
         #describe 'JSONP response', ->

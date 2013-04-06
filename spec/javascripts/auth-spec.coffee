@@ -11,31 +11,31 @@ describe 'Auth', ->
       beforeEach ->
         Auth.Config.reopen { baseUrl: 'foo/' }
       it 'appends path to Auth.Config.baseUrl', ->
-        expect(Auth.resolveUrl('bar')).toBe 'foo/bar'
-        expect(Auth.resolveUrl('/bar')).toBe 'foo/bar'
+        expect(Auth.resolveUrl('bar')).toEqual 'foo/bar'
+        expect(Auth.resolveUrl('/bar')).toEqual 'foo/bar'
 
     describe 'Auth.Config.baseUrl defined without trialing slash', ->
       beforeEach ->
         Auth.Config.reopen { baseUrl: 'foo' }
       it 'appends path to Auth.Config.baseUrl', ->
-        expect(Auth.resolveUrl('bar')).toBe 'foo/bar'
-        expect(Auth.resolveUrl('/bar')).toBe 'foo/bar'
+        expect(Auth.resolveUrl('bar')).toEqual 'foo/bar'
+        expect(Auth.resolveUrl('/bar')).toEqual 'foo/bar'
 
     describe 'Auth.Config.baseUrl defined as empty string', ->
       beforeEach ->
         Auth.Config.reopen { baseUrl: '' }
       it 'returns path', ->
-        expect(Auth.resolveUrl('bar')).toBe '/bar'
-        expect(Auth.resolveUrl('/bar')).toBe '/bar'
+        expect(Auth.resolveUrl('bar')).toEqual '/bar'
+        expect(Auth.resolveUrl('/bar')).toEqual '/bar'
 
     describe 'Auth.Config.baseUrl undefined', ->
       it 'returns path', ->
-        expect(Auth.resolveUrl('bar')).toBe '/bar'
-        expect(Auth.resolveUrl('/bar')).toBe '/bar'
+        expect(Auth.resolveUrl('bar')).toEqual '/bar'
+        expect(Auth.resolveUrl('/bar')).toEqual '/bar'
 
   describe '#resolveRedirectRoute', ->
     it 'returns null for non-signIn/Out route', ->
-      expect(Auth.resolveRedirectRoute('foo')).toBe null
+      expect(Auth.resolveRedirectRoute('foo')).toEqual null
 
     beforeEach ->
       Auth.Config.reopen
@@ -57,8 +57,8 @@ describe 'Auth', ->
           smartSignInRedirect: false
           smartSignOutRedirect: false
       it 'returns fallback routes', ->
-        expect(Auth.resolveRedirectRoute('signIn')).toBe 'sign-in-fallback'
-        expect(Auth.resolveRedirectRoute('signOut')).toBe 'sign-out-fallback'
+        expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-in-fallback'
+        expect(Auth.resolveRedirectRoute('signOut')).toEqual 'sign-out-fallback'
 
     describe 'smart redirect on', ->
       beforeEach ->
@@ -76,29 +76,29 @@ describe 'Auth', ->
         beforeEach ->
           Auth.set 'prevRoute', 'foo'
         it 'returns Auth.prevRoute', ->
-          expect(Auth.resolveRedirectRoute('signIn')).toBe 'foo'
-          expect(Auth.resolveRedirectRoute('signOut')).toBe 'foo'
+          expect(Auth.resolveRedirectRoute('signIn')).toEqual 'foo'
+          expect(Auth.resolveRedirectRoute('signOut')).toEqual 'foo'
 
       describe 'Auth.prevRoute same as signIn route', ->
         beforeEach ->
           Auth.set 'prevRoute', 'sign-in'
         describe 'sign in', ->
           it 'returns sign in fallback route', ->
-            expect(Auth.resolveRedirectRoute('signIn')).toBe 'sign-in-fallback'
+            expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-in-fallback'
         describe 'sign out', ->
           it 'returns Auth.prevRoute', ->
-            expect(Auth.resolveRedirectRoute('signOut')).toBe 'sign-in'
+            expect(Auth.resolveRedirectRoute('signOut')).toEqual 'sign-in'
 
       describe 'Auth.prevRoute same as signOut route', ->
         beforeEach ->
           Auth.set 'prevRoute', 'sign-out'
         describe 'sign in', ->
           it 'returns Auth.prevRoute', ->
-            expect(Auth.resolveRedirectRoute('signIn')).toBe 'sign-out'
+            expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-out'
         describe 'sign out', ->
           it 'returns sign out fallback route', ->
             expect(Auth.resolveRedirectRoute('signOut'))
-              .toBe 'sign-out-fallback'
+              .toEqual 'sign-out-fallback'
 
   describe '#ajax', ->
     beforeEach ->
@@ -124,7 +124,7 @@ describe 'Auth', ->
           Auth.ajax { url: 'bar', type: 'GET' }
         it 'sends auth token as param', ->
           expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-            .toBe 'token-value'
+            .toEqual 'token-value'
         it 'does not send Authorization header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
             .not.toBeDefined()
@@ -142,7 +142,7 @@ describe 'Auth', ->
             .not.toBeDefined()
         it 'sends Authorization header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-            .toBe 'headerKey token-value'
+            .toEqual 'headerKey token-value'
         it 'does not send custom header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
             .not.toBeDefined()
@@ -160,7 +160,7 @@ describe 'Auth', ->
             .not.toBeDefined()
         it 'sends custom header', ->
           expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-            .toBe 'token-value'
+            .toEqual 'token-value'
 
     describe 'Auth.authToken = null', ->
       beforeEach ->
@@ -194,7 +194,7 @@ describe 'Auth', ->
             Auth.ajax { data: { foo: 'bar' }, contentType: 'foo' }
 
           it 'uses given contentType', ->
-            expect(jQuery.ajax.calls[0].args[0].contentType).toBe 'foo'
+            expect(jQuery.ajax.calls[0].args[0].contentType).toEqual 'foo'
           it 'uses given data', ->
             expect(jQuery.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
 
@@ -219,10 +219,10 @@ describe 'Auth', ->
 
               it 'sets contentType to json', ->
                 expect(jQuery.ajax.calls[0].args[0].contentType)
-                  .toBe 'application/json; charset=utf-8'
+                  .toEqual 'application/json; charset=utf-8'
               it 'serializes data to json string', ->
                 expect(jQuery.ajax.calls[0].args[0].data)
-                  .toBe '{"foo":"bar"}'
+                  .toEqual '{"foo":"bar"}'
 
           describe 'type not given', ->
             beforeEach ->
@@ -230,17 +230,17 @@ describe 'Auth', ->
 
             it 'sets contentType to json', ->
               expect(jQuery.ajax.calls[0].args[0].contentType)
-                .toBe 'application/json; charset=utf-8'
+                .toEqual 'application/json; charset=utf-8'
             it 'serializes data to json string', ->
-              expect(jQuery.ajax.calls[0].args[0].data).toBe '{"foo":"bar"}'
+              expect(jQuery.ajax.calls[0].args[0].data).toEqual '{"foo":"bar"}'
 
     describe 'customizable', ->
       beforeEach ->
         spyOn jQuery, 'ajax'
         Auth.ajax { url: 'bar', type: 'GET', contentType: 'foo' }
       it 'overrides preset values', ->
-        expect(jQuery.ajax.calls[0].args[0].type).toBe 'GET'
-        expect(jQuery.ajax.calls[0].args[0].contentType).toBe 'foo'
+        expect(jQuery.ajax.calls[0].args[0].type).toEqual 'GET'
+        expect(jQuery.ajax.calls[0].args[0].contentType).toEqual 'foo'
 
   describe 'API calls', ->
     beforeEach ->
@@ -277,22 +277,22 @@ describe 'Auth', ->
             Auth.signIn { foo: 'bar', async: true }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toBe true
+            expect(Auth.ajax.calls[0].args[0].async).toEqual true
 
           it 'does not pollute data', ->
             expect(Auth.ajax.calls[0].args[0].data)
-              .toBe JSON.stringify { foo: 'bar' }
+              .toEqual JSON.stringify { foo: 'bar' }
 
         describe '= false', ->
           beforeEach ->
             Auth.signIn { foo: 'bar', async: false }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toBe false
+            expect(Auth.ajax.calls[0].args[0].async).toEqual false
 
           it 'does not pollute data', ->
             expect(Auth.ajax.calls[0].args[0].data)
-              .toBe JSON.stringify { foo: 'bar' }
+              .toEqual JSON.stringify { foo: 'bar' }
 
       describe 'success', ->
         beforeEach ->
@@ -305,15 +305,15 @@ describe 'Auth', ->
 
         it 'sets various Auth variables', ->
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(Auth.get 'authToken').toBe 'foo'
-          expect(Auth.get 'currentUserId').toBe 1
+          expect(Auth.get 'authToken').toEqual 'foo'
+          expect(Auth.get 'currentUserId').toEqual 1
           expect(Auth.get 'json').toEqual { auth_token: 'foo', user_id: 1 }
           expect(Auth.get 'jqxhr').toEqual { auth_token: 'foo', user_id: 1 }
 
         it 'clears Auth.prevRoute', ->
           Auth.set 'prevRoute', 'foo'
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(Auth.get 'prevRoute').toBe null
+          expect(Auth.get 'prevRoute').toEqual null
 
         it 'triggers events', ->
           success = error = complete = 0
@@ -321,9 +321,9 @@ describe 'Auth', ->
           Auth.on 'signInError', -> error++
           Auth.on 'signInComplete', -> complete++
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(success).toBe 1
-          expect(error).toBe 0
-          expect(complete).toBe 1
+          expect(success).toEqual 1
+          expect(error).toEqual 0
+          expect(complete).toEqual 1
 
         describe 'Auth.currentUser', ->
           FooModel = { find: (id) -> "#{id}-model" }
@@ -334,12 +334,12 @@ describe 'Auth', ->
           it 'is set if userModel is defined', ->
             Auth.Config.reopen { userModel: FooModel }
             Auth.signIn { username: 'user', password: 'pass', async: false }
-            expect(Auth.get 'currentUser').toBe '1-model'
+            expect(Auth.get 'currentUser').toEqual '1-model'
 
           it 'is not set if userModel = null', ->
             Auth.Config.reopen { userModel: null }
             Auth.signIn { username: 'user', password: 'pass', async: false }
-            expect(Auth.get 'currentUser').toBe null
+            expect(Auth.get 'currentUser').toEqual null
 
       describe 'failure', ->
         beforeEach ->
@@ -352,15 +352,15 @@ describe 'Auth', ->
 
         it 'sets various Auth variables', ->
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(Auth.get 'authToken').toBe null
-          expect(Auth.get 'currentUserId').toBe null
+          expect(Auth.get 'authToken').toEqual null
+          expect(Auth.get 'currentUserId').toEqual null
           expect(Auth.get 'json').toEqual null
           expect(Auth.get 'jqxhr').toEqual jasmine.any(Object)
 
         it 'clears Auth.prevRoute', ->
           Auth.set 'prevRoute', 'foo'
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(Auth.get 'prevRoute').toBe null
+          expect(Auth.get 'prevRoute').toEqual null
 
         it 'triggers events', ->
           success = error = complete = 0
@@ -368,9 +368,9 @@ describe 'Auth', ->
           Auth.on 'signInError', -> error++
           Auth.on 'signInComplete', -> complete++
           Auth.signIn { username: 'user', password: 'pass', async: false }
-          expect(success).toBe 0
-          expect(error).toBe 1
-          expect(complete).toBe 1
+          expect(success).toEqual 0
+          expect(error).toEqual 1
+          expect(complete).toEqual 1
 
         describe 'Auth.currentUser', ->
           FooModel = { find: (id) -> "#{id}-model" }
@@ -381,12 +381,12 @@ describe 'Auth', ->
           it 'is not set (regardless) if userModel is defined', ->
             Auth.Config.reopen { userModel: FooModel }
             Auth.signIn { username: 'user', password: 'pass', async: false }
-            expect(Auth.get 'currentUser').toBe null
+            expect(Auth.get 'currentUser').toEqual null
 
           it 'is not set (regardless) if userModel = null', ->
             Auth.Config.reopen { userModel: null }
             Auth.signIn { username: 'user', password: 'pass', async: false }
-            expect(Auth.get 'currentUser').toBe null
+            expect(Auth.get 'currentUser').toEqual null
 
     describe '#signOut', ->
       beforeEach ->
@@ -403,22 +403,22 @@ describe 'Auth', ->
             Auth.signOut { foo: 'bar', async: true }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toBe true
+            expect(Auth.ajax.calls[0].args[0].async).toEqual true
 
           it 'does not pollute data', ->
             expect(Auth.ajax.calls[0].args[0].data)
-              .toBe JSON.stringify { foo: 'bar', auth_token: 'foo' }
+              .toEqual JSON.stringify { foo: 'bar', auth_token: 'foo' }
 
         describe '= false', ->
           beforeEach ->
             Auth.signOut { foo: 'bar', async: false }
 
           it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toBe false
+            expect(Auth.ajax.calls[0].args[0].async).toEqual false
 
           it 'does not pollute data', ->
             expect(Auth.ajax.calls[0].args[0].data)
-              .toBe JSON.stringify { foo: 'bar', auth_token: 'foo' }
+              .toEqual JSON.stringify { foo: 'bar', auth_token: 'foo' }
 
       describe 'success', ->
         beforeEach ->
@@ -431,9 +431,9 @@ describe 'Auth', ->
 
         it 'clears current Auth session variables', ->
           Auth.signOut { foo: 'bar', async: false }
-          expect(Auth.get 'authToken').toBe null
-          expect(Auth.get 'currentUserId').toBe null
-          expect(Auth.get 'currentUser').toBe null
+          expect(Auth.get 'authToken').toEqual null
+          expect(Auth.get 'currentUserId').toEqual null
+          expect(Auth.get 'currentUser').toEqual null
 
         it 'sets various Auth variables', ->
           Auth.signOut { foo: 'bar', async: false }
@@ -443,7 +443,7 @@ describe 'Auth', ->
         it 'clears Auth.prevRoute', ->
           Auth.set 'prevRoute', 'foo'
           Auth.signOut { foo: 'bar', async: false }
-          expect(Auth.get 'prevRoute').toBe null
+          expect(Auth.get 'prevRoute').toEqual null
 
         it 'triggers events', ->
           success = error = complete = 0
@@ -451,9 +451,9 @@ describe 'Auth', ->
           Auth.on 'signOutError', -> error++
           Auth.on 'signOutComplete', -> complete++
           Auth.signOut { foo: 'bar', async: false }
-          expect(success).toBe 1
-          expect(error).toBe 0
-          expect(complete).toBe 1
+          expect(success).toEqual 1
+          expect(error).toEqual 0
+          expect(complete).toEqual 1
 
       describe 'failure', ->
         beforeEach ->
@@ -466,9 +466,9 @@ describe 'Auth', ->
 
         it 'keeps current Auth session variables', ->
           Auth.signOut { foo: 'bar', async: false }
-          expect(Auth.get 'authToken').toBe 'foo'
-          expect(Auth.get 'currentUserId').toBe 1
-          expect(Auth.get 'currentUser').toBe '1-model'
+          expect(Auth.get 'authToken').toEqual 'foo'
+          expect(Auth.get 'currentUserId').toEqual 1
+          expect(Auth.get 'currentUser').toEqual '1-model'
 
         it 'sets various Auth variables', ->
           Auth.signOut { foo: 'bar', async: false }
@@ -478,7 +478,7 @@ describe 'Auth', ->
         it 'clears Auth.prevRoute', ->
           Auth.set 'prevRoute', 'foo'
           Auth.signOut { foo: 'bar', async: false }
-          expect(Auth.get 'prevRoute').toBe null
+          expect(Auth.get 'prevRoute').toEqual null
 
         it 'triggers events', ->
           success = error = complete = 0
@@ -486,7 +486,7 @@ describe 'Auth', ->
           Auth.on 'signOutError', -> error++
           Auth.on 'signOutComplete', -> complete++
           Auth.signOut { foo: 'bar', async: false }
-          expect(success).toBe 0
-          expect(error).toBe 1
-          expect(complete).toBe 1
-          expect(complete).toBe 1
+          expect(success).toEqual 0
+          expect(error).toEqual 1
+          expect(complete).toEqual 1
+          expect(complete).toEqual 1

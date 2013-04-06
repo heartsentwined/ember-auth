@@ -39,13 +39,13 @@ describe 'Auth.Route', ->
         it 'triggers event', ->
           Auth.set 'authToken', null
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(triggered).toBe 1
+          expect(triggered).toEqual 1
 
       describe 'Auth.authToken is set', ->
         it 'does not trigger event', ->
           Auth.set 'authToken', 'foo'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(triggered).toBe 0
+          expect(triggered).toEqual 0
 
     describe 'auth-only redirection', ->
 
@@ -64,7 +64,7 @@ describe 'Auth.Route', ->
         it 'sets Auth.prevRoute with current route name', ->
           Em.run App, 'advanceReadiness'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(Auth.get 'prevRoute').toBe 'foo'
+          expect(Auth.get 'prevRoute').toEqual 'foo'
 
         it 'transitions to sign in route', ->
           currentPath = null
@@ -74,7 +74,7 @@ describe 'Auth.Route', ->
             ).observes('currentPath')
           Em.run App, 'advanceReadiness'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(currentPath).toBe 'sign-in'
+          expect(currentPath).toEqual 'sign-in'
 
       describe 'Auth.Config.authRedirect = false', ->
         beforeEach ->
@@ -91,7 +91,7 @@ describe 'Auth.Route', ->
         it 'does not set Auth.prevRoute', ->
           Em.run App, 'advanceReadiness'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(Auth.get 'prevRoute').toBe null
+          expect(Auth.get 'prevRoute').toEqual null
 
         it 'stays on current route', ->
           currentPath = null
@@ -101,4 +101,4 @@ describe 'Auth.Route', ->
             ).observes('currentPath')
           Em.run App, 'advanceReadiness'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
-          expect(currentPath).toBe 'foo'
+          expect(currentPath).toEqual 'foo'

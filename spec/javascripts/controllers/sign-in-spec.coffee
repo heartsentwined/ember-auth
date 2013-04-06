@@ -20,7 +20,7 @@ describe 'Auth.SignInController', ->
     describe 'Auth.authToken changes to different token', ->
       it 'redirects', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
 
     describe 'Auth.authToken changes to same token', ->
       it 'does not redirect', ->
@@ -35,9 +35,9 @@ describe 'Auth.SignInController', ->
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
         Auth.set 'authToken', 'baz'
-        expect(controller.transitionToRoute.calls.length).toBe 1
+        expect(controller.transitionToRoute.calls.length).toEqual 1
 
   describe 'initial state: not signed in', ->
     beforeEach ->
@@ -47,7 +47,7 @@ describe 'Auth.SignInController', ->
     describe 'Auth.authToken changes to different token', ->
       it 'redirects', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
 
     describe 'Auth.authToken changes to same token (null)', ->
       it 'does not redirect', ->
@@ -57,6 +57,6 @@ describe 'Auth.SignInController', ->
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', 'bar'
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signIn-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signIn-r'
         Auth.set 'authToken', 'baz'
-        expect(controller.transitionToRoute.calls.length).toBe 1
+        expect(controller.transitionToRoute.calls.length).toEqual 1

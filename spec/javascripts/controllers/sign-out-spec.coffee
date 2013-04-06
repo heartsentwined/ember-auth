@@ -30,15 +30,15 @@ describe 'Auth.SignOutController', ->
     describe 'Auth.authToken changes to null', ->
       it 'redirects', ->
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signOut-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
 
     describe 'consecutive Auth.authToken changes', ->
       it 'only redirects for the first time', ->
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signOut-r'
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
         Auth.set 'authToken', 'bar'
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls.length).toBe 1
+        expect(controller.transitionToRoute.calls.length).toEqual 1
 
   describe 'initial state: not signed in', ->
     beforeEach ->
@@ -61,8 +61,8 @@ describe 'Auth.SignOutController', ->
         expect(controller.transitionToRoute).not.toHaveBeenCalled()
         Auth.set 'authToken', 'bar'
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls[0].args[0]).toBe 'signOut-r'
-        expect(controller.transitionToRoute.calls.length).toBe 1
+        expect(controller.transitionToRoute.calls[0].args[0]).toEqual 'signOut-r'
+        expect(controller.transitionToRoute.calls.length).toEqual 1
         Auth.set 'authToken', 'baz'
         Auth.set 'authToken', null
-        expect(controller.transitionToRoute.calls.length).toBe 1
+        expect(controller.transitionToRoute.calls.length).toEqual 1
