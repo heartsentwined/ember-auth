@@ -1,3 +1,7 @@
+# 3.0.2 (6 Apr 2013)
+
+* Bugfix: `Auth.ajax`: `contentType` not in sync with actual `data` type (#23)
+
 # 3.0.0/3.0.1 (6 Apr 2013)
 
 \* `3.0.0` contained errors. This has been fixed in `3.0.1` already.
