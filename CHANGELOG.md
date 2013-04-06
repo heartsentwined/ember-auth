@@ -1,3 +1,7 @@
+# 3.0.1 (6 Apr 2013)
+
+* Fixup: errors in 3.0.0 release
+
 # 3.0.0 (6 Apr 2013)
 
 * Major rewrite:
