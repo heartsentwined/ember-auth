@@ -273,7 +273,7 @@
 
 }).call(this);
 (function() {
-  Auth.SignInController = Em.ObjectController.extend({
+  Auth.SignInController = Em.Mixin.create({
     registerRedirect: function() {
       return Auth.addObserver('authToken', this, 'smartSignInRedirect');
     },
@@ -287,7 +287,7 @@
 
 }).call(this);
 (function() {
-  Auth.SignOutController = Em.ObjectController.extend({
+  Auth.SignOutController = Em.Mixin.create({
     registerRedirect: function() {
       return Auth.addObserver('authToken', this, 'smartSignOutRedirect');
     },
