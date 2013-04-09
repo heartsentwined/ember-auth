@@ -126,20 +126,38 @@ describe 'Auth', ->
           describe 'customized', ->
 
             describe 'does not override auth token key', ->
-              beforeEach ->
-                Auth.ajax { url: 'bar', type: 'GET', data: { baz: 'quux' } }
 
-              it 'sends auth token as param with auth token value', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .toEqual 'token-value'
+              describe 'data = object', ->
+                beforeEach ->
+                  Auth.ajax { url: 'bar', type: 'GET', data: { baz: 'quux' } }
 
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
+                it 'sends auth token as param with auth token value', ->
+                  expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
+                    .toEqual 'token-value'
 
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
+                it 'does not send Authorization header', ->
+                  expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
+                    .not.toBeDefined()
+
+                it 'does not send custom header', ->
+                  expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
+                    .not.toBeDefined()
+
+              describe 'data = null', ->
+                beforeEach ->
+                  Auth.ajax { url: 'bar', type: 'GET', data: null }
+
+                it 'sends auth token as param with auth token value', ->
+                  expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
+                    .toEqual 'token-value'
+
+                it 'does not send Authorization header', ->
+                  expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
+                    .not.toBeDefined()
+
+                it 'does not send custom header', ->
+                  expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
+                    .not.toBeDefined()
 
             describe 'overriding auth token key', ->
               beforeEach ->

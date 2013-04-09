@@ -204,7 +204,7 @@
       }
     },
     ajax: function(settings) {
-      var data, def, e, token, _base, _base1, _base2, _base3, _name, _name1, _name2, _name3;
+      var data, def, e, token, _base, _base1, _base2, _name, _name1, _name2;
 
       if (settings == null) {
         settings = {};
@@ -219,18 +219,15 @@
       if (token = this.get('authToken')) {
         switch (Auth.Config.get('requestTokenLocation')) {
           case 'param':
+            settings.data || (settings.data = {});
             switch (typeof settings.data) {
-              case 'undefined':
-                settings.data = {};
-                (_base = settings.data)[_name = Auth.Config.get('tokenKey')] || (_base[_name] = this.get('authToken'));
-                break;
               case 'object':
-                (_base1 = settings.data)[_name1 = Auth.Config.get('tokenKey')] || (_base1[_name1] = this.get('authToken'));
+                (_base = settings.data)[_name = Auth.Config.get('tokenKey')] || (_base[_name] = this.get('authToken'));
                 break;
               case 'string':
                 try {
                   data = JSON.parse(settings.data);
-                  data[_name2 = Auth.Config.get('tokenKey')] || (data[_name2] = this.get('authToken'));
+                  data[_name1 = Auth.Config.get('tokenKey')] || (data[_name1] = this.get('authToken'));
                   settings.data = JSON.stringify(data);
                 } catch (_error) {
                   e = _error;
@@ -239,11 +236,11 @@
             break;
           case 'authHeader':
             settings.headers || (settings.headers = {});
-            (_base2 = settings.headers)['Authorization'] || (_base2['Authorization'] = "" + (Auth.Config.get('requestHeaderKey')) + " " + (this.get('authToken')));
+            (_base1 = settings.headers)['Authorization'] || (_base1['Authorization'] = "" + (Auth.Config.get('requestHeaderKey')) + " " + (this.get('authToken')));
             break;
           case 'customHeader':
             settings.headers || (settings.headers = {});
-            (_base3 = settings.headers)[_name3 = Auth.Config.get('requestHeaderKey')] || (_base3[_name3] = this.get('authToken'));
+            (_base2 = settings.headers)[_name2 = Auth.Config.get('requestHeaderKey')] || (_base2[_name2] = this.get('authToken'));
         }
       }
       return jQuery.ajax(settings);

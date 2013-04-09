@@ -146,10 +146,8 @@ window.Auth = evented.create
     if token = @get('authToken')
       switch Auth.Config.get 'requestTokenLocation'
         when 'param'
+          settings.data ||= {}
           switch typeof settings.data
-            when 'undefined'
-              settings.data = {}
-              settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
             when 'object'
               settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
             when 'string'

@@ -1,3 +1,7 @@
+# 3.0.4 (9 Apr 2013)
+
+* Bugfix: `Auth.ajax`: behavior when customized with `data = null` (#25)
+
 # 3.0.3 (9 Apr 2013)
 
 * Bugfix: `Auth.ajax`: auth token not set when customized with `data` without
