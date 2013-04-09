@@ -269,19 +269,38 @@
     rememberTokenKey: null,
     rememberPeriod: 14,
     rememberAutoRecall: true,
-    rememberStorage: 'cookie'
+    rememberStorage: 'cookie',
+    urlAuthentication: false
   });
 
 }).call(this);
 (function() {
   Auth.Route = Em.Route.extend(Em.Evented, {
     redirect: function() {
-      if (!Auth.get('authToken')) {
-        this.trigger('authAccess');
-        if (Auth.Config.get('authRedirect')) {
-          Auth.set('prevRoute', this.routeName);
-          return this.transitionTo(Auth.Config.get('signInRoute'));
+      console.log('redirect');
+      if (Auth.get('authToken')) {
+        return;
+      }
+      if (Auth.Config.get('urlAuthentication')) {
+        Auth.Module.UrlAuthentication.authenticate({
+          async: false
+        });
+        if (Auth.get('authToken')) {
+          return;
         }
+      }
+      if (Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')) {
+        Auth.Module.RememberMe.recall({
+          async: false
+        });
+        if (Auth.get('authToken')) {
+          return;
+        }
+      }
+      this.trigger('authAccess');
+      if (Auth.Config.get('authRedirect')) {
+        Auth.set('prevRoute', this.routeName);
+        return this.transitionTo(Auth.Config.get('signInRoute'));
       }
     }
   });
@@ -408,22 +427,35 @@
     }
   });
 
-  Auth.Route.reopen({
-    redirect: function() {
-      var callback, request, self;
+}).call(this);
+(function() {
+  Auth.Module.UrlAuthentication = Em.Object.create({
+    authenticate: function(opts) {
+      var data, token;
 
-      if (Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')) {
-        if (request = Auth.Module.RememberMe.recall({
-          async: false
-        })) {
-          self = this;
-          callback = this._super;
-          return request.always(function() {
-            return callback.call(self);
-          });
-        }
+      if (opts == null) {
+        opts = {};
       }
-      return this._super();
+      if (!Auth.Config.get('urlAuthentication')) {
+        return;
+      }
+      if (!Auth.get('authToken') && (token = this.retrieveToken())) {
+        data = {};
+        if (opts.async != null) {
+          data['async'] = opts.async;
+        }
+        data[Auth.Config.get('tokenKey')] = token;
+        return Auth.signIn(data);
+      }
+    },
+    retrieveToken: function() {
+      var token;
+
+      token = $.url().param(Auth.Config.get('tokenKey'));
+      if (token && token.charAt(token.length - 1) === '/') {
+        token = token.slice(0, -1);
+      }
+      return token;
     }
   });
 
