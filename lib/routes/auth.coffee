@@ -1,6 +1,5 @@
 Auth.Route = Em.Route.extend Em.Evented,
   redirect: ->
-    console.log 'redirect'
     
     return if Auth.get('authToken') 
     
