@@ -51,15 +51,3 @@ Auth.Module.RememberMe = Em.Object.create
     switch Auth.Config.get 'rememberStorage'
       when 'localStorage' then localStorage.removeItem 'ember-auth-remember-me'
       when 'cookie' then jQuery.removeCookie 'ember-auth-remember-me'
-
-# monkey-patch Auth.Route to recall session (if any) before redirecting
-Auth.Route.reopen
-  redirect: ->
-    if Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')
-      if request = Auth.Module.RememberMe.recall(async: false)
-        # TODO polish this
-        self = @
-        callback = @_super
-        return request.always ->
-          callback.call(self)
-    @_super()

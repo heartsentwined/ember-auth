@@ -147,3 +147,29 @@ Auth.Config = Em.Object.create
   # Defaults to 'cookie'
   # - Note: localStorage does not support an expiry date.
   rememberStorage: 'cookie'
+
+  # =====================
+  # URL Authentication
+  # =====================
+  
+  # Implement this hook and return true to enable URL authentication. If enabled
+  # the route will check for the token passed in as a query parameter and use
+  # it to authenticate before redirecting. A common use case for this is 
+  # automatically authenticating a user from a link in a system generated email.
+  #
+  # The name of the URL parameter is defined by the Auth.Config.tokenKey hook. 
+  #
+  # Along with the regular set of sign in credentials, your token creation API 
+  # end point should also accept the token itself.
+  #
+  # e.g.
+  #   if Auth.Config.tokenCreateUrl returns '/api/sign_in'
+  #   and Auth.Config.tokenKey returns 'auth_token' 
+  #   then a URL containing ?auth_token=fjlja8hfhf4
+  #   will POST /api/sign_in { "auth_token": "fjlja8hfhf4" }
+  #
+  # Until Ember supports query parameters the parameter must exist before the 
+  # Ember route hash.
+  # e.g.
+  #   http://www.example.com/?auth_token=fjlja8hfhf4/#/posts/5
+  urlAuthentication: false
