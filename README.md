@@ -691,7 +691,8 @@ the tests automatically.
 Building distribution js files
 ------------------------------
 
-`rake dist`
+`rake dist`. Or `bundle exec rake dist` if you are not using
+[RVM](http://rvm.io/), or are not otherwise scoping the bundle.
 
 License
 =======
