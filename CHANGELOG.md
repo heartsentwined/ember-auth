@@ -1,3 +1,8 @@
+# 3.0.3 (9 Apr 2013)
+
+* Bugfix: `Auth.ajax`: auth token not set when customized with `data` without
+    overriding the corresponding token key (#25)
+
 # 3.0.2 (6 Apr 2013)
 
 * Bugfix: `Auth.ajax`: `contentType` not in sync with actual `data` type (#23)

@@ -135,19 +135,6 @@ window.Auth = evented.create
   #   Defaults will be overrided by those set in this param
   ajax: (settings = {}) ->
     def = {}
-    if token = @get('authToken')
-      switch Auth.Config.get 'requestTokenLocation'
-        when 'param'
-          def.data ||= {}
-          def.data[Auth.Config.get('tokenKey')] = @get('authToken')
-        when 'authHeader'
-          def.headers ||= {}
-          def.headers['Authorization'] =
-            "#{Auth.Config.get('requestHeaderKey')} #{@get('authToken')}"
-        when 'customHeader'
-          def.headers ||= {}
-          def.headers[Auth.Config.get('requestHeaderKey')] = @get('authToken')
-
     def.dataType = 'json'
 
     if settings.data && !settings.contentType? && settings.type != 'GET'
@@ -155,4 +142,30 @@ window.Auth = evented.create
       settings.data = JSON.stringify(settings.data)
 
     settings = jQuery.extend def, settings
+
+    if token = @get('authToken')
+      switch Auth.Config.get 'requestTokenLocation'
+        when 'param'
+          switch typeof settings.data
+            when 'undefined'
+              settings.data = {}
+              settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
+            when 'object'
+              settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
+            when 'string'
+              try
+                data = JSON.parse(settings.data)
+                data[Auth.Config.get('tokenKey')] ||= @get('authToken')
+                settings.data = JSON.stringify(data)
+              catch e
+                # do nothing
+        when 'authHeader'
+          settings.headers ||= {}
+          settings.headers['Authorization'] ||=
+            "#{Auth.Config.get('requestHeaderKey')} #{@get('authToken')}"
+        when 'customHeader'
+          settings.headers ||= {}
+          settings.headers[Auth.Config.get('requestHeaderKey')] ||=
+            @get('authToken')
+
     jQuery.ajax(settings)
