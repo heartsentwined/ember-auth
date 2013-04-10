@@ -1,4 +1,5 @@
 #= require jquery.cookie
+#= require purl
 #= require auth
 #= require config
 #= require_tree ./routes
