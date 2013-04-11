@@ -6,29 +6,22 @@ describe 'Auth', ->
 
     describe 'Auth.Config.baseUrl defined with trialing slash', ->
       beforeEach -> Auth.Config.reopen { baseUrl: 'foo/' }
-
-      it 'appends path to Auth.Config.baseUrl', ->
-        expect(Auth.resolveUrl('bar')).toEqual 'foo/bar'
-        expect(Auth.resolveUrl('/bar')).toEqual 'foo/bar'
+      follow 'auth resolve url',
+        { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'Auth.Config.baseUrl defined without trialing slash', ->
       beforeEach -> Auth.Config.reopen { baseUrl: 'foo' }
-
-      it 'appends path to Auth.Config.baseUrl', ->
-        expect(Auth.resolveUrl('bar')).toEqual 'foo/bar'
-        expect(Auth.resolveUrl('/bar')).toEqual 'foo/bar'
+      follow 'auth resolve url',
+        { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'Auth.Config.baseUrl defined as empty string', ->
       beforeEach -> Auth.Config.reopen { baseUrl: '' }
-
-      it 'returns path', ->
-        expect(Auth.resolveUrl('bar')).toEqual '/bar'
-        expect(Auth.resolveUrl('/bar')).toEqual '/bar'
+      follow 'auth resolve url',
+        { input: 'bar', output: '/bar', isAppend: false }
 
     describe 'Auth.Config.baseUrl undefined', ->
-      it 'returns path', ->
-        expect(Auth.resolveUrl('bar')).toEqual '/bar'
-        expect(Auth.resolveUrl('/bar')).toEqual '/bar'
+      follow 'auth resolve url',
+        { input: 'bar', output: '/bar', isAppend: false }
 
   describe '#resolveRedirectRoute', ->
     it 'returns null for non-signIn/Out route', ->
@@ -37,9 +30,9 @@ describe 'Auth', ->
     beforeEach ->
       Auth.Config.reopen
         signInRoute: 'sign-in'
-        signInRedirectFallbackRoute: 'sign-in-fallback'
+        signInRedirectFallbackRoute: 'sign-in-fb'
         signOutRoute: 'sign-out'
-        signOutRedirectFallbackRoute: 'sign-out-fallback'
+        signOutRedirectFallbackRoute: 'sign-out-fb'
     afterEach ->
       Auth.Config.reopen
         signInRoute: null
@@ -54,10 +47,8 @@ describe 'Auth', ->
           smartSignOutRedirect: false
 
       it 'returns fallback routes', ->
-        expect(Auth.resolveRedirectRoute('signIn'))
-          .toEqual 'sign-in-fallback'
-        expect(Auth.resolveRedirectRoute('signOut'))
-          .toEqual 'sign-out-fallback'
+        expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-in-fb'
+        expect(Auth.resolveRedirectRoute('signOut')).toEqual 'sign-out-fb'
 
     describe 'smart redirect on', ->
       beforeEach ->
@@ -82,8 +73,7 @@ describe 'Auth', ->
 
         describe 'sign in', ->
           it 'returns sign in fallback route', ->
-            expect(Auth.resolveRedirectRoute('signIn'))
-              .toEqual 'sign-in-fallback'
+            expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-in-fb'
 
         describe 'sign out', ->
           it 'returns Auth.prevRoute', ->
@@ -97,9 +87,8 @@ describe 'Auth', ->
             expect(Auth.resolveRedirectRoute('signIn')).toEqual 'sign-out'
 
         describe 'sign out', ->
-          it 'returns sign out fallback route', ->
-            expect(Auth.resolveRedirectRoute('signOut'))
-              .toEqual 'sign-out-fallback'
+          it 'returns sign out fb route', ->
+            expect(Auth.resolveRedirectRoute('signOut')).toEqual 'sign-out-fb'
 
   describe '#ajax', ->
     beforeEach ->
@@ -123,125 +112,48 @@ describe 'Auth', ->
 
         describe 'type = GET', ->
 
+          describe 'default', ->
+            beforeEach ->
+              Auth.ajax { url: 'bar', type: 'GET' }
+            follow 'auth token location', 'param'
+
           describe 'customized', ->
+
+            describe 'overriding auth token key', ->
+              beforeEach ->
+                Auth.ajax { url: 'bar', type: 'GET', data: { tokenKey: 'quux' } }
+              follow 'auth token location', 'param', 'quux'
 
             describe 'does not override auth token key', ->
 
               describe 'data = object', ->
                 beforeEach ->
                   Auth.ajax { url: 'bar', type: 'GET', data: { baz: 'quux' } }
-
-                it 'sends auth token as param with auth token value', ->
-                  expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                    .toEqual 'token-value'
-
-                it 'does not send Authorization header', ->
-                  expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                    .not.toBeDefined()
-
-                it 'does not send custom header', ->
-                  expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                    .not.toBeDefined()
+                follow 'auth token location', 'param'
 
               describe 'data = null', ->
                 beforeEach ->
                   Auth.ajax { url: 'bar', type: 'GET', data: null }
-
-                it 'sends auth token as param with auth token value', ->
-                  expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                    .toEqual 'token-value'
-
-                it 'does not send Authorization header', ->
-                  expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                    .not.toBeDefined()
-
-                it 'does not send custom header', ->
-                  expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                    .not.toBeDefined()
-
-            describe 'overriding auth token key', ->
-              beforeEach ->
-                Auth.ajax { url: 'bar', type: 'GET', data: { tokenKey: 'quux' } }
-
-              it 'sends auth token as param with overriden value', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .toEqual 'quux'
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
-
-          describe 'default', ->
-            beforeEach ->
-              Auth.ajax { url: 'bar', type: 'GET' }
-
-            it 'sends auth token as param with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .toEqual 'token-value'
-
-            it 'does not send Authorization header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .not.toBeDefined()
-
-            it 'does not send custom header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .not.toBeDefined()
+                follow 'auth token location', 'param'
 
         describe 'type != GET', ->
-
-          describe 'customized', ->
-
-            describe 'does not override auth token key', ->
-              beforeEach ->
-                Auth.ajax { url: 'bar', type: 'FOO', data: { baz: 'quux' } }
-
-              it 'sends auth token as param with auth token value', ->
-                expect(JSON.parse(jQuery.ajax.calls[0].args[0].data).tokenKey)
-                  .toEqual 'token-value'
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
-
-            describe 'overriding auth token key', ->
-              beforeEach ->
-                Auth.ajax { url: 'bar', type: 'FOO', data: { tokenKey: 'quux' } }
-
-              it 'sends auth token as param with overriden value', ->
-                expect(JSON.parse(jQuery.ajax.calls[0].args[0].data).tokenKey)
-                  .toEqual 'quux'
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
 
           describe 'default', ->
             beforeEach ->
               Auth.ajax { url: 'bar', type: 'FOO' }
+            follow 'auth token location', 'param'
 
-            it 'sends auth token as param with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .toEqual 'token-value'
+          describe 'customized', ->
 
-            it 'does not send Authorization header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .not.toBeDefined()
+            describe 'overriding auth token key', ->
+              beforeEach ->
+                Auth.ajax { url: 'bar', type: 'FOO', data: { tokenKey: 'quux' } }
+              follow 'auth token location', 'quux'
 
-            it 'does not send custom header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .not.toBeDefined()
+            describe 'does not override auth token key', ->
+              beforeEach ->
+                Auth.ajax { url: 'bar', type: 'FOO', data: { baz: 'quux' } }
+              follow 'auth token location'
 
       describe "Auth.Config.requestTokenLocation = 'authHeader'", ->
         beforeEach ->
@@ -250,111 +162,45 @@ describe 'Auth', ->
 
         describe 'type != GET', ->
 
+          describe 'default', ->
+            beforeEach ->
+              Auth.ajax { url: 'bar', type: 'FOO' }
+            follow 'auth token location', 'authorization header'
+
           describe 'customized', ->
-
-            describe 'does not override Authorization header', ->
-              beforeEach ->
-                Auth.ajax {
-                  url: 'bar', type: 'FOO', headers: { baz: 'quux' } }
-
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'sends Authorization header with auth token value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .toEqual 'headerKey token-value'
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
 
             describe 'overriding Authorization header', ->
               beforeEach ->
                 Auth.ajax {
                   url: 'bar', type: 'FOO', headers: { Authorization: 'quux' } }
-
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'sends Authorization header with overriden value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .toEqual 'quux'
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
-
-          describe 'default', ->
-            beforeEach ->
-              Auth.ajax { url: 'bar', type: 'FOO' }
-
-            it 'does not tamper with params', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .not.toBeDefined()
-
-            it 'sends Authorization header with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .toEqual 'headerKey token-value'
-
-            it 'does not send custom header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .not.toBeDefined()
-
-        describe 'type = GET', ->
-
-          describe 'customized', ->
+              follow 'auth token location', 'authorization header', 'quux'
 
             describe 'does not override Authorization header', ->
               beforeEach ->
                 Auth.ajax {
-                  url: 'bar', type: 'GET', headers: { baz: 'quux' } }
+                  url: 'bar', type: 'FOO', headers: { baz: 'quux' } }
+              follow 'auth token location', 'authorization header'
 
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
+        describe 'type = GET', ->
 
-              it 'sends Authorization header with auth token value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .toEqual 'headerKey token-value'
+          describe 'default', ->
+            beforeEach ->
+              Auth.ajax { url: 'bar', type: 'GET' }
+            follow 'auth token location', 'authorization header'
 
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
+          describe 'customized', ->
 
             describe 'overriding Authorization header', ->
               beforeEach ->
                 Auth.ajax {
                   url: 'bar', type: 'GET', headers: { Authorization: 'quux' } }
+              follow 'auth token location', 'authorization header', 'quux'
 
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'sends Authorization header with overriden value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .toEqual 'quux'
-
-              it 'does not send custom header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .not.toBeDefined()
-
-          describe 'default', ->
-            beforeEach ->
-              Auth.ajax { url: 'bar', type: 'GET' }
-
-            it 'does not tamper with params', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .not.toBeDefined()
-
-            it 'sends Authorization header with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .toEqual 'headerKey token-value'
-
-            it 'does not send custom header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .not.toBeDefined()
+            describe 'does not override Authorization header', ->
+              beforeEach ->
+                Auth.ajax {
+                  url: 'bar', type: 'GET', headers: { baz: 'quux' } }
+              follow 'auth token location', 'authorization header'
 
       describe "Auth.Config.requestTokenLocation = 'customHeader'", ->
         beforeEach ->
@@ -363,111 +209,45 @@ describe 'Auth', ->
 
         describe 'type = GET', ->
 
+          describe 'default', ->
+            beforeEach ->
+              Auth.ajax { url: 'bar', type: 'GET' }
+            follow 'auth token location', 'custom header'
+
           describe 'customized', ->
-
-            describe 'does not override custom auth header', ->
-              beforeEach ->
-                Auth.ajax {
-                  url: 'bar', type: 'GET', headers: { baz: 'quux' } }
-
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'sends custom header with auth token value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .toEqual 'token-value'
 
             describe 'overriding custom auth header', ->
               beforeEach ->
                 Auth.ajax {
                   url: 'bar', type: 'GET', headers: { headerKey: 'quux' } }
-
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'sends custom header with overriden value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .toEqual 'quux'
-
-          describe 'default', ->
-            beforeEach ->
-              Auth.ajax { url: 'bar', type: 'GET' }
-
-            it 'does not tamper with params', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .not.toBeDefined()
-
-            it 'does not send Authorization header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .not.toBeDefined()
-
-            it 'sends custom header with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .toEqual 'token-value'
-
-        describe 'type != GET', ->
-
-          describe 'customized', ->
+              follow 'auth token location', 'custom header', 'quux'
 
             describe 'does not override custom auth header', ->
               beforeEach ->
                 Auth.ajax {
-                  url: 'bar', type: 'FOO', headers: { baz: 'quux' } }
+                  url: 'bar', type: 'GET', headers: { baz: 'quux' } }
+              follow 'auth token location', 'custom header'
 
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
+        describe 'type != GET', ->
 
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
+          describe 'default', ->
+            beforeEach ->
+              Auth.ajax { url: 'bar', type: 'FOO' }
+            follow 'auth token location', 'custom header'
 
-              it 'sends custom header with auth token value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .toEqual 'token-value'
+          describe 'customized', ->
 
             describe 'overriding custom auth header', ->
               beforeEach ->
                 Auth.ajax {
                   url: 'bar', type: 'FOO', headers: { headerKey: 'quux' } }
+              follow 'auth token location', 'custom header', 'quux'
 
-              it 'does not tamper with params', ->
-                expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                  .not.toBeDefined()
-
-              it 'does not send Authorization header', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                  .not.toBeDefined()
-
-              it 'sends custom header with overriden value', ->
-                expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                  .toEqual 'quux'
-
-          describe 'default', ->
-            beforeEach ->
-              Auth.ajax { url: 'bar', type: 'FOO' }
-
-            it 'does not tamper with params', ->
-              expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-                .not.toBeDefined()
-
-            it 'does not send Authorization header', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.Authorization)
-                .not.toBeDefined()
-
-            it 'sends custom header with auth token value', ->
-              expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-                .toEqual 'token-value'
+            describe 'does not override custom auth header', ->
+              beforeEach ->
+                Auth.ajax {
+                  url: 'bar', type: 'FOO', headers: { baz: 'quux' } }
+              follow 'auth token location', 'custom header'
 
     describe 'Auth.authToken = null', ->
       beforeEach ->
@@ -475,79 +255,51 @@ describe 'Auth', ->
         spyOn jQuery, 'ajax'
         Auth.ajax { url: 'bar', type: 'GET' }
 
-      it 'does not tamper with params', ->
-        expect(jQuery.ajax.calls[0].args[0].data?.tokenKey)
-          .not.toBeDefined()
-
-      it 'does not tamper with headers', ->
-        expect(jQuery.ajax.calls[0].args[0].headers?.headerKey)
-          .not.toBeDefined()
+      follow 'auth token in param'
+      follow 'auth token in authorization header'
+      follow 'auth token in custom header'
 
     describe 'default content type', ->
       beforeEach -> spyOn jQuery, 'ajax'
 
       describe 'data not given', ->
         beforeEach -> Auth.ajax()
-
-        it 'does not set contentType', ->
-          expect(jQuery.ajax.calls[0].args[0].contentType).not.toBeDefined()
-
-        it 'does not set data', ->
-          expect(jQuery.ajax.calls[0].args[0].data).not.toBeDefined()
+        follow 'auth ajax content type'
+        follow 'auth ajax data'
 
       describe 'data given', ->
 
         describe 'contentType given', ->
           beforeEach -> Auth.ajax { data: { foo: 'bar' }, contentType: 'foo' }
-
-          it 'uses given contentType', ->
-            expect(jQuery.ajax.calls[0].args[0].contentType).toEqual 'foo'
-
-          it 'uses given data', ->
-            expect(jQuery.ajax.calls[0].args[0].data).toEqual { foo: 'bar' }
+          follow 'auth ajax content type', 'foo'
+          follow 'auth ajax data', { foo: 'bar' }
 
         describe 'contentType not given', ->
 
-          describe 'type given', ->
-
-            describe "= 'GET'", ->
-              beforeEach -> Auth.ajax { data: { foo: 'bar' }, type: 'GET' }
-
-              it 'does not set contentType', ->
-                expect(jQuery.ajax.calls[0].args[0].contentType)
-                  .not.toBeDefined()
-
-              it 'uses given data', ->
-                expect(jQuery.ajax.calls[0].args[0].data)
-                  .toEqual { foo: 'bar' }
-
-            describe "!= 'GET'", ->
-              beforeEach -> Auth.ajax { data: { foo: 'bar' }, type: 'FOO' }
-
-              it 'sets contentType to json', ->
-                expect(jQuery.ajax.calls[0].args[0].contentType)
-                  .toEqual 'application/json; charset=utf-8'
-
-              it 'serializes data to json string', ->
-                expect(jQuery.ajax.calls[0].args[0].data)
-                  .toEqual '{"foo":"bar"}'
-
           describe 'type not given', ->
             beforeEach -> Auth.ajax { data: { foo: 'bar' } }
+            follow 'auth ajax content type', 'application/json; charset=utf-8'
+            follow 'auth ajax data', '{"foo":"bar"}', true
 
-            it 'sets contentType to json', ->
-              expect(jQuery.ajax.calls[0].args[0].contentType)
-                .toEqual 'application/json; charset=utf-8'
+          describe 'type given', ->
 
-            it 'serializes data to json string', ->
-              expect(jQuery.ajax.calls[0].args[0].data).toEqual '{"foo":"bar"}'
+            describe '= GET', ->
+              beforeEach -> Auth.ajax { data: { foo: 'bar' }, type: 'GET' }
+              follow 'auth ajax content type'
+              follow 'auth ajax data', { foo: 'bar' }
+
+            describe '!= GET', ->
+              beforeEach -> Auth.ajax { data: { foo: 'bar' }, type: 'FOO' }
+              follow 'auth ajax content type', 'application/json; charset=utf-8'
+              follow 'auth ajax data', '{"foo":"bar"}', true
 
     describe 'customizable', ->
       beforeEach ->
         spyOn jQuery, 'ajax'
         Auth.ajax { url: 'bar', type: 'GET', contentType: 'foo' }
 
-      it 'overrides preset values', ->
+      it 'uses given values', ->
+        expect(jQuery.ajax.calls[0].args[0].url).toEqual 'bar'
         expect(jQuery.ajax.calls[0].args[0].type).toEqual 'GET'
         expect(jQuery.ajax.calls[0].args[0].contentType).toEqual 'foo'
 
@@ -573,29 +325,7 @@ describe 'Auth', ->
       Auth.set 'prevRoute', null
 
     describe '#signIn', ->
-
-      describe 'supports async option', ->
-        beforeEach -> spyOn(Auth, 'ajax').andCallThrough()
-
-        describe '= true', ->
-          beforeEach -> Auth.signIn { foo: 'bar', async: true }
-
-          it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toEqual true
-
-          it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data)
-              .toEqual JSON.stringify { foo: 'bar' }
-
-        describe '= false', ->
-          beforeEach -> Auth.signIn { foo: 'bar', async: false }
-
-          it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toEqual false
-
-          it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data)
-              .toEqual JSON.stringify { foo: 'bar' }
+      follow 'auth async support'
 
       describe 'success', ->
         beforeEach ->
@@ -693,28 +423,7 @@ describe 'Auth', ->
         Auth.set 'currentUserId', 1
         Auth.set 'currentUser', '1-model'
 
-      describe 'supports async option', ->
-        beforeEach -> spyOn(Auth, 'ajax').andCallThrough()
-
-        describe '= true', ->
-          beforeEach -> Auth.signOut { foo: 'bar', async: true }
-
-          it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toEqual true
-
-          it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data)
-              .toEqual JSON.stringify { foo: 'bar', auth_token: 'foo' }
-
-        describe '= false', ->
-          beforeEach -> Auth.signOut { foo: 'bar', async: false }
-
-          it 'sets async option', ->
-            expect(Auth.ajax.calls[0].args[0].async).toEqual false
-
-          it 'does not pollute data', ->
-            expect(Auth.ajax.calls[0].args[0].data)
-              .toEqual JSON.stringify { foo: 'bar', auth_token: 'foo' }
+      follow 'auth async support'
 
       describe 'success', ->
         beforeEach ->
