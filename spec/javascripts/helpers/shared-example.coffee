@@ -11,7 +11,7 @@ window.itBehavesLike = ->
 
   if exampleGroup
     describe exampleName, ->
-      exampleGroup.apply this, exampleArguments
+      exampleGroup.apply this, exampleArgs
       if innerBlock then innerBlock()
   else
     it "cannot find shared behavior: '#{exampleName}'", ->
