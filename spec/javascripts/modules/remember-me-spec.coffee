@@ -26,62 +26,29 @@ describe 'Auth.Module.RememberMe', ->
     afterEach ->
       Auth.Config.reopen { rememberPeriod: 14, rememberStorage: 'cookie' }
 
-    describe '#retrieveToken', ->
-      beforeEach ->
-        spyOn localStorage, 'getItem'
-        spyOn jQuery, 'cookie'
+    follow 'remember me storage media support',
+      moduleMethod: 'retrieveToken'
+      moduleArgs: []
+      localStorageMethod: 'getItem'
+      localStorageArgs: ['ember-auth-remember-me']
+      cookieMethod: 'cookie'
+      cookieArgs: ['ember-auth-remember-me']
 
-      it 'supports local storage', ->
-        Auth.Config.reopen { rememberStorage: 'localStorage' }
-        Auth.Module.RememberMe.retrieveToken()
-        expect(localStorage.getItem)
-          .toHaveBeenCalledWith 'ember-auth-remember-me'
-        expect(jQuery.cookie).not.toHaveBeenCalled()
+    follow 'remember me storage media support',
+      moduleMethod: 'storeToken'
+      moduleArgs: ['foo']
+      localStorageMethod: 'setItem'
+      localStorageArgs: ['ember-auth-remember-me', 'foo']
+      cookieMethod: 'cookie'
+      cookieArgs: ['ember-auth-remember-me', 'foo', { expires: 7 }]
 
-      it 'supports cookie', ->
-        Auth.Config.reopen { rememberStorage: 'cookie' }
-        Auth.Module.RememberMe.retrieveToken()
-        expect(jQuery.cookie).toHaveBeenCalledWith 'ember-auth-remember-me'
-        expect(localStorage.getItem).not.toHaveBeenCalled()
-
-    describe '#storeToken', ->
-      beforeEach ->
-        spyOn localStorage, 'setItem'
-        spyOn jQuery, 'cookie'
-
-      it 'supports local storage', ->
-        Auth.Config.reopen { rememberStorage: 'localStorage' }
-        Auth.Module.RememberMe.storeToken('foo')
-        expect(localStorage.setItem)
-          .toHaveBeenCalledWith 'ember-auth-remember-me', 'foo'
-        expect(jQuery.cookie).not.toHaveBeenCalled()
-
-      it 'supports cookie', ->
-        Auth.Config.reopen { rememberStorage: 'cookie' }
-        Auth.Module.RememberMe.storeToken('foo')
-        expect(jQuery.cookie)
-          .toHaveBeenCalledWith 'ember-auth-remember-me', 'foo',
-            expires: 7
-        expect(localStorage.setItem).not.toHaveBeenCalled()
-
-    describe '#removeToken', ->
-      beforeEach ->
-        spyOn localStorage, 'removeItem'
-        spyOn jQuery, 'removeCookie'
-
-      it 'supports local storage', ->
-        Auth.Config.reopen { rememberStorage: 'localStorage' }
-        Auth.Module.RememberMe.removeToken()
-        expect(localStorage.removeItem)
-          .toHaveBeenCalledWith 'ember-auth-remember-me'
-        expect(jQuery.removeCookie).not.toHaveBeenCalled()
-
-      it 'supports cookie', ->
-        Auth.Config.reopen { rememberStorage: 'cookie' }
-        Auth.Module.RememberMe.removeToken()
-        expect(jQuery.removeCookie)
-          .toHaveBeenCalledWith 'ember-auth-remember-me'
-        expect(localStorage.removeItem).not.toHaveBeenCalled()
+    follow 'remember me storage media support',
+      moduleMethod: 'removeToken'
+      moduleArgs: []
+      localStorageMethod: 'removeItem'
+      localStorageArgs: ['ember-auth-remember-me']
+      cookieMethod: 'removeCookie'
+      cookieArgs: ['ember-auth-remember-me']
 
   describe '#recall', ->
     beforeEach -> spyOn Auth, 'signIn'
@@ -108,25 +75,16 @@ describe 'Auth.Module.RememberMe', ->
 
     describe 'Auth.Config.rememberMe = false', ->
       beforeEach -> Auth.Config.reopen { rememberMe: false }
-
-      it 'does not attempt a sign in', ->
-        Auth.Module.RememberMe.recall()
-        expect(Auth.signIn).not.toHaveBeenCalled()
+      follow 'recall no sign in'
 
     describe 'Auth.authToken present', ->
       beforeEach -> Auth.set 'authToken', 'foo'
-
-      it 'does not attempt a sign in', ->
-        Auth.Module.RememberMe.recall()
-        expect(Auth.signIn).not.toHaveBeenCalled()
+      follow 'recall no sign in'
 
     describe 'retrieveToken fails', ->
       beforeEach ->
         spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn null
-
-      it 'does not attempt a sign in', ->
-        Auth.Module.RememberMe.recall()
-        expect(Auth.signIn).not.toHaveBeenCalled()
+      follow 'recall no sign in'
 
     describe 'Auth.Config.rememberMe = true', ->
       beforeEach -> Auth.Config.reopen { rememberMe: true }
@@ -147,36 +105,24 @@ describe 'Auth.Module.RememberMe', ->
 
     describe 'Auth.Config.rememberMe = false', ->
       beforeEach -> Auth.Config.reopen { rememberMe: false }
-
-      it 'does not attempt to remember session', ->
-        Auth.Module.RememberMe.remember()
-        expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
+      follow 'recall no remember'
 
     describe 'no remember token in Auth.json', ->
       beforeEach -> Auth.set 'json', { foo: 'bar' }
       afterEach -> Auth.set 'json', null
-
-      it 'does not attempt to remember session', ->
-        Auth.Module.RememberMe.remember()
-        expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
+      follow 'recall no remember'
 
     describe 'remember token in Auth.json is empty', ->
       beforeEach -> Auth.set 'json', { r_key: '' }
       afterEach -> Auth.set 'json', null
-
-      it 'does not attempt to remember session', ->
-        Auth.Module.RememberMe.remember()
-        expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
+      follow 'recall no remember'
 
     describe 'remember token same as local one', ->
       beforeEach ->
         Auth.set 'json', { r_key: 'foo' }
         spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn 'foo'
       afterEach -> Auth.set 'json', null
-
-      it 'does not attempt to remember session', ->
-        Auth.Module.RememberMe.remember()
-        expect(Auth.Module.RememberMe.storeToken).not.toHaveBeenCalled()
+      follow 'recall no remember'
 
     describe 'Auth.Config.rememberMe = true', ->
       beforeEach -> Auth.Config.reopen { rememberMe: true }
