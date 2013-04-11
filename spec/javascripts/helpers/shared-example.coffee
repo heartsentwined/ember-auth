@@ -1,9 +1,9 @@
 window.sharedExampleGroups = {}
 
-window.sharedExample = (exampleName, callback) ->
+window.example = (exampleName, callback) ->
   window.sharedExampleGroups[exampleName] = callback
 
-window.itBehavesLike = ->
+window.follow = ->
   exampleName  = _.first(arguments)
   exampleArgs  = _.select(_.rest(arguments), (arg) -> !_.isFunction(arg))
   innerBlock   = _.detect(arguments, (arg) -> _.isFunction(arg))
