@@ -626,6 +626,7 @@
       var _this = this;
 
       Auth.on('signInSuccess', function() {
+        _this.forget();
         return _this.remember();
       });
       Auth.on('signInError', function() {
