@@ -6,9 +6,11 @@ describe 'Auth.Module.RememberMe', ->
     Auth.set 'authToken', null
 
   describe 'default actions', ->
-    it 'remember() on signInSuccess', ->
+    it 'forget() and remember() on signInSuccess', ->
+      spyOn Auth.Module.RememberMe, 'forget'
       spyOn Auth.Module.RememberMe, 'remember'
       Auth.trigger 'signInSuccess'
+      expect(Auth.Module.RememberMe.forget).toHaveBeenCalled()
       expect(Auth.Module.RememberMe.remember).toHaveBeenCalled()
 
     it 'forget() on signInError', ->

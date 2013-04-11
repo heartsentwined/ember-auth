@@ -1,6 +1,7 @@
 Auth.Module.RememberMe = Em.Object.create
   init: ->
     Auth.on 'signInSuccess', =>
+      @forget()
       @remember()
 
     Auth.on 'signInError', =>
