@@ -9,7 +9,7 @@ ember-auth
 3.0 Upgrade
 ===========
 
-Features and **BC Breaks** introduced in `3.0.x` release. Check the
+Features and **BC Breaks** introduced in `3.*` release. Check the
 [Changelog](https://github.com/heartsentwined/ember-auth/blob/master/CHANGELOG.md)
 for the complete list and an upgrade guide.
 
