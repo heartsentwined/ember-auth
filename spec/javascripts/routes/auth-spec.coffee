@@ -86,3 +86,6 @@ describe 'Auth.Route', ->
           Em.run App, 'advanceReadiness'
           Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
           expect(currentPath).toEqual 'foo'
+
+  # TODO:
+  # url authentication, remember me, auth redirect sequence tests
