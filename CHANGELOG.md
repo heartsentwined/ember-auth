@@ -1,3 +1,7 @@
+# 3.1.0 (12 Apr 2013)
+
+* Feature: url authentication (`example.com?auth_token=lJfajl79`) (#27)
+
 # 3.0.4 (9 Apr 2013)
 
 * Bugfix: `Auth.ajax`: behavior when customized with `data = null` (#25)
