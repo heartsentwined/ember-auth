@@ -10,9 +10,9 @@ window.follow = ->
   exampleGroup = window.sharedExampleGroups[exampleName]
 
   if exampleGroup
-    describe exampleName, ->
+    describe "follows example '#{exampleName}'", ->
       exampleGroup.apply this, exampleArgs
       if innerBlock then innerBlock()
   else
-    it "cannot find shared behavior: '#{exampleName}'", ->
+    it "cannot find example '#{exampleName}'", ->
       expect(false).toEqual(true) # dummy
