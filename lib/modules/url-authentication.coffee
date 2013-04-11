@@ -1,5 +1,5 @@
-Auth.Module.UrlAuthentication = Em.Object.create     
-  
+Auth.Module.UrlAuthentication = Em.Object.create
+
   # try to sign in user from query parameter
   # @param {opts} authenticate options
   #   opts.async = false to send a synchronous sign in request
@@ -10,7 +10,7 @@ Auth.Module.UrlAuthentication = Em.Object.create
       data['async'] = opts.async if opts.async?
       data[Auth.Config.get('tokenKey')] = token
       Auth.signIn data
-      
+
   retrieveToken: ->
     token = $.url().param(Auth.Config.get('tokenKey'))
     # Remove trailing slash
