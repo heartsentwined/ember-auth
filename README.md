@@ -589,6 +589,10 @@ Standard events (see below) apply; and a failed sign in will also trigger an
 URL authentication will not take effect if the entry point itself is not an
 `Auth.Route`: the user will not be signed in; (hence) no events will fire.
 
+URL authentication will take precedence over a local remember me session.
+If the sign in succeeds, it will override the remember me session
+(only if remember me is enabled).
+
 User-registration, forgot password, change password, etc
 --------------------------------------------------------
 
