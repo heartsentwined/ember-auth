@@ -559,6 +559,36 @@ sign in, simply *do not* return a remember token from the server response.
 
 Bear in mind some [security caveats](https://github.com/heartsentwined/ember-auth/wiki/Security).
 
+Passing authentication token in url
+-----------------------------------
+
+You can enable authentication via an authentication token passed in the URL
+query string, e.g. for direct links to a user's auth-only content.
+
+Your server API token creation ("sign in") end point should be polymorphic,
+and accept an authentication token.
+
+Let's say you want to allow this URL, pointing to an auth-only resource
+* `http://www.example.com/?auth_token=fjlja8hfhf4/#/posts/5`
+to auto-sign in the user via
+* `POST /api/sign_in` with params `auth_token = fjlja8hfhf4`
+
+Configuration:
+
+```coffeescript
+Auth.Config.reopen
+  urlAuthentication: true # default = false
+  tokenCreateUrl: '/api/sign_in'
+  tokenKey: 'auth_token'
+```
+
+`ember-auth` will now (attempt to) sign in the user before rendering the page.
+Standard events (see below) apply; and a failed sign in will also trigger an
+`Auth.Route.authAccess` event.
+
+URL authentication will not take effect if the entry point itself is not an
+`Auth.Route`: the user will not be signed in; (hence) no events will fire.
+
 User-registration, forgot password, change password, etc
 --------------------------------------------------------
 
