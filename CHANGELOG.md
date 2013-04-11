@@ -1,6 +1,7 @@
 # 3.1.0 (12 Apr 2013)
 
 * Feature: url authentication (`example.com?auth_token=lJfajl79`) (#27)
+* Bugfix: previous remember me cookies are now cleared on successful sign in
 
 # 3.0.4 (9 Apr 2013)
 
