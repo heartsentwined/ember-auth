@@ -75,16 +75,16 @@ describe 'Auth.Module.RememberMe', ->
 
     describe 'Auth.Config.rememberMe = false', ->
       beforeEach -> Auth.Config.reopen { rememberMe: false }
-      follow 'recall no sign in'
+      follow 'remember me - recall - no sign in'
 
     describe 'Auth.authToken present', ->
       beforeEach -> Auth.set 'authToken', 'foo'
-      follow 'recall no sign in'
+      follow 'remember me - recall - no sign in'
 
     describe 'retrieveToken fails', ->
       beforeEach ->
         spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn null
-      follow 'recall no sign in'
+      follow 'remember me - recall - no sign in'
 
     describe 'Auth.Config.rememberMe = true', ->
       beforeEach -> Auth.Config.reopen { rememberMe: true }
@@ -105,24 +105,24 @@ describe 'Auth.Module.RememberMe', ->
 
     describe 'Auth.Config.rememberMe = false', ->
       beforeEach -> Auth.Config.reopen { rememberMe: false }
-      follow 'recall no remember'
+      follow 'remember me - remember - no store session'
 
     describe 'no remember token in Auth.json', ->
       beforeEach -> Auth.set 'json', { foo: 'bar' }
       afterEach -> Auth.set 'json', null
-      follow 'recall no remember'
+      follow 'remember me - remember - no store session'
 
     describe 'remember token in Auth.json is empty', ->
       beforeEach -> Auth.set 'json', { r_key: '' }
       afterEach -> Auth.set 'json', null
-      follow 'recall no remember'
+      follow 'remember me - remember - no store session'
 
     describe 'remember token same as local one', ->
       beforeEach ->
         Auth.set 'json', { r_key: 'foo' }
         spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn 'foo'
       afterEach -> Auth.set 'json', null
-      follow 'recall no remember'
+      follow 'remember me - remember - no store session'
 
     describe 'Auth.Config.rememberMe = true', ->
       beforeEach -> Auth.Config.reopen { rememberMe: true }
