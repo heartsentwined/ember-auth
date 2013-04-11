@@ -516,7 +516,8 @@ Auth.Config.reopen
   rememberStorage: 'localStorage' # defaults to 'cookie'
 ```
 
-If you choose to use localStorage you can remove the jquery.cookie.js library from the distributed js file.
+If you choose to use localStorage you can remove the jquery.cookie.js library
+from the distributed js file.
 
 Remember Me will (attempt to) auto-sign in the user from the local cookie
 when the user accesses an `Auth.Route` (only if one is not already signed in).
