@@ -1,6 +1,11 @@
+# 3.1.1 (15 Apr 2013)
+
+* Bugfix: remove `ember-rails` dependency in favor of `ember-source` (#32)
+
 # 3.1.0 (12 Apr 2013)
 
 * Feature: url authentication (`example.com?auth_token=lJfajl79`) (#27)
+    (@seanrucker)
 * Bugfix: previous remember me cookies are now cleared on successful sign in
 
 # 3.0.4 (9 Apr 2013)
@@ -112,14 +117,15 @@ App.SignOutController = Em.ObjectController.extend(Auth.SignOutController, {})
 
 # 2.6.0 (4 Apr 2013)
 
-* Feature: use `localStorage` instead of cookie for `RememberMe`
-* Feature: pass authentication token in request header
-* Bugfix: empty `responseText` on a successful JSONP request
-* Bugfix: proper JSONP redirect support
+* Feature: use `localStorage` instead of cookie for `RememberMe` (#20) (@iHiD)
+* Feature: pass authentication token in request header (#19) (@seanrucker)
+* Bugfix: empty `responseText` on a successful JSONP request (#15) (@iHiD)
+* Bugfix: proper JSONP redirect support (#16) (@iHiD)
 
 # 2.5.0 (3 Apr 2013)
 
-* Feature: Authenticated requests available for non `ember-data` requests
+* Feature: Authenticated requests available for non `ember-data` requests (#18)
+    (@seanrucker)
 
 # 2.4.1 (2 Apr 2013)
 
