@@ -17,4 +17,6 @@ group :development, :test do
   gem 'underscore-rails', '~> 1.4'
   gem 'guard-jasmine',    '~> 1.14'
   gem 'ember-rails',      '~> 0.10'
+
+  gem 'appraisal'
 end

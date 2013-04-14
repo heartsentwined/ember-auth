@@ -1,6 +1,9 @@
 # bundler tasks
 require 'bundler/gem_tasks'
 
+# appraisal
+require 'appraisal'
+
 # load asset:precompile task with appropriate settings
 require 'uglifier'
 require File.expand_path(File.join('..', 'application'), __FILE__)
