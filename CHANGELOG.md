@@ -1,3 +1,7 @@
+# 3.1.2 (15 Apr 2013)
+
+* Add `ember` dependency to `package.json`
+
 # 3.1.1 (15 Apr 2013)
 
 * Bugfix: remove `ember-rails` dependency in favor of `ember-source` (#32)
