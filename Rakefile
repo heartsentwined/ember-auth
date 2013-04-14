@@ -1,9 +1,6 @@
 # bundler tasks
 require 'bundler/gem_tasks'
 
-# appraisal
-require 'appraisal'
-
 # load asset:precompile task with appropriate settings
 require 'uglifier'
 require File.expand_path(File.join('..', 'application'), __FILE__)
@@ -34,6 +31,15 @@ task :dist do
   File.delete File.join('dist', 'manifest.yml')
 
   puts 'Successfully built ember-auth at dist/'
+end
+
+# appraisal
+require 'appraisal'
+
+desc 'Run tests'
+task :test, :timeout do |t, args|
+  timeout = args.timeout ? "--server-timeout=#{args.timeout}" : ''
+  exit system "guard-jasmine #{timeout}"
 end
 
 task :default => [:dist]
