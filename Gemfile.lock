@@ -123,7 +123,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack (~> 3.2)
-  appraisal
+  appraisal (~> 0.5)
   coffee-script (~> 2.2)
   ember-rails (~> 0.10)
   guard-jasmine (~> 1.14)
