@@ -24,6 +24,14 @@ Auth.Config = Em.Object.create
   #   if POST /api/token returns {auth_token: "fjlja8hfhf4"},
   #   set this to 'auth_token'
   tokenKey: null
+  
+  # REQUIRED
+  # You must implement this hook:
+  # It should return the name of the key of auth token in your API's response.
+  # e.g.
+  #   if POST /api/token returns {remember: true},
+  #   set this to true
+  rememberKey: null
 
   # REQUIRED
   # You must implement this hook:
@@ -156,8 +164,12 @@ Auth.Config = Em.Object.create
   # the route will check for the token passed in as a query parameter and use
   # it to authenticate before redirecting. A common use case for this is 
   # automatically authenticating a user from a link in a system generated email.
+  # Another common case is returning from Oauth authentication once the identity
+  # provider has confirmed identity and authorized the request.
   #
-  # The name of the URL parameter is defined by the Auth.Config.tokenKey hook. 
+  # The name of the URL parameter is defined by the Auth.Config.tokenKey hook.
+  # It is also possible to sign in with remember me enabled. The name of the 
+  # additional URL parameter is defined by Auth.Config.rememberKey
   #
   # Along with the regular set of sign in credentials, your token creation API 
   # end point should also accept the token itself.
@@ -167,6 +179,11 @@ Auth.Config = Em.Object.create
   #   and Auth.Config.tokenKey returns 'auth_token' 
   #   then a URL containing ?auth_token=fjlja8hfhf4
   #   will POST /api/sign_in { "auth_token": "fjlja8hfhf4" }
+  #
+  # e.g.2.
+  #   if besides the previous example, Auth.Config.rememberKey returns 'remember'
+  #   a URL containing ?auth_token=fjlja8hfhf4&remember=true
+  #   will POST /api/sign_in { "auth_token": "fjlja8hfhf4", "remember": true }
   #
   # Until Ember supports query parameters the parameter must exist before the 
   # Ember route hash.
