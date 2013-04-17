@@ -151,25 +151,29 @@ Auth.Config = Em.Object.create
   # =====================
   # URL Authentication
   # =====================
-  
-  # Implement this hook and return true to enable URL authentication. If enabled
-  # the route will check for the token passed in as a query parameter and use
-  # it to authenticate before redirecting. A common use case for this is 
-  # automatically authenticating a user from a link in a system generated email.
+
+  # Implement this hook and return true to enable URL authentication.
   #
-  # The name of the URL parameter is defined by the Auth.Config.tokenKey hook. 
+  # A sign in attempt will be performed if the URL query string contains
+  # one or more params at the key specified at
+  # Auth.Config.urlAuthenticationParamsKey.
+  # The sign in attempt will pass along all params under the specified key,
+  # unmodified except for stripping a trailing slash (if any)
+  # It is up to your server to determine what to do with the params.
   #
-  # Along with the regular set of sign in credentials, your token creation API 
-  # end point should also accept the token itself.
-  #
+  # Caveat: if you use the `hash` routing strategy, the query parameters
+  # must exist before the Ember route hash.
   # e.g.
-  #   if Auth.Config.tokenCreateUrl returns '/api/sign_in'
-  #   and Auth.Config.tokenKey returns 'auth_token' 
-  #   then a URL containing ?auth_token=fjlja8hfhf4
-  #   will POST /api/sign_in { "auth_token": "fjlja8hfhf4" }
-  #
-  # Until Ember supports query parameters the parameter must exist before the 
-  # Ember route hash.
-  # e.g.
-  #   http://www.example.com/?auth_token=fjlja8hfhf4/#/posts/5
+  #   http://www.example.com/?auth[remember]=1&auth[key]=fja8hfhf4/#/posts/5
   urlAuthentication: false
+
+  # REQUIRED if you want to use URL authentication
+  # This should return the key within which all params to be passed in the
+  # sign in call are located.
+  # e.g.
+  #   If this is set to 'auth',
+  #   and given a URL
+  #     http://www.example.com/?auth[remember]=1&auth[key]=fja8hfhf4/#/posts/5
+  #   a sign in attempt will be to the token creation API, with the params
+  #     remember = 1, key = fja8hfhf4
+  urlAuthenticationParamsKey: null
