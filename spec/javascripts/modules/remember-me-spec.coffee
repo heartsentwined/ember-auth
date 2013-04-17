@@ -42,7 +42,8 @@ describe 'Auth.Module.RememberMe', ->
       localStorageMethod: 'setItem'
       localStorageArgs: ['ember-auth-remember-me', 'foo']
       cookieMethod: 'cookie'
-      cookieArgs: ['ember-auth-remember-me', 'foo', { expires: 7 }]
+      cookieArgs: ['ember-auth-remember-me', 'foo',
+        { expires: 7, path: '/' }]
 
     follow 'remember me storage media support',
       moduleMethod: 'removeToken'

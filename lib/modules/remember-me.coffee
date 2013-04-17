@@ -46,6 +46,7 @@ Auth.Module.RememberMe = Em.Object.create
       when 'cookie'
         jQuery.cookie 'ember-auth-remember-me', token,
           expires: Auth.Config.get('rememberPeriod')
+          path: '/'
 
   # delegate to different token removal methods
   removeToken: ->
