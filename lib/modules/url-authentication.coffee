@@ -5,21 +5,39 @@ Auth.Module.UrlAuthentication = Em.Object.create
   #   opts.async = false to send a synchronous sign in request
   authenticate: (opts = {}) ->
     return unless Auth.Config.get('urlAuthentication')
-    if !Auth.get('authToken') && token = @retrieveToken()
-      data = {}
-      data['async'] = opts.async if opts.async?
-      data[Auth.Config.get('tokenKey')] = token
-      Auth.signIn data
+    return if Auth.get 'authToken'
+    @canonicalizeParams()
+    return if $.isEmptyObject @params
+    data = {}
+    data['async'] = opts.async if opts.async?
+    data[Auth.Config.get('urlAuthenticationParamsKey')] = @params
+    Auth.signIn data
 
-  retrieveToken: ->
-    token = $.url().param(Auth.Config.get('tokenKey'))
-    # Remove trailing slash
-    token = token.slice(0, -1) if token && token.charAt(token.length-1) is '/'
-    token
   retrieveParams: ->
     return unless Auth.Config.get('urlAuthentication')
     key = Auth.Config.get('urlAuthenticationParamsKey')
     @params = $.url().param(key)?[key]
+
+  canonicalizeParams: (obj = @params) ->
+    params = {}
+    if $.isArray obj
+      params[k] = v for v, k in obj
+    else if typeof obj != 'object'
+      params[String(obj)] = String(obj)
+    else
+      params = obj
+
+    canonicalized = {}
+    for k, v of params
+      k = String(k)
+      k = k.slice(0, -1) if k && k.charAt(k.length-1) == '/'
+      if typeof v == 'object'
+        canonicalized[k] = @canonicalizeParams(v)
+      else
+        v = String(v)
+        v = v.slice(0, -1) if v && v.charAt(v.length-1) == '/'
+        canonicalized[k] = v
+    @params = canonicalized
 
 # hijack the routing process to grab params
 # before ember's routing sanitizes the URL
