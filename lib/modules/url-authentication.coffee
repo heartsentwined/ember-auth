@@ -16,3 +16,15 @@ Auth.Module.UrlAuthentication = Em.Object.create
     # Remove trailing slash
     token = token.slice(0, -1) if token && token.charAt(token.length-1) is '/'
     token
+  retrieveParams: ->
+    return unless Auth.Config.get('urlAuthentication')
+    key = Auth.Config.get('urlAuthenticationParamsKey')
+    @params = $.url().param(key)?[key]
+
+# hijack the routing process to grab params
+# before ember's routing sanitizes the URL
+Em.Router.reopen
+  init: ->
+    if Auth.Config.get('urlAuthentication')
+      Auth.Module.UrlAuthentication.retrieveParams()
+    @_super.apply(this, arguments)
