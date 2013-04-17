@@ -1,7 +1,6 @@
 Auth.Module.RememberMe = Em.Object.create
   init: ->
     Auth.on 'signInSuccess', =>
-      @forget()
       @remember()
 
     Auth.on 'signInError', =>
@@ -16,6 +15,7 @@ Auth.Module.RememberMe = Em.Object.create
   recall: (opts = {}) ->
     return unless Auth.Config.get 'rememberMe'
     if !Auth.get('authToken') && token = @retrieveToken()
+      @fromRecall = true
       data = {}
       data['async'] = opts.async if opts.async?
       data[Auth.Config.get('rememberTokenKey')] = token
@@ -25,7 +25,11 @@ Auth.Module.RememberMe = Em.Object.create
   remember: ->
     return unless Auth.Config.get 'rememberMe'
     token = Auth.get('json')[Auth.Config.get('rememberTokenKey')]
-    @storeToken(token) if token && token != @retrieveToken()
+    if token
+      @storeToken(token) if token != @retrieveToken()
+    else
+      @forget() unless @fromRecall
+    @fromRecall = false
 
   # destroy local remember me cookie
   forget: ->

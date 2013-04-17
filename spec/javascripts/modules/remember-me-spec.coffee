@@ -6,11 +6,9 @@ describe 'Auth.Module.RememberMe', ->
     Auth.set 'authToken', null
 
   describe 'default actions', ->
-    it 'forget() and remember() on signInSuccess', ->
-      spyOn Auth.Module.RememberMe, 'forget'
+    it 'remember() on signInSuccess', ->
       spyOn Auth.Module.RememberMe, 'remember'
       Auth.trigger 'signInSuccess'
-      expect(Auth.Module.RememberMe.forget).toHaveBeenCalled()
       expect(Auth.Module.RememberMe.remember).toHaveBeenCalled()
 
     it 'forget() on signInError', ->
@@ -102,6 +100,47 @@ describe 'Auth.Module.RememberMe', ->
           it 'attempts a sign in', ->
             Auth.Module.RememberMe.recall()
             expect(Auth.signIn.calls[0].args[0]).toEqual { r_key: 'foo' }
+
+  describe 'cookie handling on recall', ->
+    beforeEach ->
+      Auth.Config.reopen { tokenCreateUrl: '/api/sign-in' }
+      Auth.set 'authToken', null
+      spyOn(Auth, 'signIn').andCallThrough()
+      spyOn(Auth.Module.RememberMe, 'retrieveToken').andReturn 'foo'
+      spyOn(Auth.Module.RememberMe, 'remember').andCallThrough()
+      spyOn Auth.Module.RememberMe, 'forget'
+    afterEach ->
+      $.mockjaxClear()
+
+    describe 'sign in success', ->
+      beforeEach ->
+        $.mockjax
+          url: '/api/sign-in'
+          type: 'post'
+          data: JSON.stringify { r_key: 'foo' }
+          status: 201
+          responseText: { auth_token: 'foo', user_id: 1 }
+
+      it 'does not forget cookie', ->
+        Auth.Module.RememberMe.recall({ async: false })
+        expect(Auth.signIn).toHaveBeenCalled()
+        expect(Auth.Module.RememberMe.remember).toHaveBeenCalled()
+        expect(Auth.Module.RememberMe.forget).not.toHaveBeenCalled()
+
+    describe 'sign in failure', ->
+      beforeEach ->
+        $.mockjax
+          url: '/api/sign-in'
+          type: 'post'
+          data: JSON.stringify { r_key: 'foo' }
+          status: 400
+          responseText: { auth_token: 'foo', user_id: 1 }
+
+      it 'forgets cookie', ->
+        Auth.Module.RememberMe.recall({ async: false })
+        expect(Auth.signIn).toHaveBeenCalled()
+        expect(Auth.Module.RememberMe.remember).not.toHaveBeenCalled()
+        expect(Auth.Module.RememberMe.forget).toHaveBeenCalled()
 
   describe '#remember', ->
     beforeEach -> spyOn Auth.Module.RememberMe, 'storeToken'
