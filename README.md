@@ -715,6 +715,13 @@ The source code at `src/auth.coffee` is a comprehensive list of public API
 and helper methods; `src/config.coffee` contains an exhaustive list of
 configurable options.
 
+Versioning
+==========
+
+`ember-auth` uses [Semantic Versioning](http://semver.org/). You can safely
+use the [pessimistic version constraint operator](http://docs.rubygems.org/read/chapter/16#page74)
+(`~> 1.2`) for rubygems, or `>= 1.2 && < 2.0` for other dependency managers.
+
 Contributing
 ============
 
