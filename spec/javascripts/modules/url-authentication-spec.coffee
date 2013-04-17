@@ -154,6 +154,38 @@ describe 'Auth.Module.UrlAuthentication', ->
         App.destroy()
         App = null
 
+    describe 'route scope', ->
+      beforeEach ->
+        Auth.Config.reopen { urlAuthentication: true }
+
+      describe 'Auth.Config.urlAuthenticationRouteScope = auth', ->
+        beforeEach -> Auth.Config.reopen
+          urlAuthenticationRouteScope: 'auth'
+
+        it 'attempts to auto recall session for Auth.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
+          expect(Auth.Module.UrlAuthentication.authenticate).toHaveBeenCalled()
+
+        it 'does not attempt to auto recall session for Em.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'sign-in'
+          expect(Auth.Module.UrlAuthentication.authenticate).not.toHaveBeenCalled()
+
+      describe 'Auth.Config.urlAuthenticationRouteScope = both', ->
+        beforeEach -> Auth.Config.reopen
+          urlAuthenticationRouteScope: 'both'
+
+        it 'attempts to auto recall session for Auth.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
+          expect(Auth.Module.UrlAuthentication.authenticate).toHaveBeenCalled()
+
+        it 'does not attempt to auto recall session for Em.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'sign-in'
+          expect(Auth.Module.UrlAuthentication.authenticate).toHaveBeenCalled()
+
     describe 'Auth.Config.urlAuthentication = false', ->
       beforeEach ->
         Auth.Config.reopen { urlAuthentication: false }

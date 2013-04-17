@@ -142,6 +142,12 @@ Auth.Config = Em.Object.create
   # is not already signed in).
   rememberAutoRecall: true
 
+  # Implement this hook and return 'both' if you want auto-recall behavior to
+  # apply to regular Em.Route as well.
+  # Defaults to 'auth' - auto recall only happens in Auth.Routes.
+  # Valid values are 'auth' and 'both'
+  rememberAutoRecallRouteScope: 'auth'
+
   # Which storage medium to use for storing the remember me session.
   # Valid values are 'cookie' and 'localStorage'
   # Defaults to 'cookie'
@@ -177,3 +183,9 @@ Auth.Config = Em.Object.create
   #   a sign in attempt will be to the token creation API, with the params
   #     remember = 1, key = fja8hfhf4
   urlAuthenticationParamsKey: null
+
+  # Implement this hook and return 'both' if you want url authentication to
+  # be available in regular Em.Routes as well.
+  # Defaults to 'auth' - url authentication only happens in Auth.Routes.
+  # Valid values are 'auth' and 'both'
+  urlAuthenticationRouteScope: 'auth'

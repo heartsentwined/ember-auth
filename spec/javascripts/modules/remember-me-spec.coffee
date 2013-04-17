@@ -227,6 +227,38 @@ describe 'Auth.Module.RememberMe', ->
         App.destroy()
         App = null
 
+    describe 'route scope', ->
+      beforeEach ->
+        Auth.Config.reopen { rememberMe: true, rememberAutoRecall: true }
+
+      describe 'Auth.Config.rememberAutoRecallRouteScope = auth', ->
+        beforeEach -> Auth.Config.reopen
+          rememberAutoRecallRouteScope: 'auth'
+
+        it 'attempts to auto recall session for Auth.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
+          expect(Auth.Module.RememberMe.recall).toHaveBeenCalled()
+
+        it 'does not attempt to auto recall session for Em.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'sign-in'
+          expect(Auth.Module.RememberMe.recall).not.toHaveBeenCalled()
+
+      describe 'Auth.Config.rememberAutoRecallRouteScope = both', ->
+        beforeEach -> Auth.Config.reopen
+          rememberAutoRecallRouteScope: 'both'
+
+        it 'attempts to auto recall session for Auth.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
+          expect(Auth.Module.RememberMe.recall).toHaveBeenCalled()
+
+        it 'does not attempt to auto recall session for Em.Route', ->
+          Em.run App, 'advanceReadiness'
+          Em.run -> App.__container__.lookup('router:main').handleURL 'sign-in'
+          expect(Auth.Module.RememberMe.recall).toHaveBeenCalled()
+
     describe 'Auth.Config.rememberMe = false', ->
       beforeEach ->
         Auth.Config.reopen { rememberMe: false }
