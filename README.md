@@ -542,6 +542,14 @@ before any redirection calculations:
 Auth.Module.RememberMe.recall { async: false }
 ```
 
+By default, auto-recall behavior is only triggered on `Auth.Route`s. If you
+want it to be available for regular `Em.Route`s too, set:
+
+```coffeescript
+Auth.Config.reopen
+  rememberAutoRecallRouteScope: 'both' # defaults to 'auth'
+```
+
 The built-in behavior is to set the local remember me cookie on sign in
 success, and destroy any local remember me cookie on sign out, and on any
 sign in error. If you want to access these behaviors elsewhere, use the
@@ -593,6 +601,14 @@ URL authentication will not take effect if the entry point itself is not an
 URL authentication will take precedence over a local remember me session.
 If the sign in succeeds, it will override the remember me session
 (only if remember me is enabled).
+
+By default, url authentication is only available on `Auth.Route`s. If you
+want it to be available for regular `Em.Route`s too, set:
+
+```coffeescript
+Auth.Config.reopen
+  urlAuthenticationRouteScope: 'both' # defaults to 'auth'
+```
 
 User-registration, forgot password, change password, etc
 --------------------------------------------------------
