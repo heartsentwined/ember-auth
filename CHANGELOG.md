@@ -1,3 +1,7 @@
+# 4.1.1 (18 Apr 2013)
+
+* (Minor spec fix)
+
 # 4.1.0 (18 Apr 2013)
 
 * Bugfix: Remember cookies should always use root scope
