@@ -1,5 +1,5 @@
 describe 'Auth.Route', ->
-  it 'supports events', -> expect(Auth.on).toBeDefined()
+  it 'supports events', -> expect(Auth.Route.create().on).toBeDefined()
 
   describe '#redirect', ->
     App = null
