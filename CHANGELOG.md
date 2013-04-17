@@ -1,8 +1,9 @@
-# 4.0.2 (17 Apr 2013)
+# 4.1.0 (18 Apr 2013)
 
 * Bugfix: Remember cookies should always use root scope
 * Bugfix: Proper recall/forget behavior for Remember Me (#36)
 * Bugfix: `Auth.Route` now calls `_super()`
+* Bugfix: Url Authentication not properly reading params from URL (#37)
 * Feature: optional flags to enable Remember Me's auto-recall behavior,
     and Url Authentication's authenticate behavior, on regular `Em.Route`s
     in addition to `Auth.Route`s (#36)
