@@ -1,3 +1,41 @@
+# 4.0.0 (17 Apr 2013)
+
+* Feature: pass any params for URL authentication (#33)
+* BC Break: URL Authentication params are now mandatorily scoped under a new
+    config setting `urlAuthenticationParamsKey`.
+
+Upgrade Guide
+-------------
+
+### URL Authentication
+
+Before:
+
+```cofreescript
+Auth.Config.reopen
+  urlAuthentication: true
+```
+
+and a URL
+
+```text
+http://www.example.com/?auth_token=fja8hfhf4/#/posts/5
+```
+
+After:
+
+```coffeescript
+Auth.Config.reopen
+  urlAuthentication: true
+  urlAuthenticationParamsKey: 'auth' # or pick another name
+```
+
+and the corresponding URL
+
+```text
+http://www.example.com/?auth[auth_token]=fja8hfhf4/#/posts/5
+```
+
 # 3.1.2 (15 Apr 2013)
 
 * Add `ember` dependency to `package.json`
