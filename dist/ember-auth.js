@@ -781,7 +781,9 @@
         obj = this.params;
       }
       params = {};
-      if ($.isArray(obj)) {
+      if (obj == null) {
+        params = {};
+      } else if ($.isArray(obj)) {
         for (k = _i = 0, _len = obj.length; _i < _len; k = ++_i) {
           v = obj[k];
           params[k] = v;
