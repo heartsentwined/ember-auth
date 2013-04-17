@@ -52,4 +52,5 @@ Auth.Module.RememberMe = Em.Object.create
   removeToken: ->
     switch Auth.Config.get 'rememberStorage'
       when 'localStorage' then localStorage.removeItem 'ember-auth-remember-me'
-      when 'cookie' then jQuery.removeCookie 'ember-auth-remember-me'
+      when 'cookie'
+        jQuery.removeCookie 'ember-auth-remember-me', { path: '/' }

@@ -51,7 +51,7 @@ describe 'Auth.Module.RememberMe', ->
       localStorageMethod: 'removeItem'
       localStorageArgs: ['ember-auth-remember-me']
       cookieMethod: 'removeCookie'
-      cookieArgs: ['ember-auth-remember-me']
+      cookieArgs: ['ember-auth-remember-me', { path: '/' }]
 
   describe '#recall', ->
     beforeEach -> spyOn Auth, 'signIn'
@@ -114,11 +114,13 @@ describe 'Auth.Module.RememberMe', ->
       beforeEach -> Auth.set 'json', { foo: 'bar' }
       afterEach -> Auth.set 'json', null
       follow 'remember me - remember - no store session'
+      follow 'remember me - remember - clear prev session'
 
     describe 'remember token in Auth.json is empty', ->
       beforeEach -> Auth.set 'json', { r_key: '' }
       afterEach -> Auth.set 'json', null
       follow 'remember me - remember - no store session'
+      follow 'remember me - remember - clear prev session'
 
     describe 'remember token same as local one', ->
       beforeEach ->
