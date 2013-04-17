@@ -1,5 +1,4 @@
 Auth.Module.UrlAuthentication = Em.Object.create
-
   # try to sign in user from query parameter
   # @param {opts} authenticate options
   #   opts.async = false to send a synchronous sign in request
@@ -16,7 +15,7 @@ Auth.Module.UrlAuthentication = Em.Object.create
   retrieveParams: ->
     return unless Auth.Config.get('urlAuthentication')
     key = Auth.Config.get('urlAuthenticationParamsKey')
-    @params = $.url().param(key)?[key]
+    @params = $.url().param(key)
 
   canonicalizeParams: (obj = @params) ->
     params = {}
