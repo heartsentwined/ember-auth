@@ -2,18 +2,90 @@ describe 'Auth.Module.UrlAuthentication', ->
   beforeEach ->
     Auth.Config.reopen { urlAuthentication: true }
   afterEach ->
-    Auth.Config.reopen { urlAuthentication: false }
+    Auth.Config.reopen
+      urlAuthentication: false
+      urlAuthenticationParamsKey: null
     Auth.set 'authToken', null
+    Auth.Module.UrlAuthentication.params = null
 
-  describe '#retrieveToken', ->
+  describe '#retrieveParams', ->
+    # how to test for different Router location settings? 'history', 'hash'
 
-    it 'removes trailing slash', ->
-      spyOn(jQuery, 'url').andReturn { param: -> 'foo/' }
-      expect(Auth.Module.UrlAuthentication.retrieveToken()).toEqual 'foo'
+    describe 'Auth.Config.urlAuthentication = false', ->
+      beforeEach -> Auth.Config.reopen { urlAuthentication: false }
+      it 'does nothing', ->
+        Auth.Module.UrlAuthentication.retrieveParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual null
 
-    it 'works with params without trailing slash', ->
-      spyOn(jQuery, 'url').andReturn { param: -> 'foo' }
-      expect(Auth.Module.UrlAuthentication.retrieveToken()).toEqual 'foo'
+    describe 'Auth.Config.urlAuthentication = true', ->
+      beforeEach -> Auth.Config.reopen
+        urlAuthentication: true
+        urlAuthenticationParamsKey: 'foo'
+
+      it 'retrieves param at Auth.Config.urlAuthenticationParamsKey', ->
+        spyOn(jQuery, 'url').andReturn { param: -> { foo: { bar: 'baz' } } }
+        Auth.Module.UrlAuthentication.retrieveParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { bar: 'baz' }
+
+      it 'works for empty values', ->
+        spyOn(jQuery, 'url').andReturn { param: -> {} }
+        Auth.Module.UrlAuthentication.retrieveParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual null
+
+  describe '#canonicalizeParams', ->
+
+    describe 'null', ->
+      it 'wraps to empty objet', ->
+        Auth.Module.UrlAuthentication.params = null
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual {}
+
+    describe 'primitive', ->
+      it 'wraps to one-member object', ->
+        Auth.Module.UrlAuthentication.params = 'foo'
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { foo: 'foo' }
+
+      it 'removes trialing slash, if any', ->
+        Auth.Module.UrlAuthentication.params = 'foo/'
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { foo: 'foo' }
+
+    describe 'array', ->
+      it 'wraps to object with array indices as keys', ->
+        Auth.Module.UrlAuthentication.params = [1,2]
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { 0: '1', 1: '2' }
+
+      it 'removes trialing slash, if any', ->
+        Auth.Module.UrlAuthentication.params = ['a/','b']
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { 0: 'a', 1: 'b' }
+
+    describe 'empty object', ->
+      it 'does nothing', ->
+        Auth.Module.UrlAuthentication.params = {}
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual {}
+
+    describe 'simple object', ->
+      it 'removes trailing slash, if any', ->
+        Auth.Module.UrlAuthentication.params = { foo: 'foo' }
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { foo: 'foo' }
+        Auth.Module.UrlAuthentication.params = { foo: 'foo/' }
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual { foo: 'foo' }
+
+    describe 'deep object', ->
+      it 'removes trailing slash, if any', ->
+        Auth.Module.UrlAuthentication.params =
+          a: { b: 'b/', c: 'c' }
+          d: 'd/'
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual
+          a: { b: 'b', c: 'c' }
+          d: 'd'
 
   describe '#authenticate', ->
     beforeEach -> spyOn Auth, 'signIn'
@@ -21,7 +93,7 @@ describe 'Auth.Module.UrlAuthentication', ->
     describe 'supports async option', ->
       beforeEach ->
         Auth.set 'authToken', null
-        spyOn(Auth.Module.UrlAuthentication, 'retrieveToken').andReturn 'foo'
+        Auth.Module.UrlAuthentication.params = { foo: 'bar' }
 
       describe '= true', ->
         it 'sets async option', ->
@@ -46,9 +118,8 @@ describe 'Auth.Module.UrlAuthentication', ->
       beforeEach -> Auth.set 'authToken', 'foo'
       follow 'url authentication - authenticate - no sign in'
 
-    describe 'retrieveToken fails', ->
-      beforeEach ->
-        spyOn(Auth.Module.UrlAuthentication, 'retrieveToken').andReturn null
+    describe 'params is empty', ->
+      beforeEach -> Auth.Module.UrlAuthentication.params = {}
       follow 'url authentication - authenticate - no sign in'
 
     describe 'Auth.Config.urlAuthentication = true', ->
@@ -57,14 +128,14 @@ describe 'Auth.Module.UrlAuthentication', ->
       describe 'Auth.authToken absent', ->
         beforeEach -> Auth.set 'authToken', null
 
-        describe 'retrieveToken succeeds', ->
-          beforeEach ->
-            spyOn(Auth.Module.UrlAuthentication, 'retrieveToken').andReturn 'foo'
+        describe 'params is not empty', ->
+          beforeEach -> Auth.Module.UrlAuthentication.params = { foo: 'bar' }
 
           it 'attempts a sign in', ->
-            Auth.Config.reopen { tokenKey: 'auth_key' }
+            Auth.Config.reopen { urlAuthenticationParamsKey: 'auth_key' }
             Auth.Module.UrlAuthentication.authenticate()
-            expect(Auth.signIn.calls[0].args[0]).toEqual { auth_key: 'foo' }
+            expect(Auth.signIn.calls[0].args[0]).toEqual
+              auth_key: { foo: 'bar' }
 
   describe 'auto recall session', ->
     App = null
@@ -110,8 +181,8 @@ describe 'Auth.Module.UrlAuthentication', ->
           tokenKey: 'auth_key'
           idKey: 'user_id'
           urlAuthentication: true
+          urlAuthenticationParamsKey: 'auth_key'
         Auth.set 'authToken', null
-        spyOn(Auth.Module.UrlAuthentication, 'retrieveToken').andReturn 'bar'
 
       afterEach ->
         Auth.Config.reopen
@@ -120,7 +191,9 @@ describe 'Auth.Module.UrlAuthentication', ->
           tokenKey: null
           idKey: null
           urlAuthentication: false
+          urlAuthenticationParamsKey: null
         $.mockjaxClear()
+        Auth.Module.UrlAuthentication.params = null
 
       describe 'JSON response', ->
 
@@ -129,12 +202,13 @@ describe 'Auth.Module.UrlAuthentication', ->
             $.mockjax
               url: '/api/sign-in'
               type: 'post'
-              data: JSON.stringify { auth_key: 'bar' }
+              data: JSON.stringify { auth_key: { foo: 'bar' } }
               status: 201
               responseText: { auth_key: 'foo', user_id: 1 }
 
           it 'recalls session', ->
             Em.run App, 'advanceReadiness'
+            Auth.Module.UrlAuthentication.params = { foo: 'bar' }
             Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
             expect(Auth.Module.UrlAuthentication.authenticate.calls[0].args[0])
               .toEqual { async: false }
@@ -147,6 +221,7 @@ describe 'Auth.Module.UrlAuthentication', ->
                 currentPath = @get 'currentPath'
               ).observes('currentPath')
             Em.run App, 'advanceReadiness'
+            Auth.Module.UrlAuthentication.params = { foo: 'bar' }
             Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
             expect(currentPath).toEqual 'foo'
 
@@ -158,12 +233,13 @@ describe 'Auth.Module.UrlAuthentication', ->
             $.mockjax
               url: '/api/sign-in'
               type: 'post'
-              data: { auth_key: 'bar' }
+              data: JSON.stringify { auth_key: { foo: 'bar' } }
               status: 401
               responseText: ''
 
           it 'fails to recall session', ->
             Em.run App, 'advanceReadiness'
+            Auth.Module.UrlAuthentication.params = { foo: 'bar' }
             Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
             expect(Auth.Module.UrlAuthentication.authenticate.calls[0].args[0])
               .toEqual { async: false }
@@ -175,6 +251,7 @@ describe 'Auth.Module.UrlAuthentication', ->
               init: ->
                 @on 'authAccess', -> triggered++
             Em.run App, 'advanceReadiness'
+            Auth.Module.UrlAuthentication.params = { foo: 'bar' }
             Em.run -> App.__container__.lookup('router:main').handleURL 'foo'
             expect(triggered).toEqual 1
 
@@ -196,6 +273,7 @@ describe 'Auth.Module.UrlAuthentication', ->
                   currentPath = @get 'currentPath'
                 ).observes('currentPath')
               Em.run App, 'advanceReadiness'
+              Auth.Module.UrlAuthentication.params = { foo: 'bar' }
               Em.run -> App.__container__.lookup('router:main')
                 .handleURL 'foo'
               expect(currentPath).toEqual 'sign-in'
