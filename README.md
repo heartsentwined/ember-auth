@@ -561,32 +561,35 @@ sign in, simply *do not* return a remember token from the server response.
 
 Bear in mind some [security caveats](https://github.com/heartsentwined/ember-auth/wiki/Security).
 
-Passing authentication token in url
------------------------------------
+URL Authentication
+------------------
 
-You can enable authentication via an authentication token passed in the URL
+You can enable authentication via authentication information passed in the URL
 query string, e.g. for direct links to a user's auth-only content.
 
-Your server API token creation ("sign in") end point should be polymorphic,
-and accept an authentication token.
-
 Let's say you want to allow this URL, pointing to an auth-only resource
-* `http://www.example.com/?auth_token=fjlja8hfhf4/#/posts/5`
+* `http://www.example.com/?auth[remember]=1&auth[key]=fja8hfhf4/#/posts/5`
 to auto-sign in the user via
-* `POST /api/sign_in` with params `auth_token = fjlja8hfhf4`
+* `POST /api/sign_in` with params `key = fja8hfhf4, remember = 1`
 
 Configuration:
 
 ```coffeescript
 Auth.Config.reopen
   urlAuthentication: true # default = false
+  urlAuthenticationParamsKey: 'auth'
   tokenCreateUrl: '/api/sign_in'
-  tokenKey: 'auth_token'
 ```
 
 `ember-auth` will now (attempt to) sign in the user before rendering the page.
 Standard events (see below) apply; and a failed sign in will also trigger an
 `Auth.Route.authAccess` event.
+
+Your server's token creation ("sign in") API end point is responsible for
+handling the params passed; they are transparent to `ember-auth`. However,
+`ember-auth` does strip a trailing slash (if any) from all params; otherwise,
+as in the above example, `key` will have a value of `fja8hfhf4/` simply due
+to its position right before the ember hash key.
 
 URL authentication will not take effect if the entry point itself is not an
 `Auth.Route`: the user will not be signed in; (hence) no events will fire.
