@@ -23,19 +23,19 @@ describe 'Auth.Module.UrlAuthentication', ->
         urlAuthenticationParamsKey: 'foo'
 
       it 'retrieves param at Auth.Config.urlAuthenticationParamsKey', ->
-        spyOn(jQuery, 'url').andReturn { param: -> { foo: { bar: 'baz' } } }
+        spyOn(jQuery, 'url').andReturn { param: -> { bar: 'baz' } }
         Auth.Module.UrlAuthentication.retrieveParams()
         expect(Auth.Module.UrlAuthentication.params).toEqual { bar: 'baz' }
 
       it 'works for empty values', ->
         spyOn(jQuery, 'url').andReturn { param: -> {} }
         Auth.Module.UrlAuthentication.retrieveParams()
-        expect(Auth.Module.UrlAuthentication.params).toEqual null
+        expect(Auth.Module.UrlAuthentication.params).toEqual {}
 
   describe '#canonicalizeParams', ->
 
     describe 'null', ->
-      it 'wraps to empty objet', ->
+      it 'wraps to empty object', ->
         Auth.Module.UrlAuthentication.params = null
         Auth.Module.UrlAuthentication.canonicalizeParams()
         expect(Auth.Module.UrlAuthentication.params).toEqual {}
