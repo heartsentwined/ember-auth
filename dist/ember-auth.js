@@ -542,7 +542,8 @@
     rememberPeriod: 14,
     rememberAutoRecall: true,
     rememberStorage: 'cookie',
-    urlAuthentication: false
+    urlAuthentication: false,
+    urlAuthenticationParamsKey: null
   });
 
 }).call(this);
@@ -687,7 +688,8 @@
           return localStorage.setItem('ember-auth-remember-me', token);
         case 'cookie':
           return jQuery.cookie('ember-auth-remember-me', token, {
-            expires: Auth.Config.get('rememberPeriod')
+            expires: Auth.Config.get('rememberPeriod'),
+            path: '/'
           });
       }
     },
@@ -705,7 +707,7 @@
 (function() {
   Auth.Module.UrlAuthentication = Em.Object.create({
     authenticate: function(opts) {
-      var data, token;
+      var data;
 
       if (opts == null) {
         opts = {};
@@ -713,23 +715,73 @@
       if (!Auth.Config.get('urlAuthentication')) {
         return;
       }
-      if (!Auth.get('authToken') && (token = this.retrieveToken())) {
-        data = {};
-        if (opts.async != null) {
-          data['async'] = opts.async;
-        }
-        data[Auth.Config.get('tokenKey')] = token;
-        return Auth.signIn(data);
+      if (Auth.get('authToken')) {
+        return;
       }
+      this.canonicalizeParams();
+      if ($.isEmptyObject(this.params)) {
+        return;
+      }
+      data = {};
+      if (opts.async != null) {
+        data['async'] = opts.async;
+      }
+      data[Auth.Config.get('urlAuthenticationParamsKey')] = this.params;
+      return Auth.signIn(data);
     },
-    retrieveToken: function() {
-      var token;
+    retrieveParams: function() {
+      var key, _ref;
 
-      token = $.url().param(Auth.Config.get('tokenKey'));
-      if (token && token.charAt(token.length - 1) === '/') {
-        token = token.slice(0, -1);
+      if (!Auth.Config.get('urlAuthentication')) {
+        return;
       }
-      return token;
+      key = Auth.Config.get('urlAuthenticationParamsKey');
+      return this.params = (_ref = $.url().param(key)) != null ? _ref[key] : void 0;
+    },
+    canonicalizeParams: function(obj) {
+      var canonicalized, k, params, v, _i, _len;
+
+      if (obj == null) {
+        obj = this.params;
+      }
+      params = {};
+      if ($.isArray(obj)) {
+        for (k = _i = 0, _len = obj.length; _i < _len; k = ++_i) {
+          v = obj[k];
+          params[k] = v;
+        }
+      } else if (typeof obj !== 'object') {
+        params[String(obj)] = String(obj);
+      } else {
+        params = obj;
+      }
+      canonicalized = {};
+      for (k in params) {
+        v = params[k];
+        k = String(k);
+        if (k && k.charAt(k.length - 1) === '/') {
+          k = k.slice(0, -1);
+        }
+        if (typeof v === 'object') {
+          canonicalized[k] = this.canonicalizeParams(v);
+        } else {
+          v = String(v);
+          if (v && v.charAt(v.length - 1) === '/') {
+            v = v.slice(0, -1);
+          }
+          canonicalized[k] = v;
+        }
+      }
+      return this.params = canonicalized;
+    }
+  });
+
+  Em.Router.reopen({
+    init: function() {
+      if (Auth.Config.get('urlAuthentication')) {
+        Auth.Module.UrlAuthentication.retrieveParams();
+      }
+      return this._super.apply(this, arguments);
     }
   });
 
