@@ -8,16 +8,12 @@ ember-auth
 `ember-auth` provides token authentication support to
 [ember.js](http://emberjs.com/).
 
-3.x Upgrade
+4.x Upgrade
 ===========
 
-Features and **BC Breaks** introduced in `3.x` release. Check the
+Features and **BC Breaks** introduced in `4.x` release. Check the
 [Changelog](https://github.com/heartsentwined/ember-auth/blob/master/CHANGELOG.md)
 for the complete list and an upgrade guide.
-
-The `3.x` branch is also unit-tested.
-
-\* `3.0.0` contained errors. This has been fixed in `>= 3.0.1` already.
 
 Overview
 ========
