@@ -1,3 +1,7 @@
+# 4.1.2 (18 Apr 2013)
+
+* Bugfix: Url Authentication behavior when params is not given (#36)
+
 # 4.1.1 (18 Apr 2013)
 
 * (Minor spec fix)
