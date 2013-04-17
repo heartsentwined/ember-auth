@@ -1,3 +1,7 @@
+# 4.0.1 (18 Apr 2013)
+
+* Bugfix: `4.0.0` was shipped with old dist files
+
 # 4.0.0 (17 Apr 2013)
 
 * Feature: pass any params for URL authentication (#33)
