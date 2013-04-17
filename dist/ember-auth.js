@@ -541,9 +541,11 @@
     rememberTokenKey: null,
     rememberPeriod: 14,
     rememberAutoRecall: true,
+    rememberAutoRecallRouteScope: 'auth',
     rememberStorage: 'cookie',
     urlAuthentication: false,
-    urlAuthenticationParamsKey: null
+    urlAuthenticationParamsKey: null,
+    urlAuthenticationRouteScope: 'auth'
   });
 
 }).call(this);
@@ -551,14 +553,14 @@
   Auth.Route = Em.Route.extend(Em.Evented, {
     redirect: function() {
       if (Auth.get('authToken')) {
-        return;
+        return this._super.apply(this, arguments);
       }
       if (Auth.Config.get('urlAuthentication')) {
         Auth.Module.UrlAuthentication.authenticate({
           async: false
         });
         if (Auth.get('authToken')) {
-          return;
+          return this._super.apply(this, arguments);
         }
       }
       if (Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')) {
@@ -566,14 +568,39 @@
           async: false
         });
         if (Auth.get('authToken')) {
-          return;
+          return this._super.apply(this, arguments);
         }
       }
       this.trigger('authAccess');
       if (Auth.Config.get('authRedirect')) {
         Auth.set('prevRoute', this.routeName);
-        return this.transitionTo(Auth.Config.get('signInRoute'));
+        this.transitionTo(Auth.Config.get('signInRoute'));
       }
+      return this._super.apply(this, arguments);
+    }
+  });
+
+}).call(this);
+(function() {
+  Em.Route.reopen({
+    redirect: function() {
+      if (Auth.Config.get('urlAuthentication') && Auth.Config.get('urlAuthenticationRouteScope') === 'both') {
+        Auth.Module.UrlAuthentication.authenticate({
+          async: false
+        });
+        if (Auth.get('authToken')) {
+          return this._super.apply(this, arguments);
+        }
+      }
+      if (Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall') && Auth.Config.get('rememberAutoRecallRouteScope') === 'both') {
+        Auth.Module.RememberMe.recall({
+          async: false
+        });
+        if (Auth.get('authToken')) {
+          return this._super.apply(this, arguments);
+        }
+      }
+      return this._super.apply(this, arguments);
     }
   });
 
@@ -629,7 +656,6 @@
       var _this = this;
 
       Auth.on('signInSuccess', function() {
-        _this.forget();
         return _this.remember();
       });
       Auth.on('signInError', function() {
@@ -649,6 +675,7 @@
         return;
       }
       if (!Auth.get('authToken') && (token = this.retrieveToken())) {
+        this.fromRecall = true;
         data = {};
         if (opts.async != null) {
           data['async'] = opts.async;
@@ -664,9 +691,16 @@
         return;
       }
       token = Auth.get('json')[Auth.Config.get('rememberTokenKey')];
-      if (token && token !== this.retrieveToken()) {
-        return this.storeToken(token);
+      if (token) {
+        if (token !== this.retrieveToken()) {
+          this.storeToken(token);
+        }
+      } else {
+        if (!this.fromRecall) {
+          this.forget();
+        }
       }
+      return this.fromRecall = false;
     },
     forget: function() {
       if (!Auth.Config.get('rememberMe')) {
@@ -698,7 +732,9 @@
         case 'localStorage':
           return localStorage.removeItem('ember-auth-remember-me');
         case 'cookie':
-          return jQuery.removeCookie('ember-auth-remember-me');
+          return jQuery.removeCookie('ember-auth-remember-me', {
+            path: '/'
+          });
       }
     }
   });
@@ -730,13 +766,13 @@
       return Auth.signIn(data);
     },
     retrieveParams: function() {
-      var key, _ref;
+      var key;
 
       if (!Auth.Config.get('urlAuthentication')) {
         return;
       }
       key = Auth.Config.get('urlAuthenticationParamsKey');
-      return this.params = (_ref = $.url().param(key)) != null ? _ref[key] : void 0;
+      return this.params = $.url().param(key);
     },
     canonicalizeParams: function(obj) {
       var canonicalized, k, params, v, _i, _len;
