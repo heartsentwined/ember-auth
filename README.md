@@ -595,15 +595,14 @@ handling the params passed; they are transparent to `ember-auth`. However,
 as in the above example, `key` will have a value of `fja8hfhf4/` simply due
 to its position right before the ember hash key.
 
-URL authentication will not take effect if the entry point itself is not an
-`Auth.Route`: the user will not be signed in; (hence) no events will fire.
-
 URL authentication will take precedence over a local remember me session.
 If the sign in succeeds, it will override the remember me session
 (only if remember me is enabled).
 
-By default, url authentication is only available on `Auth.Route`s. If you
-want it to be available for regular `Em.Route`s too, set:
+By default, url authentication is only available on `Auth.Route`s.
+URL authentication will not take effect if the entry point itself is not an
+`Auth.Route`: the user will not be signed in; (hence) no events will fire.
+If you want it to be available for regular `Em.Route`s too, set:
 
 ```coffeescript
 Auth.Config.reopen
