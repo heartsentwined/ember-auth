@@ -5,7 +5,7 @@
   "keywords": ["ember", "emberjs", "ember.js", "auth", "authentication"],
   "homepage": "https://github.com/heartsentwined/ember-auth",
   "bugs": "https://github.com/heartsentwined/ember-auth/issues",
-  "version": "3.1.2",
+  "version": "4.0.0",
   "main": "dist/ember-auth.js",
 
   "author": {
