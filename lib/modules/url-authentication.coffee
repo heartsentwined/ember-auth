@@ -19,7 +19,9 @@ Auth.Module.UrlAuthentication = Em.Object.create
 
   canonicalizeParams: (obj = @params) ->
     params = {}
-    if $.isArray obj
+    if !obj?
+      params = {}
+    else if $.isArray obj
       params[k] = v for v, k in obj
     else if typeof obj != 'object'
       params[String(obj)] = String(obj)

@@ -40,6 +40,12 @@ describe 'Auth.Module.UrlAuthentication', ->
         Auth.Module.UrlAuthentication.canonicalizeParams()
         expect(Auth.Module.UrlAuthentication.params).toEqual {}
 
+    describe 'undefined', ->
+      it 'wraps to empty object', ->
+        Auth.Module.UrlAuthentication.params = undefined
+        Auth.Module.UrlAuthentication.canonicalizeParams()
+        expect(Auth.Module.UrlAuthentication.params).toEqual {}
+
     describe 'primitive', ->
       it 'wraps to one-member object', ->
         Auth.Module.UrlAuthentication.params = 'foo'
