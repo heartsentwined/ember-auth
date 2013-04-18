@@ -1,3 +1,7 @@
+# 4.1.4 (18 Apr 2013)
+
+* Bugfix: Url Authentication namespacing params (#33)
+
 # 4.1.3 (18 Apr 2013)
 
 * Wrap `Auth` under an exports object (or global `this`)

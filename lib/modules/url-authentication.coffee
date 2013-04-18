@@ -9,7 +9,7 @@ Auth.Module.UrlAuthentication = Em.Object.create
     return if $.isEmptyObject @params
     data = {}
     data['async'] = opts.async if opts.async?
-    data[Auth.Config.get('urlAuthenticationParamsKey')] = @params
+    data = $.extend data, @params
     Auth.signIn data
 
   retrieveParams: ->

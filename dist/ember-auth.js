@@ -764,7 +764,7 @@
       if (opts.async != null) {
         data['async'] = opts.async;
       }
-      data[Auth.Config.get('urlAuthenticationParamsKey')] = this.params;
+      data = $.extend(data, this.params);
       return Auth.signIn(data);
     },
     retrieveParams: function() {

@@ -140,8 +140,7 @@ describe 'Auth.Module.UrlAuthentication', ->
           it 'attempts a sign in', ->
             Auth.Config.reopen { urlAuthenticationParamsKey: 'auth_key' }
             Auth.Module.UrlAuthentication.authenticate()
-            expect(Auth.signIn.calls[0].args[0]).toEqual
-              auth_key: { foo: 'bar' }
+            expect(Auth.signIn.calls[0].args[0]).toEqual { foo: 'bar' }
 
   describe 'auto recall session', ->
     App = null
@@ -240,7 +239,7 @@ describe 'Auth.Module.UrlAuthentication', ->
             $.mockjax
               url: '/api/sign-in'
               type: 'post'
-              data: JSON.stringify { auth_key: { foo: 'bar' } }
+              data: JSON.stringify { foo: 'bar' }
               status: 201
               responseText: { auth_key: 'foo', user_id: 1 }
 
@@ -271,7 +270,7 @@ describe 'Auth.Module.UrlAuthentication', ->
             $.mockjax
               url: '/api/sign-in'
               type: 'post'
-              data: JSON.stringify { auth_key: { foo: 'bar' } }
+              data: JSON.stringify { foo: 'bar' }
               status: 401
               responseText: ''
 
