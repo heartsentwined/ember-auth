@@ -1,6 +1,8 @@
+exports = exports ? this
+
 evented = Em.Object.extend(Em.Evented)
 
-window.Auth = evented.create
+exports.Auth = evented.create
   # =====================
   # Public API
   # =====================

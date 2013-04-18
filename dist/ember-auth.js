@@ -364,11 +364,13 @@
 });
 
 (function() {
-  var evented;
+  var evented, exports;
+
+  exports = exports != null ? exports : this;
 
   evented = Em.Object.extend(Em.Evented);
 
-  window.Auth = evented.create({
+  exports.Auth = evented.create({
     authToken: null,
     currentUserId: null,
     currentUser: null,
