@@ -16,3 +16,6 @@ gem 'guard-jasmine',    '~> 1.14'
 gem 'ember-rails',      '~> 0.10'
 
 gem 'appraisal',        '~> 0.5'
+
+gem 'guard-jasmine-headless-webkit', '~> 0.3'
+gem 'jasmine', '~> 1.3'
