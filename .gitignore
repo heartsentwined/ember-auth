@@ -18,3 +18,4 @@ tmp
 log
 .rvmrc
 *.bpkg
+.jhw-cache
