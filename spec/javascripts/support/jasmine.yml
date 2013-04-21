@@ -5,6 +5,7 @@ src_files:
   - 'prereq.coffee'
   - 'ember-auth.coffee'
 helpers:
+  - 'helpers/underscore.js'
   - 'helpers/**/*'
   - 'examples/**/*'
 spec_files:
