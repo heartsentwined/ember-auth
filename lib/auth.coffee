@@ -151,7 +151,10 @@ exports.Auth = evented.create
           settings.data ||= {}
           switch typeof settings.data
             when 'object'
-              settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
+              if window.FormData and settings.data instanceof window.FormData
+                settings.data.append(Auth.Config.get('tokenKey'), @get('authToken'))
+              else
+                settings.data[Auth.Config.get('tokenKey')] ||= @get('authToken')
             when 'string'
               try
                 data = JSON.parse(settings.data)
