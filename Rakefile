@@ -32,6 +32,7 @@ task :dist do
   puts 'Compiling js distribution...'
   env = Sprockets::Environment.new
   env.append_path 'lib'
+  env.append_path 'vendor'
   File.write File.join('dist', 'ember-auth.js'), env['ember-auth.js'].to_s
 
   puts 'Minifying js distribution...'
