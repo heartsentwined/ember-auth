@@ -496,7 +496,11 @@
             settings.data || (settings.data = {});
             switch (typeof settings.data) {
               case 'object':
-                (_base = settings.data)[_name = Auth.Config.get('tokenKey')] || (_base[_name] = this.get('authToken'));
+                if (window.FormData && settings.data instanceof window.FormData) {
+                  settings.data.append(Auth.Config.get('tokenKey'), this.get('authToken'));
+                } else {
+                  (_base = settings.data)[_name = Auth.Config.get('tokenKey')] || (_base[_name] = this.get('authToken'));
+                }
                 break;
               case 'string':
                 try {
