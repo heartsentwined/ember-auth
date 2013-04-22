@@ -3,6 +3,7 @@ exports = exports ? this
 evented = Em.Object.extend(Em.Evented)
 
 exports.Auth = evented.create
+  isInit: true # XXX - redir use
   # =====================
   # Public API
   # =====================
@@ -127,10 +128,29 @@ exports.Auth = evented.create
 
     return fallback unless isSmart
 
-    if !@prevRoute? || @prevRoute == sameRoute
-      fallback
-    else
-      @prevRoute
+    # XXX
+    endsWith = (haystack, needle) ->
+      d = haystack.length - needle.length
+      d >= 0 && haystack.lastIndexOf(needle) == d
+
+    # strip .index from args
+    if endsWith(fallback, '.index')
+      fallback = fallback.substr(0, fallback.lastIndexOf('.index'))
+    if endsWith(sameRoute, '.index')
+      sameRoute = sameRoute.substr(0, sameRoute.lastIndexOf('.index'))
+    if prevRoute = @get 'prevRoute'
+      if endsWith(prevRoute, '.index')
+        prevRoute = prevRoute.substr(0, prevRoute.lastIndexOf('.index'))
+
+    if @isInit # initial visit XXX
+      if prevRoute # on other pages
+        return null
+      else # on sign in page
+        return fallback
+    else if prevRoute == sameRoute # visiting sign in page
+      return fallback
+    else # visiting other pages
+      return null
 
   # ajax calls with auth token
   # @param {settings} jQuery.ajax options

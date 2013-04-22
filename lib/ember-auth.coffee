@@ -1,5 +1,6 @@
 #= require jquery.cookie
 #= require jquery.url
+#= require ember-override
 #= require auth
 #= require config
 #= require_tree ./routes

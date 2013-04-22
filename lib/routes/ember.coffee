@@ -10,5 +10,8 @@ Em.Route.reopen
       Auth.Module.RememberMe.recall({ async: false })
       return @_super.apply(this, arguments) if Auth.get('authToken')
 
-    @_super.apply(this, arguments)
+    if Auth.Config.get('authRedirect') # XXX
+      if !Auth.get('prevPath')
+        Auth.set('prevPath', @router.get('location').getURL())
 
+    @_super.apply(this, arguments)

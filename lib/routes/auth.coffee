@@ -12,8 +12,8 @@ Auth.Route = Em.Route.extend Em.Evented,
 
     @trigger('authAccess')
 
-    if Auth.Config.get('authRedirect')
+    if Auth.Config.get('authRedirect') # XXX
       Auth.set('prevRoute', @routeName)
-      @transitionTo Auth.Config.get('signInRoute')
+      @transitionTo Auth.Config.get('signInRoute'), { log: false }
 
     @_super.apply(this, arguments)
