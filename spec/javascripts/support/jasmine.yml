@@ -6,7 +6,7 @@
 <% require 'handlebars/source' %>
 src_files:
   - 'prereq.coffee'
-  - 'ember-auth.coffee'
+  - 'ember-auth.em'
 helpers:
   - 'helpers/sinon.js'
   - 'helpers/jasmine-sinon.js'
