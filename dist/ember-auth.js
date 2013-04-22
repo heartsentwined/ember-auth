@@ -364,6 +364,41 @@
 });
 
 (function() {
+  Em.Router.reopen({
+    transitionTo: function() {
+      var args, lastArg;
+
+      args = Array.prototype.slice.call(arguments);
+      lastArg = args.pop();
+      if (!(typeof lastArg === 'object' && (lastArg['log'] != null))) {
+        args.push(lastArg);
+      }
+      if (((lastArg['log'] == null) || lastArg['log']) && Auth.Config.get('authRedirect')) {
+        Auth.set('isInit', false);
+        Auth.set('prevRoute', args.slice(0, 1)[0]);
+        Auth.set('prevRouteArgs', args);
+      }
+      return this._super.apply(this, args);
+    },
+    replaceWith: function() {
+      var args, lastArg;
+
+      args = Array.prototype.slice.call(arguments);
+      lastArg = args.pop();
+      if (!(typeof lastArg === 'object' && (lastArg['log'] != null))) {
+        args.push(lastArg);
+      }
+      if (((lastArg['log'] == null) || lastArg['log']) && Auth.Config.get('authRedirect')) {
+        Auth.set('isInit', false);
+        Auth.set('prevRoute', args.slice(0, 1)[0]);
+        Auth.set('prevRouteArgs', args);
+      }
+      return this._super.apply(this, args);
+    }
+  });
+
+}).call(this);
+(function() {
   var evented, exports;
 
   exports = exports != null ? exports : this;
@@ -371,6 +406,7 @@
   evented = Em.Object.extend(Em.Evented);
 
   exports.Auth = evented.create({
+    isInit: true,
     authToken: null,
     currentUserId: null,
     currentUser: null,
@@ -459,7 +495,7 @@
       return [base, path].join('/');
     },
     resolveRedirectRoute: function(type) {
-      var fallback, isSmart, sameRoute, typeClassCase;
+      var endsWith, fallback, isSmart, prevRoute, sameRoute, typeClassCase;
 
       if (type !== 'signIn' && type !== 'signOut') {
         return null;
@@ -471,10 +507,33 @@
       if (!isSmart) {
         return fallback;
       }
-      if ((this.prevRoute == null) || this.prevRoute === sameRoute) {
+      endsWith = function(haystack, needle) {
+        var d;
+
+        d = haystack.length - needle.length;
+        return d >= 0 && haystack.lastIndexOf(needle) === d;
+      };
+      if (endsWith(fallback, '.index')) {
+        fallback = fallback.substr(0, fallback.lastIndexOf('.index'));
+      }
+      if (endsWith(sameRoute, '.index')) {
+        sameRoute = sameRoute.substr(0, sameRoute.lastIndexOf('.index'));
+      }
+      if (prevRoute = this.get('prevRoute')) {
+        if (endsWith(prevRoute, '.index')) {
+          prevRoute = prevRoute.substr(0, prevRoute.lastIndexOf('.index'));
+        }
+      }
+      if (this.isInit) {
+        if (prevRoute) {
+          return null;
+        } else {
+          return fallback;
+        }
+      } else if (prevRoute === sameRoute) {
         return fallback;
       } else {
-        return this.prevRoute;
+        return null;
       }
     },
     ajax: function(settings) {
@@ -580,7 +639,9 @@
       this.trigger('authAccess');
       if (Auth.Config.get('authRedirect')) {
         Auth.set('prevRoute', this.routeName);
-        this.transitionTo(Auth.Config.get('signInRoute'));
+        this.transitionTo(Auth.Config.get('signInRoute'), {
+          log: false
+        });
       }
       return this._super.apply(this, arguments);
     }
@@ -606,6 +667,11 @@
           return this._super.apply(this, arguments);
         }
       }
+      if (Auth.Config.get('authRedirect')) {
+        if (!Auth.get('prevPath')) {
+          Auth.set('prevPath', this.router.get('location').getURL());
+        }
+      }
       return this._super.apply(this, arguments);
     }
   });
@@ -617,8 +683,23 @@
       return Auth.addObserver('authToken', this, 'smartSignInRedirect');
     },
     smartSignInRedirect: function() {
+      var args, path, route, router;
+
       if (Auth.get('authToken')) {
-        this.transitionToRoute(Auth.resolveRedirectRoute('signIn'));
+        if (route = Auth.resolveRedirectRoute('signIn')) {
+          this.transitionToRoute(route);
+        } else if (Auth.get('isInit')) {
+          path = Auth.get('prevPath');
+          router = this.get('target');
+          router.location.setURL(path);
+          router.handleURL(path);
+        } else if (args = Auth.get('prevRouteArgs')) {
+          this.transitionToRoute.apply(this, args);
+        } else if (route = Auth.get('prevRoute')) {
+          this.transitionToRoute(route);
+        } else {
+
+        }
         return Auth.removeObserver('authToken', this, 'smartSignInRedirect');
       }
     }
@@ -631,8 +712,23 @@
       return Auth.addObserver('authToken', this, 'smartSignOutRedirect');
     },
     smartSignOutRedirect: function() {
-      if (!Auth.get('authToken')) {
-        this.transitionToRoute(Auth.resolveRedirectRoute('signOut'));
+      var args, path, route, router;
+
+      if (Auth.get('authToken')) {
+        if (route = Auth.resolveRedirectRoute('signOut')) {
+          this.transitionToRoute(route);
+        } else if (Auth.get('isInit')) {
+          path = Auth.get('prevPath');
+          router = this.get('target');
+          router.location.setURL(path);
+          router.handleURL(path);
+        } else if (args = Auth.get('prevRouteArgs')) {
+          this.transitionToRoute.apply(this, args);
+        } else if (route = Auth.get('prevRoute')) {
+          this.transitionToRoute(route);
+        } else {
+
+        }
         return Auth.removeObserver('authToken', this, 'smartSignOutRedirect');
       }
     }
