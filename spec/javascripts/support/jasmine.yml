@@ -5,6 +5,9 @@ src_files:
   - 'prereq.coffee'
   - 'ember-auth.coffee'
 helpers:
+  - 'helpers/sinon.js'
+  - 'helpers/jasmine-sinon.js'
+  - 'helpers/jquery.mockjax.js'
   - 'helpers/underscore.js'
   - 'helpers/**/*'
   - 'examples/**/*'
