@@ -1,3 +1,8 @@
+# Master
+
+* Bugfix: auth token injection for `FormData` objects (#38) (@mastropinguino)
+* Bugfix: smart redirect now works with routes with dynamic segments
+
 # 4.1.4 (18 Apr 2013)
 
 * Bugfix: Url Authentication namespacing params (#33)
