@@ -23,6 +23,8 @@ end
 # build dist js files
 require 'uglifier'
 require 'sprockets'
+require 'ember_script'
+Sprockets.register_engine '.em', EmberScript::EmberScriptTemplate
 desc 'Build distribution js files'
 task :dist do
   puts 'Removing existing dist files...'

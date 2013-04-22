@@ -1,3 +1,6 @@
+<% require 'ember_script' %>
+<% Sprockets.register_engine '.em', EmberScript::EmberScriptTemplate %>
+
 <% require 'ember/source' %>
 <% require 'ember/data/source' %>
 <% require 'handlebars/source' %>

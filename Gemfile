@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'coffee-script',                 '~> 2.2'
+gem 'ember_script',                  '~> 0.0'
 gem 'uglifier',                      '~> 1.3'
 
 gem 'jasmine',                       '~> 1.3'
