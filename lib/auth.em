@@ -4,6 +4,10 @@ class Em.Auth extends Em.Object with Em.Evented
     @strategy = Em.Auth.Strategy.create { auth: this }
     @storage  = Em.Auth.Storage.create  { auth: this }
     @session  = Em.Auth.Session.create  { auth: this }
+    @patch()
+
+  patch: ->
+    Em.Auth.Patch.create({ auth: this })
 
   # =====================
   # Config
