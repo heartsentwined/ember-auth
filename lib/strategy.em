@@ -6,5 +6,5 @@ class Em.Auth.Strategy
     else
       throw "Adapter not found: Em.Auth.Strategy.#{adapter}"
 
-  serialize:   (env, data) -> @adapter.serialize   env, data
-  deserialize: (env, data) -> @adapter.deserialize env, data
+  serialize:   (opts) -> @adapter.serialize(opts)
+  deserialize: (opts) -> @adapter.deserialize(opts)
