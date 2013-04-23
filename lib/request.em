@@ -6,6 +6,6 @@ class Em.Auth.Request
     else
       throw "Em.Auth.Request adapter not found: #{@auth.requestAdapter}"
 
-  signIn:  (data) -> @adapter.signIn  @auth.strategy.serialize('signIn', data)
-  signOut: (data) -> @adapter.signOut @auth.strategy.serialize('signOut', data)
+  signIn:  (opts) -> @adapter.signIn  @auth.strategy.serialize(opts)
+  signOut: (opts) -> @adapter.signOut @auth.strategy.serialize(opts)
   send:           -> @adapter.send.apply(this, arguments)
