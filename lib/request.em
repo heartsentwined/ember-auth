@@ -4,7 +4,7 @@ class Em.Auth.Request
     if Em.Auth.Request[adapter]?
       @adapter = Em.Auth.Request[adapter].create({ auth: @auth })
     else
-      throw "Em.Auth.Request adapter not found: #{@auth.requestAdapter}"
+      throw "Adapter not found: Em.Auth.Request.#{adapter}"
 
   signIn:  (opts) ->
     url = @resolveUrl @auth.signInEndPoint
