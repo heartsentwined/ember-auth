@@ -1,25 +1,15 @@
 class Em.Auth.Request.Jquery
   signIn: (opts = {}) ->
-    @send(
-      jQuery.extend true, { url: '/', type: 'POST' }, opts
-    ).done( =>
-      @auth.strategy.deserialize(json)
-      @auth.trigger 'signInSuccess'
-    ).fail( =>
-      @auth.trigger 'signInError'
-    ).always =>
-      @auth.trigger 'signInComplete'
+    @send(jQuery.extend true, { url: '/', type: 'POST' }, opts)
+    .done(   => @auth.trigger 'signInSuccess'  )
+    .fail(   => @auth.trigger 'signInError'    )
+    .always( => @auth.trigger 'signInComplete' )
 
   signOut: (opts = {}) ->
-    @send(
-      jQuery.extend true, { url: '/', type: 'DELETE' }, opts
-    ).done( =>
-      @auth.strategy.deserialize 'signOut', json
-      @auth.trigger 'signOutSuccess'
-    ).fail( =>
-      @auth.trigger 'signOutError'
-    ).always =>
-      @auth.trigger 'signOutComplete'
+    @send(jQuery.extend true, { url: '/', type: 'DELETE' }, opts)
+    .done(   => @auth.trigger 'signOutSuccess'; @auth.session.clear() )
+    .fail(   => @auth.trigger 'signOutError'    )
+    .always( => @auth.trigger 'signOutComplete' )
 
   send: (settings = {}) ->
     def = {}
@@ -33,6 +23,7 @@ class Em.Auth.Request.Jquery
     jQuery.ajax(
       settings
     ).done( (json, status, jqxhr) =>
+      @auth.strategy.deserialize(json)
       @auth.json  = json
       @auth.jqxhr = jqxhr
     ).fail( (jqxhr) =>
