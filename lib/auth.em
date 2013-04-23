@@ -1,9 +1,9 @@
 class Em.Auth extends Em.Object with Em.Evented
   init: ->
-    @request  = Em.Auth.Request.create { auth: this }
+    @request  = Em.Auth.Request.create  { auth: this }
     @strategy = Em.Auth.Strategy.create { auth: this }
-    @storage  = Em.Auth.Storage.create { auth: this }
-    @session  = Em.Auth.Session.create { auth: this }
+    @storage  = Em.Auth.Storage.create  { auth: this }
+    @session  = Em.Auth.Session.create  { auth: this }
 
   # =====================
   # Config
