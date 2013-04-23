@@ -6,6 +6,20 @@ class Em.Auth.Request
     else
       throw "Em.Auth.Request adapter not found: #{@auth.requestAdapter}"
 
-  signIn:  (opts) -> @adapter.signIn  @auth.strategy.serialize(opts)
-  signOut: (opts) -> @adapter.signOut @auth.strategy.serialize(opts)
-  send:           -> @adapter.send.apply(this, arguments)
+  signIn:  (opts) ->
+    url = @resolveUrl @auth.signInEndPoint
+    @adapter.signIn  url, @auth.strategy.serialize(opts)
+  signOut: (opts) ->
+    url = @resolveUrl @auth.signOutEndPoint
+    @adapter.signOut url, @auth.strategy.serialize(opts)
+  send: -> @adapter.send.apply(this, arguments)
+
+  # different base url support
+  # @param {path} string the path for resolving full URL
+  resolveUrl: (path) ->
+    base = @auth.baseUrl
+    if base && base[base.length-1] == '/'
+      base = base.substr(0, base.length-1)
+    if path?[0] == '/'
+      path = path.substr(1, path.length)
+    [base, path].join('/')

@@ -1,6 +1,7 @@
 class Em.Auth.Strategy.Token
   serialize: (opts = {}) ->
     return opts unless token = @auth.authToken
+
     switch @auth.requestTokenLocation
       when 'param'
         opts.data ||= {}
@@ -23,7 +24,8 @@ class Em.Auth.Strategy.Token
       when 'customHeader'
         opts.headers ||= {}
         opts.headers[@auth.requestHeaderKey] ||= token
-    opts
+
+    return opts
 
   deserialize: (data = {}) ->
     @auth.authToken     = data[@auth.tokenKey]

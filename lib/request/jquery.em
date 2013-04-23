@@ -1,12 +1,12 @@
 class Em.Auth.Request.Jquery
-  signIn: (opts = {}) ->
-    @send(jQuery.extend true, { url: '/', type: 'POST' }, opts)
+  signIn: (url, opts = {}) ->
+    @send(jQuery.extend true, { url: url, type: 'POST' }, opts)
     .done(   => @auth.trigger 'signInSuccess'  )
     .fail(   => @auth.trigger 'signInError'    )
     .always( => @auth.trigger 'signInComplete' )
 
-  signOut: (opts = {}) ->
-    @send(jQuery.extend true, { url: '/', type: 'DELETE' }, opts)
+  signOut: (url, opts = {}) ->
+    @send(jQuery.extend true, { url: url, type: 'DELETE' }, opts)
     .done(   => @auth.trigger 'signOutSuccess'; @auth.session.clear() )
     .fail(   => @auth.trigger 'signOutError'    )
     .always( => @auth.trigger 'signOutComplete' )
