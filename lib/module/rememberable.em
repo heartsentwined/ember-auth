@@ -32,3 +32,9 @@ class Em.Auth.Module.Rememberable
 
   removeToken: ->
     @auth.storage.remove 'ember-auth-rememberable'
+
+  patch: ->
+    Em.Route.reopen
+      redirect: =>
+        if !@auth.authToken && @auth.rememberableAutoRecall
+          @recall({ async: false })
