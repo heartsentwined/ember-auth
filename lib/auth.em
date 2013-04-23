@@ -26,7 +26,7 @@ class Em.Auth extends Em.Object with Em.Evented
   #currentUserId: null
 
   # Holds current user model
-  currentUser: @session.currentUser
+  currentUser: ~> @session.currentUser
   #currentUser: null
 
   # =====================
