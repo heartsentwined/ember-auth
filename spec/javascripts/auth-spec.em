@@ -4,7 +4,7 @@ afterEach =>
   @auth.destroy()
   sinon.collection.restore()
 
-describe 'Ember.Auth', =>
+describe 'Em.Auth', =>
   it 'supports events', => expect(@auth.on).toBeDefined()
 
   example 'auth initializer', (obj) =>
