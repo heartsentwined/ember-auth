@@ -13,7 +13,22 @@ class Em.Auth extends Em.Object with Em.Evented
   strategyAdapter: 'token'
   sessionAdapter:  'cookie'
 
+  # module
   modules: ['ember-data']
+
+  # request
+  signInEndPoint: null
+  signOutEndPoint: null
+  baseUrl: null
+
+  # session
+  userModel: null
+
+  # strategy.token
+  tokenKey: null
+  tokenIdKey: null
+  tokenLocation: 'param'
+  tokenHeaderKey: null
 
   # Holds prev route for smart redirect.
   prevRoute: null
