@@ -29,6 +29,3 @@ class Em.Auth extends Em.Object with Em.Evented
   tokenIdKey: null
   tokenLocation: 'param'
   tokenHeaderKey: null
-
-  # Holds prev route for smart redirect.
-  prevRoute: null
