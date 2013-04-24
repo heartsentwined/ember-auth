@@ -9,9 +9,9 @@ describe 'Em.Auth', =>
 
   example 'auth initializer', (obj) =>
     it "initializes a #{obj}", =>
-      stub = sinon.collection.stub Em.Auth[obj], 'create'
+      spy = sinon.collection.spy Em.Auth[obj], 'create'
       @auth = Em.Auth.create()
-      expect(stub).toHaveBeenCalledWithExactly({ auth: @auth })
+      expect(spy).toHaveBeenCalledWithExactly({ auth: @auth })
 
   follow 'auth initializer', 'Request'
   follow 'auth initializer', 'Strategy'
