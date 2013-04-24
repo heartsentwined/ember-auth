@@ -5,6 +5,7 @@ class Em.Auth.Request
       @adapter = Em.Auth.Request[adapter].create({ auth: @auth })
     else
       throw "Adapter not found: Em.Auth.Request.#{adapter}"
+    @inject()
 
   signIn:  (opts) ->
     url = @resolveUrl @auth.signInEndPoint
@@ -23,3 +24,9 @@ class Em.Auth.Request
     if path?[0] == '/'
       path = path.substr(1, path.length)
     [base, path].join('/')
+
+  inject: ->
+    @auth.reopen
+      signIn:  @signIn
+      signOut: @signOut
+      send:    @send
