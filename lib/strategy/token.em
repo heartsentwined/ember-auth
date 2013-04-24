@@ -20,15 +20,13 @@ class Em.Auth.Strategy.Token
               '' # do nothing TODO pending CSR fix
       when 'authHeader'
         opts.headers ||= {}
-        opts.headers['Authorization'] ||= "#{@auth.requestHeaderKey} #{token}"
+        opts.headers['Authorization'] ||= "#{@auth.tokenHeaderKey} #{token}"
       when 'customHeader'
         opts.headers ||= {}
-        opts.headers[@auth.requestHeaderKey] ||= token
+        opts.headers[@auth.tokenHeaderKey] ||= token
 
     return opts
 
   deserialize: (data = {}) ->
     @auth.authToken     = data[@auth.tokenKey]
     @auth.currentUserId = data[@auth.idKey]
-    if model = @auth.userModel
-      @auth.currentUser = model.find(@auth.currentUserId)

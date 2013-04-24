@@ -5,7 +5,14 @@ class Em.Auth.Session
       @adapter = Em.Auth.Session[adapter].create({ auth: @auth })
     else
       throw "Adapter not found: Em.Auth.Session.#{adapter}"
+
+    @auth.on 'signInSuccess', @findUser()
+
     @inject()
+
+  findUser: ->
+    if model = @auth.userModel
+      @currentUser = model.find(@currentUserId)
 
   clear: ->
     @authToken     = null
