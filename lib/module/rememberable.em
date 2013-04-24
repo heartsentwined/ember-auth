@@ -10,11 +10,11 @@ class Em.Auth.Module.Rememberable
       @fromRecall = true
       data = {}
       data.async = opts.async if opts.async?
-      data[@auth.rememberTokenKey] = token
+      data[@auth.rememberableTokenKey] = token
       @auth.signIn { data: data }
 
   remember: ->
-    if token = @auth.json[@auth.rememberTokenKey]
+    if token = @auth.json[@auth.rememberableTokenKey]
       @storeToken(token) if token != @retrieveToken()
     else
       @forget() unless @fromRecall
@@ -28,7 +28,7 @@ class Em.Auth.Module.Rememberable
 
   storeToken: (token) ->
     @auth.session.store 'ember-auth-rememberable', token,
-      expires: @auth.rememberPeriod
+      expires: @auth.rememberablePeriod
 
   removeToken: ->
     @auth.session.remove 'ember-auth-rememberable'
