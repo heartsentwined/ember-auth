@@ -5,13 +5,7 @@ afterEach =>
   sinon.collection.restore()
 
 describe 'Em.Auth.Request', =>
-  it 'initializes the given adapter', =>
-    spy = sinon.collection.spy Em.Auth.Request.Dummy, 'create'
-    @auth = Em.Auth.create { requestAdapter: 'dummy' }
-    expect(spy).toHaveBeenCalledWithExactly { auth: @auth }
-
-  it 'throws if adapter not found', =>
-    expect(-> Em.Auth.create { requestAdapter: 'foo' }).toThrow()
+  follow 'adapter init', 'request'
 
   example 'request method injection', (method) =>
     it "injects #{method} method to Auth", =>
