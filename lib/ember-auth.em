@@ -1,12 +1,11 @@
 #= require      jquery.cookie
 #= require      jquery.url
 #= require      auth
-#= require      session
 #= require      request
 #= require_tree ./request
 #= require      strategy
 #= require_tree ./strategy
-#= require      storage
-#= require_tree ./storage
+#= require      session
+#= require_tree ./session
 #= require      module
 #= require_tree ./module
