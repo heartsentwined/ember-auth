@@ -6,7 +6,7 @@ class Em.Auth.Module.Rememberable
     @patch()
 
   recall: (opts = {}) ->
-    if !@auth.authToken && token = @retrieveToken()
+    if !@auth.authToken && (token = @retrieveToken())
       @fromRecall = true
       data = {}
       data.async = opts.async if opts.async?
