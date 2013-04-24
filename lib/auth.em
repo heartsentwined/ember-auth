@@ -16,22 +16,5 @@ class Em.Auth extends Em.Object with Em.Evented
 
   modules: ['ember-data']
 
-  # =====================
-  # Public API
-  # =====================
-
-  # Holds auth token
-  authToken: ~> @session.authToken
-
-  # Holds current user ID
-  currentUserId: ~> @session.currentUserId
-
-  # Holds current user model
-  currentUser: ~> @session.currentUser
-
-  # =====================
-  # End of Public API
-  # =====================
-
   # Holds prev route for smart redirect.
   prevRoute: null
