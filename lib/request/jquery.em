@@ -7,7 +7,7 @@ class Em.Auth.Request.Jquery
 
   signOut: (url, opts = {}) ->
     @send(jQuery.extend true, { url: url, type: 'DELETE' }, opts)
-    .done(   => @auth.trigger 'signOutSuccess'; @auth.session.clear() )
+    .done(   => @auth.trigger 'signOutSuccess'  )
     .fail(   => @auth.trigger 'signOutError'    )
     .always( => @auth.trigger 'signOutComplete' )
 
