@@ -7,12 +7,13 @@ afterEach =>
 describe 'Ember.Auth', =>
   it 'supports events', => expect(@auth.on).toBeDefined()
 
-  example 'request proxy method', (method) =>
-    it "has proxy method for request##{method}", =>
-      sinon.collection.stub @auth.request, method
-      @auth[method]('foo')
-      expect(@auth.request[method]).toHaveBeenCalledWithExactly('foo')
+  example 'auth initializer', (obj) =>
+    it "initializes a #{obj}", =>
+      init = sinon.collection.stub Em.Auth[obj], 'create'
+      @auth = Em.Auth.create()
+      expect(init).toHaveBeenCalledWithExactly({ auth: @auth })
 
-  follow 'request proxy method', 'signIn'
-  follow 'request proxy method', 'signOut'
-  follow 'request proxy method', 'ajax'
+  follow 'auth initializer', 'Request'
+  follow 'auth initializer', 'Strategy'
+  follow 'auth initializer', 'Session'
+  follow 'auth initializer', 'Module'
