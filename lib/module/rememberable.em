@@ -37,4 +37,4 @@ class Em.Auth.Module.Rememberable
     Em.Route.reopen
       redirect: =>
         if !@auth.authToken && @auth.rememberableAutoRecall
-          @recall({ async: false })
+          @recall { async: false }

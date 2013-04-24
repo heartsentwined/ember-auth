@@ -2,7 +2,7 @@ class Em.Auth.Session
   init: ->
     adapter = Em.String.classify @auth.sessionAdapter
     if Em.Auth.Session[adapter]?
-      @adapter = Em.Auth.Session[adapter].create({ auth: @auth })
+      @adapter = Em.Auth.Session[adapter].create { auth: @auth }
     else
       throw "Adapter not found: Em.Auth.Session.#{adapter}"
 

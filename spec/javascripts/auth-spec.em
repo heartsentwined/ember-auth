@@ -11,7 +11,7 @@ describe 'Em.Auth', =>
     it "initializes a #{obj}", =>
       spy = sinon.collection.spy Em.Auth[obj], 'create'
       @auth = Em.Auth.create()
-      expect(spy).toHaveBeenCalledWithExactly({ auth: @auth })
+      expect(spy).toHaveBeenCalledWithExactly { auth: @auth }
 
   follow 'auth initializer', 'Request'
   follow 'auth initializer', 'Strategy'

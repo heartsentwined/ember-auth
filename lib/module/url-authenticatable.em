@@ -40,7 +40,7 @@ class Em.Auth.Module.UrlAuthenticatable
   patch: ->
     Em.Route.reopen
       redirect: =>
-        @authenticate({ async: false }) unless @auth.authToken
+        @authenticate { async: false } unless @auth.authToken
 
     # hijack the routing process to grab params
     # before ember's routing sanitizes the URL
