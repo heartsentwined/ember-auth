@@ -6,7 +6,7 @@ class Em.Auth.Session
     else
       throw "Adapter not found: Em.Auth.Session.#{adapter}"
 
-    @auth.on 'signInSuccess', @findUser()
+    @auth.on 'signInSuccess', => @findUser()
 
     @inject()
 
