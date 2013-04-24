@@ -1,13 +1,10 @@
 class Em.Auth extends Em.Object with Em.Evented
   init: ->
+    @session  = Em.Auth.Session.create  { auth: this }
     @request  = Em.Auth.Request.create  { auth: this }
     @strategy = Em.Auth.Strategy.create { auth: this }
     @storage  = Em.Auth.Storage.create  { auth: this }
-    @session  = Em.Auth.Session.create  { auth: this }
-    @patch()
-
-  patch: ->
-    Em.Auth.Patch.create({ auth: this })
+    Em.Auth.Module.create { auth: this }
 
   # =====================
   # Config
@@ -23,15 +20,12 @@ class Em.Auth extends Em.Object with Em.Evented
 
   # Holds auth token
   authToken: ~> @session.authToken
-  #authToken: null
 
   # Holds current user ID
   currentUserId: ~> @session.currentUserId
-  #currentUserId: null
 
   # Holds current user model
   currentUser: ~> @session.currentUser
-  #currentUser: null
 
   # =====================
   # End of Public API
