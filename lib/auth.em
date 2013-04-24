@@ -29,3 +29,11 @@ class Em.Auth extends Em.Object with Em.Evented
   tokenIdKey: null
   tokenLocation: 'param'
   tokenHeaderKey: null
+
+  # module.rememberable
+  rememberableTokenKey: null
+  rememberablePeriod: 14
+  rememberableAutoRecall: true
+
+  # module.urlAuthenticatable
+  urlAuthenticatableParamsKey: null
