@@ -27,6 +27,6 @@ class Em.Auth.Request
 
   inject: ->
     @auth.reopen
-      signIn:  @signIn
-      signOut: @signOut
-      send:    @send
+      signIn:  (opts) => @signIn  opts
+      signOut: (opts) => @signOut opts
+      send:           => @send.apply(this, arguments)
