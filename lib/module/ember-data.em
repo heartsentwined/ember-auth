@@ -1,5 +1,7 @@
-class Em.Auth.Patch.RESTAdapter
-  init: ->
+class Em.Auth.Module.EmberData
+  init: -> @patch()
+
+  patch: ->
     DS.RESTAdapter.reopen
       ajax: (url, type, settings) ->
         settings.url     = url
