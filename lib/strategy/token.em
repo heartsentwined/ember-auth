@@ -2,7 +2,7 @@ class Em.Auth.Strategy.Token
   serialize: (opts = {}) ->
     return opts unless token = @auth.authToken
 
-    switch @auth.requestTokenLocation
+    switch @auth.tokenLocation
       when 'param'
         opts.data ||= {}
         switch typeof opts.data
@@ -29,4 +29,4 @@ class Em.Auth.Strategy.Token
 
   deserialize: (data = {}) ->
     @auth.authToken     = data[@auth.tokenKey]
-    @auth.currentUserId = data[@auth.idKey]
+    @auth.currentUserId = data[@auth.tokenIdKey]
