@@ -14,6 +14,8 @@ class Em.Auth extends Em.Object with Em.Evented
   strategyAdapter: 'token'
   storageAdapter:  'cookie'
 
+  modules: ['ember-data']
+
   # =====================
   # Public API
   # =====================
