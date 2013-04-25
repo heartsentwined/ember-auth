@@ -10,12 +10,6 @@ describe 'Em.Auth.Strategy', ->
 
   follow 'adapter init', 'strategy'
 
-  example 'delegation', (method) ->
-    describe "##{method}", ->
-      it 'delegates to adapter', ->
-        spy = sinon.collection.spy auth.strategy.adapter, method
-        auth.strategy[method]('foo')
-        expect(spy).toHaveBeenCalledWithExactly('foo')
-
-  follow 'delegation', 'serialize'
-  follow 'delegation', 'deserialize'
+  it '', ->
+    follow 'adapter delegation', auth.strategy, 'serialize', ['foo']
+    follow 'adapter delegation', auth.strategy, 'deserialize', ['foo']
