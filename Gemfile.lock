@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/heartsentwined/guard-jasmine-headless-webkit.git
+  revision: e9b224c0917b2c4ef9dd7a0704ad4d8800d02cd4
+  branch: ember-script
+  specs:
+    guard-jasmine-headless-webkit (0.4.0.rc1)
+      guard (>= 0.4.0)
+      jasmine-headless-webkit (>= 0.7.0)
+
+GIT
   remote: git://github.com/heartsentwined/jasmine-headless-webkit.git
   revision: ec0aa8d3205e14d98b50e09485229104b2241f29
   branch: ember-script
@@ -11,15 +20,6 @@ GIT
       rainbow
       sprockets
       sprockets-vendor_gems
-
-GIT
-  remote: git://github.com/johnbintz/guard-jasmine-headless-webkit.git
-  revision: f86ec8b3b6e672ca6b3268de9054ed2cbedaa6a4
-  ref: f86ec8b3b6
-  specs:
-    guard-jasmine-headless-webkit (0.4.0.rc1)
-      guard (>= 0.4.0)
-      jasmine-headless-webkit (>= 0.7.0)
 
 GEM
   remote: https://rubygems.org/
