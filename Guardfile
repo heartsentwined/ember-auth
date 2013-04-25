@@ -6,5 +6,5 @@ guard 'jasmine-headless-webkit' do
   watch(%r{^spec/javascripts/(.*)-spec\.(js|coffee|em)$}) do |m|
     spec_location % [m[1], m[2]]
   end
-  watch(%r{^spec/javascripts/(examples|helpers)/.*$})
+  watch(%r{^spec/javascripts/(examples|helpers)/.*$}) { 'spec/javascripts' }
 end
