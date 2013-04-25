@@ -1,109 +1,111 @@
-beforeEach =>
-  @auth = Em.Auth.create { requestAdapter: 'jquery' }
-afterEach =>
-  @auth.destroy()
-  sinon.collection.restore()
-  $.mockjaxClear()
+describe 'Em.Auth.Request.Jquery', ->
+  auth = null
+  spy  = null
 
-describe 'Em.Auth.Request.Jquery', =>
+  beforeEach ->
+    auth = Em.Auth.create { requestAdapter: 'jquery' }
+  afterEach ->
+    auth.destroy()
+    sinon.collection.restore()
+    $.mockjaxClear()
 
-  example 'content type', (value) =>
+  example 'content type', (value) ->
     if value
-      it 'uses given contentType', =>
-        expect(@spy.args[0][0].contentType).toEqual value
+      it 'uses given contentType', ->
+        expect(spy.args[0][0].contentType).toEqual value
     else
-      it 'does not set contentType', =>
-        expect(@spy.args[0][0].contentType).not.toBeDefined()
+      it 'does not set contentType', ->
+        expect(spy.args[0][0].contentType).not.toBeDefined()
 
-  example 'data', (value, isSerialize) =>
+  example 'data', (value, isSerialize) ->
     if value
       desc =
         if isSerialize
           'serializes data to json string'
         else
           'uses given data'
-      it desc, =>
-        expect(@spy.args[0][0].data).toEqual value
+      it desc, ->
+        expect(spy.args[0][0].data).toEqual value
     else
-      it 'does not set data', =>
-        expect(@spy.args[0][0].data).not.toBeDefined()
+      it 'does not set data', ->
+        expect(spy.args[0][0].data).not.toBeDefined()
 
-  describe '#send', =>
+  describe '#send', ->
 
-    describe 'default content type and data', =>
-      beforeEach => @spy = sinon.collection.spy jQuery, 'ajax'
+    describe 'default content type and data', ->
+      beforeEach -> spy = sinon.collection.spy jQuery, 'ajax'
 
-      describe 'data not given', =>
-        beforeEach => @auth.request.adapter.send()
+      describe 'data not given', ->
+        beforeEach -> auth.request.adapter.send()
         follow 'content type'
         follow 'data'
 
-      describe 'data given', =>
+      describe 'data given', ->
 
-        describe 'contentType given', =>
-          beforeEach =>
-            @auth.request.adapter.send { contentType: 'foo', data: 'bar' }
+        describe 'contentType given', ->
+          beforeEach ->
+            auth.request.adapter.send { contentType: 'foo', data: 'bar' }
           follow 'content type', 'foo'
           follow 'data', 'bar'
 
-        describe 'contentType not given', =>
+        describe 'contentType not given', ->
 
-          describe 'type not given', =>
-            beforeEach => @auth.request.adapter.send { data: { foo: 'bar' } }
+          describe 'type not given', ->
+            beforeEach -> auth.request.adapter.send { data: { foo: 'bar' } }
             follow 'content type', 'application/json; charset=utf-8'
             follow 'data', '{"foo":"bar"}', true
 
-          describe 'type given', =>
+          describe 'type given', ->
 
-            describe '= GET', =>
-              beforeEach =>
-                @auth.request.adapter.send { data: { foo: 'bar' }, type: 'get' }
+            describe '= GET', ->
+              beforeEach ->
+                auth.request.adapter.send { data: { foo: 'bar' }, type: 'get' }
               follow 'content type'
               follow 'data', { foo: 'bar' }
 
-            describe '!= GET', =>
-              beforeEach =>
-                @auth.request.adapter.send { data: { foo: 'bar' }, type: 'FOO' }
+            describe '!= GET', ->
+              beforeEach ->
+                auth.request.adapter.send { data: { foo: 'bar' }, type: 'FOO' }
               follow 'content type', 'application/json; charset=utf-8'
               follow 'data', '{"foo":"bar"}', true
 
-    it 'is customizable', =>
+    it 'is customizable', ->
       spy = sinon.collection.spy jQuery, 'ajax'
-      @auth.request.adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
+      auth.request.adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
       expect(spy.args[0][0].url).toEqual 'bar'
       expect(spy.args[0][0].type).toEqual 'GET'
       expect(spy.args[0][0].contentType).toEqual 'foo'
 
-    describe 'success', =>
-      beforeEach =>
+    describe 'success', ->
+      beforeEach ->
         $.mockjax
           url: '/foo'
           type: 'POST'
           status: 201
           responseText: { foo: 'bar' }
-        spy = sinon.collection.spy @auth.strategy, 'deserialize'
-        @auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
+        spy = sinon.collection.spy auth.strategy, 'deserialize'
+        auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
 
-      it 'sets json',  => expect(@auth.json).not.toBeNull()
-      it 'sets jqxhr', => expect(@auth.jqxhr).not.toBeNull()
-      it 'delegates to strategy.deserialize', => expect(spy).toHaveBeenCalled()
+      it 'sets json',  -> expect(auth.json).not.toBeNull()
+      it 'sets jqxhr', -> expect(auth.jqxhr).not.toBeNull()
+      it 'delegates to strategy.deserialize', -> expect(spy).toHaveBeenCalled()
 
-    describe 'failure', =>
-      beforeEach =>
+    describe 'failure', ->
+      beforeEach ->
         $.mockjax
           url: '/foo'
           type: 'POST'
           status: 401
           responseText: { foo: 'bar' }
-        @auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
+        auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
 
-      it 'sets jqxhr', => expect(@auth.jqxhr).not.toBeNull()
+      it 'sets jqxhr', -> expect(auth.jqxhr).not.toBeNull()
 
-  example 'action', (env) =>
-    describe "##{env}", =>
-      it 'delegates to #send', =>
-        spy = sinon.collection.spy @auth.request.adapter, 'send'
-        @auth.request.adapter[env]('/foo', { bar: 'baz' })
+  example 'action', (env) ->
+    describe "##{env}", ->
+      it 'delegates to #send', ->
+        spy = sinon.collection.spy auth.request.adapter, 'send'
+        auth.request.adapter[env]('/foo', { bar: 'baz' })
         expect(spy).toHaveBeenCalledWithExactly
           url: '/foo'
           type: switch env
@@ -111,16 +113,16 @@ describe 'Em.Auth.Request.Jquery', =>
             when 'signOut' then 'DELETE'
           bar: 'baz'
 
-      it 'allows overriding of defaults', =>
-        spy = sinon.collection.spy @auth.request.adapter, 'send'
-        @auth.request.adapter[env]('/foo', { type: 'bar' })
+      it 'allows overriding of defaults', ->
+        spy = sinon.collection.spy auth.request.adapter, 'send'
+        auth.request.adapter[env]('/foo', { type: 'bar' })
         expect(spy).toHaveBeenCalledWithExactly { url: '/foo', type: 'bar' }
 
       follow 'trigger events', env, 'success'
       follow 'trigger events', env, 'error'
 
-  example 'trigger events', (env, status) =>
-    it "triggers #{status} events", =>
+  example 'trigger events', (env, status) ->
+    it "triggers #{status} events", ->
       $.mockjax
         url: '/foo'
         type: switch env
@@ -130,8 +132,8 @@ describe 'Em.Auth.Request.Jquery', =>
           when 'success' then 201
           when 'error'   then 401
         responseText: null
-      spy = sinon.collection.spy @auth, 'trigger'
-      @auth.request.adapter[env]('/foo', { async: false })
+      spy = sinon.collection.spy auth, 'trigger'
+      auth.request.adapter[env]('/foo', { async: false })
       event = Em.String.capitalize status
       expect(spy).toHaveBeenCalledWithExactly("#{env}#{event}")
       expect(spy).toHaveBeenCalledWithExactly("#{env}Complete")
