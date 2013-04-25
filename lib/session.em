@@ -25,8 +25,8 @@ class Em.Auth.Session
   remove:   (key, opts)        -> @adapter.remove   key, opts
 
   inject: ->
-    self = this
+    # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
-      authToken:     ~> self.authToken
-      currentUserId: ~> self.currentUserId
-      currentUser:   ~> self.currentUser
+      authToken:     Em.computed(=> @authToken).property('session.authToken')
+      currentUserId: Em.computed(=> @currentUserId).property('session.currentUserId')
+      currentUser:   Em.computed(=> @currentUser).property('session.currentUser')
