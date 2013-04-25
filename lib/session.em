@@ -17,7 +17,7 @@ class Em.Auth.Session
 
   clear: ->
     @authToken     = null
-    @currentUserid = null
+    @currentUserId = null
     @currentUser   = null
 
   retrieve: (key, opts)        -> @adapter.retrieve key, opts
