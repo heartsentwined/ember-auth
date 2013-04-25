@@ -15,14 +15,10 @@ describe 'Em.Auth.Session', ->
     follow 'adapter delegation', auth.session, 'store', ['foo', 'bar', 'baz']
     follow 'adapter delegation', auth.session, 'remove', ['foo', 'bar']
 
-  describe '#inject', ->
-    example 'property injection', (property) ->
-      it "injects #{property}", ->
-        auth.session.set property, 'foo'
-        expect(auth.get(property)).toEqual 'foo'
-    follow 'property injection', 'authToken'
-    follow 'property injection', 'currentUserId'
-    follow 'property injection', 'currentUser'
+  it '', ->
+    follow 'property injection', auth.session, auth, 'authToken'
+    follow 'property injection', auth.session, auth, 'currentUserId'
+    follow 'property injection', auth.session, auth, 'currentUser'
 
   describe '#findUser', ->
     model = { find: -> }
