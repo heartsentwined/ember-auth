@@ -561,6 +561,17 @@
       if (Auth.get('authToken')) {
         return this._super.apply(this, arguments);
       }
+      this.trigger('authAccess');
+      if (Auth.Config.get('authRedirect')) {
+        Auth.set('prevRoute', this.routeName);
+        this.transitionTo(Auth.Config.get('signInRoute'));
+      }
+      return this._super.apply(this, arguments);
+    },
+    model: function() {
+      if (Auth.get('authToken')) {
+        return this._super.apply(this, arguments);
+      }
       if (Auth.Config.get('urlAuthentication')) {
         Auth.Module.UrlAuthentication.authenticate({
           async: false
@@ -577,12 +588,6 @@
           return this._super.apply(this, arguments);
         }
       }
-      this.trigger('authAccess');
-      if (Auth.Config.get('authRedirect')) {
-        Auth.set('prevRoute', this.routeName);
-        this.transitionTo(Auth.Config.get('signInRoute'));
-      }
-      return this._super.apply(this, arguments);
     }
   });
 
