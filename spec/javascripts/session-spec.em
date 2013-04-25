@@ -1,4 +1,4 @@
-describe 'Em.Auth.Strategy', ->
+describe 'Em.Auth.Session', ->
   auth = null
   spy  = null
 
