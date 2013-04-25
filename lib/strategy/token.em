@@ -11,7 +11,7 @@ class Em.Auth.Strategy.Token
           opts.data[@auth.tokenKey] ||= token
       when 'authHeader'
         opts.headers ||= {}
-        opts.headers['Authorization'] ||= "#{@auth.tokenHeaderKey} #{token}"
+        opts.headers.Authorization ||= "#{@auth.tokenHeaderKey} #{token}"
       when 'customHeader'
         opts.headers ||= {}
         opts.headers[@auth.tokenHeaderKey] ||= token
