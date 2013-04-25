@@ -11,6 +11,10 @@ describe 'Em.Auth.Request.Jquery', ->
     sinon.collection.restore()
     $.mockjaxClear()
 
+  it '', ->
+    follow 'property injection', adapter, auth, 'json'
+    follow 'property injection', adapter, auth, 'jqxhr'
+
   example 'content type', (value) ->
     if value
       it 'uses given contentType', ->
@@ -88,8 +92,8 @@ describe 'Em.Auth.Request.Jquery', ->
         spy = sinon.collection.spy auth.strategy, 'deserialize'
         adapter.send { url: '/foo', type: 'POST', async: false }
 
-      it 'sets json',  -> expect(auth.json).not.toBeNull()
-      it 'sets jqxhr', -> expect(auth.jqxhr).not.toBeNull()
+      it 'sets json',  -> expect(adapter.json).not.toBeNull()
+      it 'sets jqxhr', -> expect(adapter.jqxhr).not.toBeNull()
       it 'delegates to strategy.deserialize', -> expect(spy).toHaveBeenCalled()
 
     describe 'failure', ->
