@@ -1,4 +1,9 @@
 class Em.Auth.Request.Jquery
+  init: -> @inject()
+
+  json:  null
+  jqxhr: null
+
   signIn: (url, opts = {}) ->
     @send(jQuery.extend true, { url: url, type: 'POST' }, opts)
     .done(   => @auth.trigger 'signInSuccess'  )
@@ -25,9 +30,15 @@ class Em.Auth.Request.Jquery
       settings
     ).done( (json, status, jqxhr) =>
       @auth.strategy.deserialize(json)
-      @auth.json  = json
-      @auth.jqxhr = jqxhr
+      @json  = json
+      @jqxhr = jqxhr
     ).fail( (jqxhr) =>
-      @auth.jqxhr = jqxhr
+      @jqxhr = jqxhr
     ).always (jqxhr) =>
-      @auth.jqxhr = jqxhr
+      @jqxhr = jqxhr
+
+  inject: ->
+    # TODO make these two-way bindings instead of read-only from auth side
+    @auth.reopen
+      json:  Em.computed(=> @json ).property('request.adapter.json')
+      jqxhr: Em.computed(=> @jqxhr).property('request.adapter.jqxhr')
