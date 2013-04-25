@@ -1,9 +1,11 @@
 describe 'Em.Auth.Request.Jquery', ->
   auth = null
   spy  = null
+  adapter = null
 
   beforeEach ->
-    auth = Em.Auth.create { requestAdapter: 'jquery' }
+    auth    = Em.Auth.create { requestAdapter: 'jquery' }
+    adapter = auth.request.adapter
   afterEach ->
     auth.destroy()
     sinon.collection.restore()
@@ -36,7 +38,7 @@ describe 'Em.Auth.Request.Jquery', ->
       beforeEach -> spy = sinon.collection.spy jQuery, 'ajax'
 
       describe 'data not given', ->
-        beforeEach -> auth.request.adapter.send()
+        beforeEach -> adapter.send()
         follow 'content type'
         follow 'data'
 
@@ -44,14 +46,14 @@ describe 'Em.Auth.Request.Jquery', ->
 
         describe 'contentType given', ->
           beforeEach ->
-            auth.request.adapter.send { contentType: 'foo', data: 'bar' }
+            adapter.send { contentType: 'foo', data: 'bar' }
           follow 'content type', 'foo'
           follow 'data', 'bar'
 
         describe 'contentType not given', ->
 
           describe 'type not given', ->
-            beforeEach -> auth.request.adapter.send { data: { foo: 'bar' } }
+            beforeEach -> adapter.send { data: { foo: 'bar' } }
             follow 'content type', 'application/json; charset=utf-8'
             follow 'data', '{"foo":"bar"}', true
 
@@ -59,19 +61,19 @@ describe 'Em.Auth.Request.Jquery', ->
 
             describe '= GET', ->
               beforeEach ->
-                auth.request.adapter.send { data: { foo: 'bar' }, type: 'get' }
+                adapter.send { data: { foo: 'bar' }, type: 'get' }
               follow 'content type'
               follow 'data', { foo: 'bar' }
 
             describe '!= GET', ->
               beforeEach ->
-                auth.request.adapter.send { data: { foo: 'bar' }, type: 'FOO' }
+                adapter.send { data: { foo: 'bar' }, type: 'FOO' }
               follow 'content type', 'application/json; charset=utf-8'
               follow 'data', '{"foo":"bar"}', true
 
     it 'is customizable', ->
       spy = sinon.collection.spy jQuery, 'ajax'
-      auth.request.adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
+      adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
       expect(spy.args[0][0].url).toEqual 'bar'
       expect(spy.args[0][0].type).toEqual 'GET'
       expect(spy.args[0][0].contentType).toEqual 'foo'
@@ -84,7 +86,7 @@ describe 'Em.Auth.Request.Jquery', ->
           status: 201
           responseText: { foo: 'bar' }
         spy = sinon.collection.spy auth.strategy, 'deserialize'
-        auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
+        adapter.send { url: '/foo', type: 'POST', async: false }
 
       it 'sets json',  -> expect(auth.json).not.toBeNull()
       it 'sets jqxhr', -> expect(auth.jqxhr).not.toBeNull()
@@ -97,15 +99,15 @@ describe 'Em.Auth.Request.Jquery', ->
           type: 'POST'
           status: 401
           responseText: { foo: 'bar' }
-        auth.request.adapter.send { url: '/foo', type: 'POST', async: false }
+        adapter.send { url: '/foo', type: 'POST', async: false }
 
-      it 'sets jqxhr', -> expect(auth.jqxhr).not.toBeNull()
+      it 'sets jqxhr', -> expect(adapter.jqxhr).not.toBeNull()
 
   example 'action', (env) ->
     describe "##{env}", ->
       it 'delegates to #send', ->
-        spy = sinon.collection.spy auth.request.adapter, 'send'
-        auth.request.adapter[env]('/foo', { bar: 'baz' })
+        spy = sinon.collection.spy adapter, 'send'
+        adapter[env]('/foo', { bar: 'baz' })
         expect(spy).toHaveBeenCalledWithExactly
           url: '/foo'
           type: switch env
@@ -114,8 +116,8 @@ describe 'Em.Auth.Request.Jquery', ->
           bar: 'baz'
 
       it 'allows overriding of defaults', ->
-        spy = sinon.collection.spy auth.request.adapter, 'send'
-        auth.request.adapter[env]('/foo', { type: 'bar' })
+        spy = sinon.collection.spy adapter, 'send'
+        adapter[env]('/foo', { type: 'bar' })
         expect(spy).toHaveBeenCalledWithExactly { url: '/foo', type: 'bar' }
 
       follow 'trigger events', env, 'success'
@@ -133,7 +135,7 @@ describe 'Em.Auth.Request.Jquery', ->
           when 'error'   then 401
         responseText: null
       spy = sinon.collection.spy auth, 'trigger'
-      auth.request.adapter[env]('/foo', { async: false })
+      adapter[env]('/foo', { async: false })
       event = Em.String.capitalize status
       expect(spy).toHaveBeenCalledWithExactly("#{env}#{event}")
       expect(spy).toHaveBeenCalledWithExactly("#{env}Complete")
