@@ -11,6 +11,10 @@ class Em.Auth.Session
 
     @inject()
 
+  authToken:     null
+  currentUserId: null
+  currentUser:   null
+
   findUser: ->
     if model = @auth.userModel
       @currentUser = model.find(@currentUserId)
