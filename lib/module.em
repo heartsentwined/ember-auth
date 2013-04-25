@@ -10,6 +10,6 @@ class Em.Auth.Module
     @inject()
 
   inject: ->
-    self = this
+    # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
-      module: ~> self.module
+      module: Em.computed(=> @module).property('module.module')
