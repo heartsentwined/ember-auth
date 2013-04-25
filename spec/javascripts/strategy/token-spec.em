@@ -21,7 +21,7 @@ describe 'Em.Auth.Strategy.Token', ->
       it '', -> follow 'token in custom header', output
 
     describe 'auth token set', ->
-      beforeEach -> auth.authToken = 'token'
+      beforeEach -> auth.session.authToken = 'token'
 
       describe 'tokenLocation = param', ->
         beforeEach ->
