@@ -5,7 +5,9 @@ describe 'Em.Auth.Request', ->
 
   beforeEach ->
     Em.run ->
-      auth    = Em.Auth.create { responseAdapter: 'dummy' }
+      auth = Em.Auth.create
+        responseAdapter: 'dummy'
+        strategyAdapter: 'dummy'
       request = auth._request
   afterEach ->
     auth.destroy() if auth
@@ -29,7 +31,7 @@ describe 'Em.Auth.Request', ->
   example 'request server api', (type) ->
     describe "##{type}", ->
       beforeEach ->
-        opts = { responseAdapter: 'dummy' }
+        opts = { responseAdapter: 'dummy', strategyAdapter: 'dummy' }
         opts["#{type}EndPoint"] = '/foo'
         Em.run ->
           auth    = Em.Auth.create opts
@@ -40,11 +42,6 @@ describe 'Em.Auth.Request', ->
         request[type]('bar')
         expect(spy).toHaveBeenCalledWithExactly('/foo')
 
-      it 'serializes opts', ->
-        spy = sinon.collection.spy auth._strategy, 'serialize'
-        request[type]('bar')
-        expect(spy).toHaveBeenCalledWithExactly('bar')
-
       it 'delegates to adapter', ->
         spy = sinon.collection.spy request.adapter, type
         request[type]('bar')
@@ -53,8 +50,13 @@ describe 'Em.Auth.Request', ->
   follow 'request server api', 'signIn'
   follow 'request server api', 'signOut'
 
-  it '', ->
-    follow 'adapter delegation', request, 'send', ['foo']
+  describe '#send', ->
+    it 'delegates to adapter#send', ->
+      follow 'adapter delegation', request, 'send', ['foo']
+    it 'serializes opts', ->
+      spy = sinon.collection.spy auth._strategy, 'serialize'
+      request.send('foo')
+      expect(spy).toHaveBeenCalledWithExactly('foo')
 
   describe '#resolveUrl', ->
 

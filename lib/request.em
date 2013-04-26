@@ -8,12 +8,10 @@ class Em.Auth.Request
     @inject()
 
   signIn:  (opts) ->
-    url = @resolveUrl @auth.signInEndPoint
-    @adapter.signIn  url, @auth._strategy.serialize(opts)
+    @adapter.signIn  @resolveUrl(@auth.signInEndPoint),  opts
   signOut: (opts) ->
-    url = @resolveUrl @auth.signOutEndPoint
-    @adapter.signOut url, @auth._strategy.serialize(opts)
-  send: -> @adapter.send.apply(this, arguments)
+    @adapter.signOut @resolveUrl(@auth.signOutEndPoint), opts
+  send:    (opts) -> @adapter.send @auth._strategy.serialize(opts)
 
   # different base url support
   # @param {path} string the path for resolving full URL
@@ -29,4 +27,4 @@ class Em.Auth.Request
     @auth.reopen
       signIn:  (opts) => @signIn  opts
       signOut: (opts) => @signOut opts
-      send:           => @send.apply(this, arguments)
+      send:    (opts) => @send    opts
