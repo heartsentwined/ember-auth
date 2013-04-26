@@ -1,3 +1,4 @@
+#= require jquery.cookie
 class Em.Auth.Session.Cookie
   retrieve: (key, opts) ->
     jQuery.cookie key

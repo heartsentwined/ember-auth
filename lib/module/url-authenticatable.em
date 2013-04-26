@@ -1,3 +1,4 @@
+#= require jquery.url
 class Em.Auth.Module.UrlAuthenticatable
   init: ->
     @patch()
