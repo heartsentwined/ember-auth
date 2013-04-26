@@ -6,5 +6,7 @@ class Em.Auth.Strategy
     else
       throw "Adapter not found: Em.Auth.Strategy.#{adapter}"
 
-  serialize:   (opts) -> @adapter.serialize(opts)
-  deserialize: (opts) -> @adapter.deserialize(opts)
+    @auth.on 'signInSuccess', => @deserialize()
+
+  serialize:   (opts) -> @adapter.serialize   opts
+  deserialize:        -> @adapter.deserialize @auth.response
