@@ -1,4 +1,9 @@
 class Em.Auth extends Em.Object with Em.Evented
+  _request:  null
+  _strategy: null
+  _session:  null
+  _module:   null
+
   init: ->
     @_request  ||= Em.Auth.Request.create  { auth: this }
     @_strategy ||= Em.Auth.Strategy.create { auth: this }

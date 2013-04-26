@@ -1,6 +1,7 @@
 class Em.Auth.Module
+  module: []
+
   init: ->
-    @module = []
     for key in @auth.modules
       module = Em.String.classify key
       if Em.Auth.Module[module]?

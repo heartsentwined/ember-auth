@@ -1,4 +1,8 @@
 class Em.Auth.Session
+  authToken:     null
+  currentUserId: null
+  currentUser:   null
+
   init: ->
     adapter = Em.String.classify @auth.sessionAdapter
     if Em.Auth.Session[adapter]?
@@ -10,10 +14,6 @@ class Em.Auth.Session
     @auth.on 'signOutSuccess', => @clear()
 
     @inject()
-
-  authToken:     null
-  currentUserId: null
-  currentUser:   null
 
   findUser: ->
     if model = @auth.userModel

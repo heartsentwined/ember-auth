@@ -1,8 +1,8 @@
 class Em.Auth.Request.Jquery
-  init: -> @inject()
-
   json:  null
   jqxhr: null
+
+  init: -> @inject()
 
   signIn: (url, opts = {}) ->
     @send(jQuery.extend true, { url: url, type: 'POST' }, opts)
