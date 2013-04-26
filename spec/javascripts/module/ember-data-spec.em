@@ -10,7 +10,7 @@ describe 'Em.Auth.Module.EmberData', ->
 
   describe 'DS.RESTAdapter patch', ->
     it 'replaces ajax with auth.request implementation', ->
-      spy = sinon.collection.spy auth.request, 'send'
+      spy = sinon.collection.spy auth._request, 'send'
       adapter = DS.RESTAdapter.create()
       adapter.ajax '/foo', 'POST', { foo: 'bar' }
       expect(spy).toHaveBeenCalledWithExactly

@@ -9,4 +9,4 @@ class Em.Auth.Module.EmberData
           settings.url     = url
           settings.type    = type
           settings.context = this
-          auth.request.send(settings)
+          auth._request.send(settings)
