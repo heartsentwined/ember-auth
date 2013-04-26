@@ -1,23 +1,32 @@
 class Em.Auth.Strategy.Token
+  authToken: null
+
+  init: -> @inject()
+
   serialize: (opts = {}) ->
-    return opts unless token = @auth.authToken
+    return opts unless @auth.signedIn
 
     switch @auth.tokenLocation
       when 'param'
         opts.data ||= {}
         if FormData && opts.data instanceof FormData
-          opts.data.append @auth.tokenKey, token
+          opts.data.append @auth.tokenKey, @authToken
         else
-          opts.data[@auth.tokenKey] ||= token
+          opts.data[@auth.tokenKey] ||= @authToken
       when 'authHeader'
         opts.headers ||= {}
-        opts.headers.Authorization ||= "#{@auth.tokenHeaderKey} #{token}"
+        opts.headers.Authorization ||= "#{@auth.tokenHeaderKey} #{@authToken}"
       when 'customHeader'
         opts.headers ||= {}
-        opts.headers[@auth.tokenHeaderKey] ||= token
+        opts.headers[@auth.tokenHeaderKey] ||= @authToken
 
     return opts
 
   deserialize: (data = {}) ->
-    @auth._session.authToken = data[@auth.tokenKey]
-    @auth._session.userId    = data[@auth.tokenIdKey]
+    @authToken            = data[@auth.tokenKey]
+    @auth._session.userId = data[@auth.tokenIdKey]
+
+  inject: ->
+    # TODO make these two-way bindings instead of read-only from auth side
+    @auth.reopen
+      authToken: Em.computed(=> @authToken).property('_strategy.adapter.authToken')

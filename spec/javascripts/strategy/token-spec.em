@@ -11,17 +11,23 @@ describe 'Em.Auth.Strategy.Token', ->
     auth   = null
     output = null
 
+  it '', ->
+    follow 'property injection', adapter, auth, 'authToken'
+
   describe '#serialize', ->
 
-    describe 'auth token not set', ->
+    describe 'not signed in', ->
       beforeEach ->
+        auth._session.clear()
         output = adapter.serialize { data: { foo: 'bar' } }
       it '', -> follow 'token in param', output
       it '', -> follow 'token in auth header', output
       it '', -> follow 'token in custom header', output
 
-    describe 'auth token set', ->
-      beforeEach -> auth._session.authToken = 'token'
+    describe 'signed in', ->
+      beforeEach ->
+        auth._session.start()
+        adapter.authToken = 'token'
 
       describe 'tokenLocation = param', ->
         beforeEach ->
@@ -96,8 +102,9 @@ describe 'Em.Auth.Strategy.Token', ->
         strategyAdapter: 'token'
         responseAdapter: 'dummy'
         tokenKey: 'foo'
-      auth._strategy.adapter.deserialize { foo: 'bar' }
-      expect(auth.authToken).toEqual 'bar'
+      adapter = auth._strategy.adapter
+      adapter.deserialize { foo: 'bar' }
+      expect(adapter.authToken).toEqual 'bar'
 
     it 'sets userId at tokenIdKey', ->
       auth = Em.Auth.create
