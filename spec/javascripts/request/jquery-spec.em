@@ -1,18 +1,19 @@
 describe 'Em.Auth.Request.Jquery', ->
-  auth = null
-  spy  = null
+  auth    = null
+  spy     = null
   adapter = null
 
   beforeEach ->
-    auth    = Em.Auth.create { requestAdapter: 'jquery' }
-    adapter = auth.request.adapter
+    auth = Em.Auth.create
+      requestAdapter:  'jquery'
+      responseAdapter: 'dummy'
+    adapter = auth._request.adapter
   afterEach ->
     auth.destroy()
     sinon.collection.restore()
     $.mockjaxClear()
 
   it '', ->
-    follow 'property injection', adapter, auth, 'json'
     follow 'property injection', adapter, auth, 'jqxhr'
 
   example 'content type', (value) ->
@@ -79,30 +80,22 @@ describe 'Em.Auth.Request.Jquery', ->
       expect(spy.args[0][0].type).toEqual 'GET'
       expect(spy.args[0][0].contentType).toEqual 'foo'
 
-    describe 'success', ->
+    example 'send integration', (status, response) ->
       beforeEach ->
         $.mockjax
           url: '/foo'
           type: 'POST'
-          status: 201
-          responseText: { foo: 'bar' }
-        spy = sinon.collection.spy auth.strategy, 'deserialize'
-        adapter.send { url: '/foo', type: 'POST', async: false }
-
-      it 'sets json',  -> expect(adapter.json).not.toBeNull()
-      it 'sets jqxhr', -> expect(adapter.jqxhr).not.toBeNull()
-      it 'delegates to strategy.deserialize', -> expect(spy).toHaveBeenCalled()
-
-    describe 'failure', ->
-      beforeEach ->
-        $.mockjax
-          url: '/foo'
-          type: 'POST'
-          status: 401
-          responseText: { foo: 'bar' }
+          status: status
+          responseText: response
+        spy = sinon.collection.spy auth._response, 'canonicalize'
         adapter.send { url: '/foo', type: 'POST', async: false }
 
       it 'sets jqxhr', -> expect(adapter.jqxhr).not.toBeNull()
+      it 'delegates to response.canonicalize', ->
+        expect(spy).toHaveBeenCalledWithExactly response
+
+    describe 'success', -> follow 'send integration', 201, { foo: 'bar' }
+    describe 'failure', -> follow 'send integration', 401, '{"foo":"bar"}'
 
   example 'action', (env) ->
     describe "##{env}", ->
