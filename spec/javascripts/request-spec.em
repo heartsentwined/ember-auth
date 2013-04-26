@@ -1,9 +1,11 @@
 describe 'Em.Auth.Request', ->
-  auth = null
-  spy  = null
+  auth    = null
+  spy     = null
+  request = null
 
   beforeEach ->
-    auth = Em.Auth.create()
+    auth    = Em.Auth.create()
+    request = auth._request
   afterEach ->
     auth.destroy()
     sinon.collection.restore()
@@ -15,7 +17,7 @@ describe 'Em.Auth.Request', ->
       expect(auth[method]).toBeDefined()
 
     it 'preserves args', ->
-      spy = sinon.collection.spy auth.request, method
+      spy = sinon.collection.spy request, method
       auth[method]('foo')
       expect(spy).toHaveBeenCalledWithExactly('foo')
 
@@ -28,21 +30,22 @@ describe 'Em.Auth.Request', ->
       beforeEach ->
         opts = {}
         opts["#{type}EndPoint"] = '/foo'
-        auth = Em.Auth.create opts
+        auth    = Em.Auth.create opts
+        request = auth._request
 
       it 'resolves url', ->
-        spy = sinon.collection.spy auth.request, 'resolveUrl'
-        auth.request[type]('bar')
+        spy = sinon.collection.spy request, 'resolveUrl'
+        request[type]('bar')
         expect(spy).toHaveBeenCalledWithExactly('/foo')
 
       it 'serializes opts', ->
-        spy = sinon.collection.spy auth.strategy, 'serialize'
-        auth.request[type]('bar')
+        spy = sinon.collection.spy auth._strategy, 'serialize'
+        request[type]('bar')
         expect(spy).toHaveBeenCalledWithExactly('bar')
 
       it 'delegates to adapter', ->
-        spy = sinon.collection.spy auth.request.adapter, type
-        auth.request[type]('bar')
+        spy = sinon.collection.spy request.adapter, type
+        request[type]('bar')
         expect(spy).toHaveBeenCalledWithExactly('/foo', 'bar')
 
   follow 'request server api', 'signIn'
@@ -56,8 +59,8 @@ describe 'Em.Auth.Request', ->
     example 'request resolve url', ({ input, output, isAppend }) ->
       desc = if isAppend then 'appends path to baseUrl' else 'returns path'
       it desc, ->
-        expect(auth.request.resolveUrl(input)).toEqual output
-        expect(auth.request.resolveUrl("/#{input}")).toEqual output
+        expect(auth._request.resolveUrl(input)).toEqual output
+        expect(auth._request.resolveUrl("/#{input}")).toEqual output
 
     describe 'baseUrl defined with trialing slash', ->
       beforeEach -> auth = Em.Auth.create { baseUrl: 'foo/' }
