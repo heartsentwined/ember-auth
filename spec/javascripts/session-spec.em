@@ -25,17 +25,12 @@ describe 'Em.Auth.Session', ->
   it 'injects user', ->
     follow 'property injection', session, auth, 'user'
 
-  describe 'start on signInSuccess', ->
-    it '', ->
-      follow 'events', auth, 'signInSuccess', session, 'start'
-
-  describe 'findUser on signInSuccess', ->
-    it '', ->
-      follow 'events', auth, 'signInSuccess', session, 'findUser'
-
-  describe 'clear on signOutSuccess', ->
-    it '', ->
-      follow 'events', auth, 'signOutSuccess', session, 'clear'
+  it 'start on signInSuccess', ->
+    follow 'events', auth, 'signInSuccess', session, 'start'
+  it 'findUser on signInSuccess', ->
+    follow 'events', auth, 'signInSuccess', session, 'findUser'
+  it 'clear on signOutSuccess', ->
+    follow 'events', auth, 'signOutSuccess', session, 'clear'
 
   describe '#findUser', ->
     model = { find: -> }

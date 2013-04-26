@@ -13,9 +13,8 @@ describe 'Em.Auth.Strategy', ->
 
   follow 'adapter init', 'strategy'
 
-  describe 'deserialize on signInSuccess', ->
-    it '', ->
-      follow 'events', auth, 'signInSuccess', strategy, 'deserialize'
+  it 'deserialize on signInSuccess', ->
+    follow 'events', auth, 'signInSuccess', strategy, 'deserialize'
 
   it '', ->
     follow 'adapter delegation', strategy, 'serialize', ['foo']
