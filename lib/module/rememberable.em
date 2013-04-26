@@ -14,7 +14,7 @@ class Em.Auth.Module.Rememberable
 
   remember: ->
     if token = @auth.response?[@auth.rememberableTokenKey]
-      @storeToken(token) if token != @retrieveToken()
+      @storeToken(token) unless token == @retrieveToken()
     else
       @forget() unless @fromRecall
     @fromRecall = false
@@ -35,5 +35,5 @@ class Em.Auth.Module.Rememberable
   patch: ->
     Em.Route.reopen
       redirect: =>
-        if !@auth.authToken && @auth.rememberableAutoRecall
+        if @auth.rememberableAutoRecall && !@auth.signedIn
           @recall { async: false }
