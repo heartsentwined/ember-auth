@@ -13,5 +13,12 @@ describe 'Em.Auth.Strategy', ->
   follow 'adapter init', 'strategy'
 
   it '', ->
-    follow 'adapter delegation', auth.strategy, 'serialize', ['foo']
-    follow 'adapter delegation', auth.strategy, 'deserialize', ['foo']
+    follow 'adapter delegation', strategy, 'serialize', ['foo']
+
+  # special treatment for deserialize
+  describe '#deserialize', ->
+    it 'delegates to adapter with auth.response property', ->
+      auth._response.response = 'foo'
+      spy = sinon.collection.spy strategy.adapter, 'deserialize'
+      strategy.deserialize()
+      expect(spy).toHaveBeenCalledWithExactly('foo')
