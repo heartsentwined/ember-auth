@@ -12,15 +12,15 @@ describe 'Em.Auth.Module', ->
   it 'initializes modules', ->
     class Em.Auth.Module.FooBar
     spy = sinon.collection.spy Em.Auth.Module.FooBar, 'create'
-    auth = Em.Auth.create { modules: ['foo-bar'] }
+    auth = Em.Auth.create { modules: ['fooBar'] }
     expect(spy).toHaveBeenCalledWithExactly { auth: auth }
 
   it 'throws if module not found', ->
-    expect(-> Em.Auth.create { modules: ['foo-bar'] }).toThrow()
+    expect(-> Em.Auth.create { modules: ['fooBar'] }).toThrow()
 
   it 'sets initialized modules in auth.module', ->
     class Em.Auth.Module.FooBar
       baz: ->
-    auth = Em.Auth.create { modules: ['foo-bar'] }
-    expect(auth.module['foo-bar']).toBeDefined()
-    expect(auth.module['foo-bar'].baz).toBeDefined()
+    auth = Em.Auth.create { modules: ['fooBar'] }
+    expect(auth.module['fooBar']).toBeDefined()
+    expect(auth.module['fooBar'].baz).toBeDefined()

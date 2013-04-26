@@ -14,7 +14,7 @@ class Em.Auth extends Em.Object with Em.Evented
   sessionAdapter:  'cookie'
 
   # module
-  modules: ['ember-data']
+  modules: ['emberData']
 
   # request
   signInEndPoint: null
