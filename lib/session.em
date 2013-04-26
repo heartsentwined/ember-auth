@@ -19,6 +19,9 @@ class Em.Auth.Session
     if model = @auth.userModel
       @user = model.find @userId
 
+  start: ->
+    @signedIn = true
+
   clear: ->
     @signedIn = false
     @userId   = null

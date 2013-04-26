@@ -40,6 +40,12 @@ describe 'Em.Auth.Session', ->
         session.findUser()
         expect(spy).not.toHaveBeenCalled()
 
+  describe '#start', ->
+    it 'sets signedIn', ->
+      expect(session.signedIn).toBeFalsy()
+      session.start()
+      expect(session.signedIn).toBeTruthy()
+
   describe '#clear', ->
     example 'session data clearance', (property) ->
       it "clears #{property}", ->
