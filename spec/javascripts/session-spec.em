@@ -18,7 +18,7 @@ describe 'Em.Auth.Session', ->
     follow 'adapter delegation', session, 'remove', ['foo', 'bar']
 
   it '', ->
-    follow 'property injection', session, auth, 'authToken'
+    follow 'property injection', session, auth, 'signedIn'
     follow 'property injection', session, auth, 'userId'
     follow 'property injection', session, auth, 'user'
 
@@ -46,8 +46,8 @@ describe 'Em.Auth.Session', ->
         session.set property, 'foo'
         expect(session.get(property)).toEqual 'foo'
         session.clear()
-        expect(session.get(property)).toBeNull()
+        expect(session.get(property)).toBeFalsy()
 
-    follow 'session data clearance', 'authToken'
+    follow 'session data clearance', 'signedIn'
     follow 'session data clearance', 'userId'
     follow 'session data clearance', 'user'
