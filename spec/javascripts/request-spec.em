@@ -48,11 +48,8 @@ describe 'Em.Auth.Request', ->
   follow 'request server api', 'signIn'
   follow 'request server api', 'signOut'
 
-  describe '#send', ->
-    it 'delegates to adapter', ->
-      spy = sinon.collection.spy auth.request.adapter, 'send'
-      auth.request.send('foo')
-      expect(spy).toHaveBeenCalledWithExactly('foo')
+  it '', ->
+    follow 'adapter delegation', request, 'send', ['foo']
 
   describe '#resolveUrl', ->
 
