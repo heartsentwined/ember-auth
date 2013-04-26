@@ -3,7 +3,7 @@ class Em.Auth extends Em.Object with Em.Evented
     @_request  = Em.Auth.Request.create  { auth: this }
     @_strategy = Em.Auth.Strategy.create { auth: this }
     @_session  = Em.Auth.Session.create  { auth: this }
-    Em.Auth.Module.create { auth: this }
+    @_module   = Em.Auth.Module.create   { auth: this }
 
   # =====================
   # Config
