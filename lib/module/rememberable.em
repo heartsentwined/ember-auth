@@ -13,7 +13,7 @@ class Em.Auth.Module.Rememberable
       @auth.signIn opts
 
   remember: ->
-    if token = @auth.json[@auth.rememberableTokenKey]
+    if token = @auth.response?[@auth.rememberableTokenKey]
       @storeToken(token) if token != @retrieveToken()
     else
       @forget() unless @fromRecall
