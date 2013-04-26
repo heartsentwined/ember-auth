@@ -5,7 +5,7 @@ describe 'Em.Auth.Strategy.Token', ->
 
   beforeEach ->
     auth    = Em.Auth.create()
-    adapter = auth.strategy.adapter
+    adapter = auth._strategy.adapter
   afterEach ->
     auth.destroy() if auth
     auth   = null
@@ -21,7 +21,7 @@ describe 'Em.Auth.Strategy.Token', ->
       it '', -> follow 'token in custom header', output
 
     describe 'auth token set', ->
-      beforeEach -> auth.session.authToken = 'token'
+      beforeEach -> auth._session.authToken = 'token'
 
       describe 'tokenLocation = param', ->
         beforeEach ->
