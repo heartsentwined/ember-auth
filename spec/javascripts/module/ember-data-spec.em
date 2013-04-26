@@ -3,7 +3,7 @@ describe 'Em.Auth.Module.EmberData', ->
   spy  = null
 
   beforeEach ->
-    auth = Em.Auth.create { modules: ['ember-data'] }
+    auth = Em.Auth.create { responseAdapter: 'dummy', modules: ['ember-data'] }
   afterEach ->
     auth.destroy() if auth
     auth = null
