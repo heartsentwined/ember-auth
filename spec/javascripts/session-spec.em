@@ -1,9 +1,11 @@
 describe 'Em.Auth.Session', ->
-  auth = null
-  spy  = null
+  auth    = null
+  spy     = null
+  session = null
 
   beforeEach ->
-    auth = Em.Auth.create()
+    auth    = Em.Auth.create()
+    session = auth._session
   afterEach ->
     auth.destroy()
     sinon.collection.restore()
@@ -11,40 +13,40 @@ describe 'Em.Auth.Session', ->
   follow 'adapter init', 'session'
 
   it '', ->
-    follow 'adapter delegation', auth.session, 'retrieve', ['foo', 'bar']
-    follow 'adapter delegation', auth.session, 'store', ['foo', 'bar', 'baz']
-    follow 'adapter delegation', auth.session, 'remove', ['foo', 'bar']
+    follow 'adapter delegation', session, 'retrieve', ['foo', 'bar']
+    follow 'adapter delegation', session, 'store', ['foo', 'bar', 'baz']
+    follow 'adapter delegation', session, 'remove', ['foo', 'bar']
 
   it '', ->
-    follow 'property injection', auth.session, auth, 'authToken'
-    follow 'property injection', auth.session, auth, 'currentUserId'
-    follow 'property injection', auth.session, auth, 'currentUser'
+    follow 'property injection', session, auth, 'authToken'
+    follow 'property injection', session, auth, 'currentUserId'
+    follow 'property injection', session, auth, 'currentUser'
 
   describe '#findUser', ->
     model = { find: -> }
 
     beforeEach ->
-      auth.session.currentUserId = 1
+      session.currentUserId = 1
       spy = sinon.collection.spy model, 'find'
 
     describe 'userModel set', ->
       it 'delegates to .find()', ->
         auth.userModel = model
-        auth.session.findUser()
+        session.findUser()
         expect(spy).toHaveBeenCalledWithExactly(1)
 
     describe 'userModel not set', ->
       it 'does nothing', ->
-        auth.session.findUser()
+        session.findUser()
         expect(spy).not.toHaveBeenCalled()
 
   describe '#clear', ->
     example 'session data clearance', (property) ->
       it "clears #{property}", ->
-        auth.session.set property, 'foo'
-        expect(auth.session.get(property)).toEqual 'foo'
-        auth.session.clear()
-        expect(auth.session.get(property)).toBeNull()
+        session.set property, 'foo'
+        expect(session.get(property)).toEqual 'foo'
+        session.clear()
+        expect(session.get(property)).toBeNull()
 
     follow 'session data clearance', 'authToken'
     follow 'session data clearance', 'currentUserId'
