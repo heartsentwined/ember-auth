@@ -4,7 +4,7 @@ class Em.Auth.Module.UrlAuthenticatable
     @patch()
 
   authenticate: (opts = {}) ->
-    return if @auth.authToken
+    return if @auth.signedIn
     @canonicalizeParams()
     return if jQuery.isEmptyObject @params
     data = {}
