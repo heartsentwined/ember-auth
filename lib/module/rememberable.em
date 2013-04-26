@@ -6,7 +6,7 @@ class Em.Auth.Module.Rememberable
     @patch()
 
   recall: (opts = {}) ->
-    if !@auth.authToken && (token = @retrieveToken())
+    if !@auth.signedIn && (token = @retrieveToken())
       @fromRecall = true
       opts.data ||= {}
       opts.data[@auth.rememberableTokenKey] = token
