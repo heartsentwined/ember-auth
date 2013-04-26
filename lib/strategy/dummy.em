@@ -4,4 +4,4 @@ class Em.Auth.Strategy.Dummy
 
   deserialize: (data = {}) ->
     for k, v of data
-      @auth[k] = v
+      @auth.set k, v

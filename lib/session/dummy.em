@@ -3,8 +3,9 @@ class Em.Auth.Session.Dummy
     @session = {}
 
   retrieve: (key) ->
-    @session[key]
+    @get "session.#{key}"
   store: (key, value) ->
-    @session[key] = value
+    @set "session.#{key}", value
   remove: (key) ->
+    @set "session.#{key}", undefined
     delete @session[key]
