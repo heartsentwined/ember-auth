@@ -17,7 +17,7 @@ class Em.Auth.Session
 
   findUser: ->
     if model = @auth.userModel
-      @currentUser = model.find(@currentUserId)
+      @currentUser = model.find @currentUserId
 
   clear: ->
     @authToken     = null
