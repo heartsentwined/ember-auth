@@ -1,5 +1,4 @@
 class Em.Auth.Request.Jquery
-  json:  null
   jqxhr: null
 
   init: -> @inject()
@@ -29,10 +28,10 @@ class Em.Auth.Request.Jquery
     jQuery.ajax(
       settings
     ).done( (json, status, jqxhr) =>
-      @auth.strategy.deserialize(json)
-      @json  = json
+      @auth._response.canonicalize json
       @jqxhr = jqxhr
     ).fail( (jqxhr) =>
+      @auth._response.canonicalize jqxhr.responseText
       @jqxhr = jqxhr
     ).always (jqxhr) =>
       @jqxhr = jqxhr
@@ -40,5 +39,4 @@ class Em.Auth.Request.Jquery
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
-      json:  Em.computed(=> @json ).property('request.adapter.json')
-      jqxhr: Em.computed(=> @jqxhr).property('request.adapter.jqxhr')
+      jqxhr: Em.computed(=> @jqxhr).property('_request.adapter.jqxhr')
