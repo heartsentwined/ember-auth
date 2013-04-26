@@ -19,14 +19,14 @@ describe 'Em.Auth.Session', ->
 
   it '', ->
     follow 'property injection', session, auth, 'authToken'
-    follow 'property injection', session, auth, 'currentUserId'
-    follow 'property injection', session, auth, 'currentUser'
+    follow 'property injection', session, auth, 'userId'
+    follow 'property injection', session, auth, 'user'
 
   describe '#findUser', ->
     model = { find: -> }
 
     beforeEach ->
-      session.currentUserId = 1
+      session.userId = 1
       spy = sinon.collection.spy model, 'find'
 
     describe 'userModel set', ->
@@ -49,5 +49,5 @@ describe 'Em.Auth.Session', ->
         expect(session.get(property)).toBeNull()
 
     follow 'session data clearance', 'authToken'
-    follow 'session data clearance', 'currentUserId'
-    follow 'session data clearance', 'currentUser'
+    follow 'session data clearance', 'userId'
+    follow 'session data clearance', 'user'

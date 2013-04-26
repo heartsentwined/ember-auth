@@ -99,10 +99,10 @@ describe 'Em.Auth.Strategy.Token', ->
       auth._strategy.adapter.deserialize { foo: 'bar' }
       expect(auth.authToken).toEqual 'bar'
 
-    it 'sets currentUserId at tokenIdKey', ->
+    it 'sets userId at tokenIdKey', ->
       auth = Em.Auth.create
         strategyAdapter: 'token'
         responseAdapter: 'dummy'
         tokenIdKey: 'foo'
       auth._strategy.adapter.deserialize { foo: '1' }
-      expect(auth.currentUserId).toEqual '1'
+      expect(auth.userId).toEqual '1'
