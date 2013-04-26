@@ -14,4 +14,4 @@ class Em.Auth.Request.Dummy
     @auth.trigger 'signOutComplete'
 
   send: (opts = {}) ->
-    @auth.strategy.deserialize(opts)
+    @auth._response.canonicalize opts
