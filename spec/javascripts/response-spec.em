@@ -4,10 +4,11 @@ describe 'Em.Auth.Response', ->
   response = null
 
   beforeEach ->
-    auth     = Em.Auth.create { responseAdapter: 'dummy' }
-    response = auth._response
+    Em.run ->
+      auth     = Em.Auth.create { responseAdapter: 'dummy' }
+      response = auth._response
   afterEach ->
-    auth.destroy()
+    Em.run -> auth.destroy()
     sinon.collection.restore()
 
   follow 'adapter init', 'response'
@@ -18,7 +19,7 @@ describe 'Em.Auth.Response', ->
 
     it 'sets responseData with canonicalize result', ->
       sinon.collection.stub response.adapter, 'canonicalize', (a) -> "_#{a}"
-      response.canonicalize('foo')
+      Em.run -> response.canonicalize('foo')
       expect(response.response).toEqual '_foo'
 
   it '', ->

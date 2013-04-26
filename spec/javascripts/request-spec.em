@@ -4,10 +4,11 @@ describe 'Em.Auth.Request', ->
   request = null
 
   beforeEach ->
-    auth    = Em.Auth.create { responseAdapter: 'dummy' }
-    request = auth._request
+    Em.run ->
+      auth    = Em.Auth.create { responseAdapter: 'dummy' }
+      request = auth._request
   afterEach ->
-    auth.destroy()
+    auth.destroy() if auth
     sinon.collection.restore()
 
   follow 'adapter init', 'request'
@@ -18,7 +19,7 @@ describe 'Em.Auth.Request', ->
 
     it 'preserves args', ->
       spy = sinon.collection.spy request, method
-      auth[method]('foo')
+      Em.run -> auth[method]('foo')
       expect(spy).toHaveBeenCalledWithExactly('foo')
 
   follow 'request method injection', 'signIn'
@@ -30,8 +31,9 @@ describe 'Em.Auth.Request', ->
       beforeEach ->
         opts = { responseAdapter: 'dummy' }
         opts["#{type}EndPoint"] = '/foo'
-        auth    = Em.Auth.create opts
-        request = auth._request
+        Em.run ->
+          auth    = Em.Auth.create opts
+          request = auth._request
 
       it 'resolves url', ->
         spy = sinon.collection.spy request, 'resolveUrl'
@@ -63,21 +65,21 @@ describe 'Em.Auth.Request', ->
         expect(auth._request.resolveUrl("/#{input}")).toEqual output
 
     describe 'baseUrl defined with trialing slash', ->
-      beforeEach -> auth = Em.Auth.create { baseUrl: 'foo/' }
+      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: 'foo/' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl defined without trialing slash', ->
-      beforeEach -> auth = Em.Auth.create { baseUrl: 'foo' }
+      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: 'foo' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl = null', ->
-      beforeEach -> auth = Em.Auth.create { baseUrl: null }
+      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: null }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }
 
     describe 'baseUrl = empty string', ->
-      beforeEach -> auth = Em.Auth.create { baseUrl: '' }
+      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: '' }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }

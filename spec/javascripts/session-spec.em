@@ -4,10 +4,11 @@ describe 'Em.Auth.Session', ->
   session = null
 
   beforeEach ->
-    auth    = Em.Auth.create()
-    session = auth._session
+    Em.run ->
+      auth    = Em.Auth.create()
+      session = auth._session
   afterEach ->
-    auth.destroy()
+    auth.destroy() if auth
     sinon.collection.restore()
 
   follow 'adapter init', 'session'
@@ -38,32 +39,33 @@ describe 'Em.Auth.Session', ->
     model = { find: -> }
 
     beforeEach ->
-      session.userId = 1
+      Em.run -> session.userId = 1
       spy = sinon.collection.spy model, 'find'
 
     describe 'userModel set', ->
       it 'delegates to .find()', ->
-        auth.userModel = model
-        session.findUser()
+        Em.run ->
+          auth.userModel = model
+          session.findUser()
         expect(spy).toHaveBeenCalledWithExactly(1)
 
     describe 'userModel not set', ->
       it 'does nothing', ->
-        session.findUser()
+        Em.run -> session.findUser()
         expect(spy).not.toHaveBeenCalled()
 
   describe '#start', ->
     it 'sets signedIn', ->
       expect(session.signedIn).toBeFalsy()
-      session.start()
+      Em.run -> session.start()
       expect(session.signedIn).toBeTruthy()
 
   describe '#clear', ->
     example 'session data clearance', (property) ->
       it "clears #{property}", ->
-        session.set property, 'foo'
+        Em.run -> session.set property, 'foo'
         expect(session.get(property)).toEqual 'foo'
-        session.clear()
+        Em.run -> session.clear()
         expect(session.get(property)).toBeFalsy()
 
     follow 'session data clearance', 'signedIn'

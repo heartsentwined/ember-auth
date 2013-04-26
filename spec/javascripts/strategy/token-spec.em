@@ -4,8 +4,9 @@ describe 'Em.Auth.Strategy.Token', ->
   output  = null
 
   beforeEach ->
-    auth    = Em.Auth.create { responseAdapter: 'dummy' }
-    adapter = auth._strategy.adapter
+    Em.run ->
+      auth    = Em.Auth.create { responseAdapter: 'dummy' }
+      adapter = auth._strategy.adapter
   afterEach ->
     auth.destroy() if auth
     auth   = null
@@ -18,21 +19,24 @@ describe 'Em.Auth.Strategy.Token', ->
 
     describe 'not signed in', ->
       beforeEach ->
-        auth._session.clear()
-        output = adapter.serialize { data: { foo: 'bar' } }
+        Em.run ->
+          auth._session.clear()
+          output = adapter.serialize { data: { foo: 'bar' } }
       it '', -> follow 'token in param', output
       it '', -> follow 'token in auth header', output
       it '', -> follow 'token in custom header', output
 
     describe 'signed in', ->
       beforeEach ->
-        auth._session.start()
-        adapter.authToken = 'token'
+        Em.run ->
+          auth._session.start()
+          adapter.authToken = 'token'
 
       describe 'tokenLocation = param', ->
         beforeEach ->
-          auth.tokenLocation = 'param'
-          auth.tokenKey = 'key'
+          Em.run ->
+            auth.tokenLocation = 'param'
+            auth.tokenKey = 'key'
 
         describe 'overriding auth token key', ->
           beforeEach ->
@@ -53,8 +57,9 @@ describe 'Em.Auth.Strategy.Token', ->
 
       describe 'tokenLocation = authHeader', ->
         beforeEach ->
-          auth.tokenLocation = 'authHeader'
-          auth.tokenHeaderKey = 'key'
+          Em.run ->
+            auth.tokenLocation = 'authHeader'
+            auth.tokenHeaderKey = 'key'
 
         describe 'overriding Authorization header', ->
           beforeEach ->
@@ -76,8 +81,9 @@ describe 'Em.Auth.Strategy.Token', ->
 
       describe 'tokenLocation = customHeader', ->
         beforeEach ->
-          auth.tokenLocation = 'customHeader'
-          auth.tokenHeaderKey = 'key'
+          Em.run ->
+            auth.tokenLocation = 'customHeader'
+            auth.tokenHeaderKey = 'key'
 
         describe 'overriding custom auth header', ->
           beforeEach ->
@@ -98,18 +104,20 @@ describe 'Em.Auth.Strategy.Token', ->
 
   describe '#deserialize', ->
     it 'sets authToken at tokenKey', ->
-      auth = Em.Auth.create
-        strategyAdapter: 'token'
-        responseAdapter: 'dummy'
-        tokenKey: 'foo'
-      adapter = auth._strategy.adapter
-      adapter.deserialize { foo: 'bar' }
+      Em.run ->
+        auth = Em.Auth.create
+          strategyAdapter: 'token'
+          responseAdapter: 'dummy'
+          tokenKey: 'foo'
+        adapter = auth._strategy.adapter
+        adapter.deserialize { foo: 'bar' }
       expect(adapter.authToken).toEqual 'bar'
 
     it 'sets userId at tokenIdKey', ->
-      auth = Em.Auth.create
-        strategyAdapter: 'token'
-        responseAdapter: 'dummy'
-        tokenIdKey: 'foo'
-      auth._strategy.adapter.deserialize { foo: '1' }
+      Em.run ->
+        auth = Em.Auth.create
+          strategyAdapter: 'token'
+          responseAdapter: 'dummy'
+          tokenIdKey: 'foo'
+        auth._strategy.adapter.deserialize { foo: '1' }
       expect(auth.userId).toEqual '1'

@@ -3,11 +3,12 @@ describe 'Em.Auth.Response.Json', ->
   adapter = null
 
   beforeEach ->
-    auth    = Em.Auth.create { responseAdapter: 'json' }
-    adapter = auth._response.adapter
+    Em.run ->
+      auth    = Em.Auth.create { responseAdapter: 'json' }
+      adapter = auth._response.adapter
   afterEach ->
     auth.destroy() if auth
-    auth   = null
+    auth = null
 
   describe '#canonicalize', ->
 

@@ -4,8 +4,9 @@ describe 'Em.Auth.Strategy', ->
   strategy = null
 
   beforeEach ->
-    auth     = Em.Auth.create()
-    strategy = auth._strategy
+    Em.run ->
+      auth     = Em.Auth.create()
+      strategy = auth._strategy
   afterEach ->
     auth.destroy()
     sinon.collection.restore()
@@ -22,7 +23,8 @@ describe 'Em.Auth.Strategy', ->
   # special treatment for deserialize
   describe '#deserialize', ->
     it 'delegates to adapter with auth.response property', ->
-      auth._response.response = 'foo'
       spy = sinon.collection.spy strategy.adapter, 'deserialize'
-      strategy.deserialize()
+      Em.run ->
+        auth._response.response = 'foo'
+        strategy.deserialize()
       expect(spy).toHaveBeenCalledWithExactly('foo')

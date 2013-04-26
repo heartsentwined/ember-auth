@@ -4,12 +4,13 @@ describe 'Em.Auth.Request.Jquery', ->
   adapter = null
 
   beforeEach ->
-    auth = Em.Auth.create
-      requestAdapter:  'jquery'
-      responseAdapter: 'dummy'
-    adapter = auth._request.adapter
+    Em.run ->
+      auth = Em.Auth.create
+        requestAdapter:  'jquery'
+        responseAdapter: 'dummy'
+      adapter = auth._request.adapter
   afterEach ->
-    auth.destroy()
+    auth.destroy() if auth
     sinon.collection.restore()
     $.mockjaxClear()
 
@@ -43,39 +44,44 @@ describe 'Em.Auth.Request.Jquery', ->
       beforeEach -> spy = sinon.collection.spy jQuery, 'ajax'
 
       describe 'data not given', ->
-        beforeEach -> adapter.send()
+        beforeEach ->
+          Em.run -> adapter.send()
         follow 'content type'
         follow 'data'
 
       describe 'data given', ->
 
         describe 'contentType given', ->
-          beforeEach -> adapter.send { contentType: 'foo', data: 'bar' }
+          beforeEach ->
+            Em.run -> adapter.send { contentType: 'foo', data: 'bar' }
           follow 'content type', 'foo'
           follow 'data', 'bar'
 
         describe 'contentType not given', ->
 
           describe 'type not given', ->
-            beforeEach -> adapter.send { data: { foo: 'bar' } }
+            beforeEach ->
+              Em.run -> adapter.send { data: { foo: 'bar' } }
             follow 'content type', 'application/json; charset=utf-8'
             follow 'data', '{"foo":"bar"}', true
 
           describe 'type given', ->
 
             describe '= GET', ->
-              beforeEach -> adapter.send { data: { foo: 'bar' }, type: 'get' }
+              beforeEach ->
+                Em.run -> adapter.send { data: { foo: 'bar' }, type: 'get' }
               follow 'content type'
               follow 'data', { foo: 'bar' }
 
             describe '!= GET', ->
-              beforeEach -> adapter.send { data: { foo: 'bar' }, type: 'FOO' }
+              beforeEach ->
+                Em.run -> adapter.send { data: { foo: 'bar' }, type: 'FOO' }
               follow 'content type', 'application/json; charset=utf-8'
               follow 'data', '{"foo":"bar"}', true
 
     it 'is customizable', ->
       spy = sinon.collection.spy jQuery, 'ajax'
-      adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
+      Em.run -> adapter.send { url: 'bar', type: 'GET', contentType: 'foo' }
       expect(spy.args[0][0].url).toEqual 'bar'
       expect(spy.args[0][0].type).toEqual 'GET'
       expect(spy.args[0][0].contentType).toEqual 'foo'
@@ -88,7 +94,7 @@ describe 'Em.Auth.Request.Jquery', ->
           status: status
           responseText: response
         spy = sinon.collection.spy auth._response, 'canonicalize'
-        adapter.send { url: '/foo', type: 'POST', async: false }
+        Em.run -> adapter.send { url: '/foo', type: 'POST', async: false }
 
       it 'sets jqxhr', -> expect(adapter.jqxhr).not.toBeNull()
       it 'delegates to response.canonicalize', ->
@@ -101,7 +107,7 @@ describe 'Em.Auth.Request.Jquery', ->
     describe "##{env}", ->
       it 'delegates to #send', ->
         spy = sinon.collection.spy adapter, 'send'
-        adapter[env]('/foo', { bar: 'baz' })
+        Em.run -> adapter[env]('/foo', { bar: 'baz' })
         expect(spy).toHaveBeenCalledWithExactly
           url: '/foo'
           type: switch env
@@ -111,7 +117,7 @@ describe 'Em.Auth.Request.Jquery', ->
 
       it 'allows overriding of defaults', ->
         spy = sinon.collection.spy adapter, 'send'
-        adapter[env]('/foo', { type: 'bar' })
+        Em.run -> adapter[env]('/foo', { type: 'bar' })
         expect(spy).toHaveBeenCalledWithExactly { url: '/foo', type: 'bar' }
 
       follow 'trigger events', env, 'success'
@@ -129,7 +135,7 @@ describe 'Em.Auth.Request.Jquery', ->
           when 'error'   then 401
         responseText: null
       spy = sinon.collection.spy auth, 'trigger'
-      adapter[env]('/foo', { async: false })
+      Em.run -> adapter[env]('/foo', { async: false })
       event = Em.String.capitalize status
       expect(spy).toHaveBeenCalledWithExactly("#{env}#{event}")
       expect(spy).toHaveBeenCalledWithExactly("#{env}Complete")
