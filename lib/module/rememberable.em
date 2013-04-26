@@ -8,10 +8,9 @@ class Em.Auth.Module.Rememberable
   recall: (opts = {}) ->
     if !@auth.authToken && (token = @retrieveToken())
       @fromRecall = true
-      data = {}
-      data.async = opts.async if opts.async?
-      data[@auth.rememberableTokenKey] = token
-      @auth.signIn { data: data }
+      opts.data ||= {}
+      opts.data[@auth.rememberableTokenKey] = token
+      @auth.signIn opts
 
   remember: ->
     if token = @auth.json[@auth.rememberableTokenKey]
