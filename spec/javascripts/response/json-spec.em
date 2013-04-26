@@ -8,7 +8,6 @@ describe 'Em.Auth.Response.Json', ->
       adapter = auth._response.adapter
   afterEach ->
     auth.destroy() if auth
-    auth = null
 
   describe '#canonicalize', ->
 

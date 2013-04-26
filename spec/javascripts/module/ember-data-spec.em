@@ -7,7 +7,6 @@ describe 'Em.Auth.Module.EmberData', ->
       auth = Em.Auth.create { responseAdapter: 'dummy', modules: ['emberData'] }
   afterEach ->
     auth.destroy() if auth
-    auth = null
 
   describe 'DS.RESTAdapter patch', ->
     it 'replaces ajax with auth.request implementation', ->

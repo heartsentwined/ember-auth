@@ -11,7 +11,6 @@ describe 'Em.Auth.Module.Rememberable', ->
       rememberable = auth.module.rememberable
   afterEach ->
     auth.destroy() if auth
-    auth = null
     sinon.collection.restore()
 
   it 'remember on signInSuccess', ->
