@@ -29,6 +29,7 @@ describe 'Em.Auth', ->
       expect(auth.get("_#{obj}")).toEqual override
 
   follow 'auth initializer', 'request'
+  follow 'auth initializer', 'response'
   follow 'auth initializer', 'strategy'
   follow 'auth initializer', 'session'
   follow 'auth initializer', 'module'

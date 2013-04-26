@@ -1,11 +1,13 @@
 class Em.Auth extends Em.Object with Em.Evented
   _request:  null
+  _response: null
   _strategy: null
   _session:  null
   _module:   null
 
   init: ->
     @_request  ||= Em.Auth.Request.create  { auth: this }
+    @_response ||= Em.Auth.Response.create { auth: this }
     @_strategy ||= Em.Auth.Strategy.create { auth: this }
     @_session  ||= Em.Auth.Session.create  { auth: this }
     @_module   ||= Em.Auth.Module.create   { auth: this }
@@ -15,6 +17,7 @@ class Em.Auth extends Em.Object with Em.Evented
   # =====================
 
   requestAdapter:  'jquery'
+  responseAdapter: 'json'
   strategyAdapter: 'token'
   sessionAdapter:  'cookie'
 
