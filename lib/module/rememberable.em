@@ -24,14 +24,14 @@ class Em.Auth.Module.Rememberable
     @removeToken()
 
   retrieveToken: ->
-    @auth.session.retrieve 'ember-auth-rememberable'
+    @auth._session.retrieve 'ember-auth-rememberable'
 
   storeToken: (token) ->
-    @auth.session.store 'ember-auth-rememberable', token,
+    @auth._session.store 'ember-auth-rememberable', token,
       expires: @auth.rememberablePeriod
 
   removeToken: ->
-    @auth.session.remove 'ember-auth-rememberable'
+    @auth._session.remove 'ember-auth-rememberable'
 
   patch: ->
     Em.Route.reopen

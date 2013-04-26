@@ -9,10 +9,10 @@ class Em.Auth.Request
 
   signIn:  (opts) ->
     url = @resolveUrl @auth.signInEndPoint
-    @adapter.signIn  url, @auth.strategy.serialize(opts)
+    @adapter.signIn  url, @auth._strategy.serialize(opts)
   signOut: (opts) ->
     url = @resolveUrl @auth.signOutEndPoint
-    @adapter.signOut url, @auth.strategy.serialize(opts)
+    @adapter.signOut url, @auth._strategy.serialize(opts)
   send: -> @adapter.send.apply(this, arguments)
 
   # different base url support

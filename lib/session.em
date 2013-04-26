@@ -31,6 +31,6 @@ class Em.Auth.Session
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
-      authToken:     Em.computed(=> @authToken).property('session.authToken')
-      currentUserId: Em.computed(=> @currentUserId).property('session.currentUserId')
-      currentUser:   Em.computed(=> @currentUser).property('session.currentUser')
+      authToken:     Em.computed(=> @authToken).property('_session.authToken')
+      currentUserId: Em.computed(=> @currentUserId).property('_session.currentUserId')
+      currentUser:   Em.computed(=> @currentUser).property('_session.currentUser')

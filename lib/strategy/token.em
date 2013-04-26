@@ -19,5 +19,5 @@ class Em.Auth.Strategy.Token
     return opts
 
   deserialize: (data = {}) ->
-    @auth.session.authToken     = data[@auth.tokenKey]
-    @auth.session.currentUserId = data[@auth.tokenIdKey]
+    @auth._session.authToken     = data[@auth.tokenKey]
+    @auth._session.currentUserId = data[@auth.tokenIdKey]
