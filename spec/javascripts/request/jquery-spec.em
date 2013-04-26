@@ -49,8 +49,7 @@ describe 'Em.Auth.Request.Jquery', ->
       describe 'data given', ->
 
         describe 'contentType given', ->
-          beforeEach ->
-            adapter.send { contentType: 'foo', data: 'bar' }
+          beforeEach -> adapter.send { contentType: 'foo', data: 'bar' }
           follow 'content type', 'foo'
           follow 'data', 'bar'
 
@@ -64,14 +63,12 @@ describe 'Em.Auth.Request.Jquery', ->
           describe 'type given', ->
 
             describe '= GET', ->
-              beforeEach ->
-                adapter.send { data: { foo: 'bar' }, type: 'get' }
+              beforeEach -> adapter.send { data: { foo: 'bar' }, type: 'get' }
               follow 'content type'
               follow 'data', { foo: 'bar' }
 
             describe '!= GET', ->
-              beforeEach ->
-                adapter.send { data: { foo: 'bar' }, type: 'FOO' }
+              beforeEach -> adapter.send { data: { foo: 'bar' }, type: 'FOO' }
               follow 'content type', 'application/json; charset=utf-8'
               follow 'data', '{"foo":"bar"}', true
 
