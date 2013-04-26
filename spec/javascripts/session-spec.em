@@ -18,9 +18,11 @@ describe 'Em.Auth.Session', ->
     follow 'adapter delegation', session, 'store', ['foo', 'bar', 'baz']
     follow 'adapter delegation', session, 'remove', ['foo', 'bar']
 
-  it '', ->
+  it 'injects signedIn', ->
     follow 'property injection', session, auth, 'signedIn'
+  it 'injects userId', ->
     follow 'property injection', session, auth, 'userId'
+  it 'injects user', ->
     follow 'property injection', session, auth, 'user'
 
   describe 'start on signInSuccess', ->

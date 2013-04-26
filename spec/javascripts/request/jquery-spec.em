@@ -14,7 +14,7 @@ describe 'Em.Auth.Request.Jquery', ->
     sinon.collection.restore()
     $.mockjaxClear()
 
-  it '', ->
+  it 'injects jqxhr', ->
     follow 'property injection', adapter, auth, 'jqxhr'
 
   example 'content type', (value) ->

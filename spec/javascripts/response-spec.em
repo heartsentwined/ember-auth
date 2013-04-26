@@ -22,5 +22,5 @@ describe 'Em.Auth.Response', ->
       Em.run -> response.canonicalize('foo')
       expect(response.response).toEqual '_foo'
 
-  it '', ->
+  it 'injects response', ->
     follow 'property injection', response, auth, 'response'
