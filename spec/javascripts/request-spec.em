@@ -4,7 +4,7 @@ describe 'Em.Auth.Request', ->
   request = null
 
   beforeEach ->
-    auth    = Em.Auth.create()
+    auth    = Em.Auth.create { responseAdapter: 'dummy' }
     request = auth._request
   afterEach ->
     auth.destroy()
@@ -28,7 +28,7 @@ describe 'Em.Auth.Request', ->
   example 'request server api', (type) ->
     describe "##{type}", ->
       beforeEach ->
-        opts = {}
+        opts = { responseAdapter: 'dummy' }
         opts["#{type}EndPoint"] = '/foo'
         auth    = Em.Auth.create opts
         request = auth._request
