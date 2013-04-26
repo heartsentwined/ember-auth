@@ -7,5 +7,4 @@ class Em.Auth.Session.Dummy
   store: (key, value) ->
     @set "session.#{key}", value
   remove: (key) ->
-    @set "session.#{key}", undefined
     delete @session[key]
