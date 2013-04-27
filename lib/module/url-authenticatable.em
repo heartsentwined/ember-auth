@@ -39,13 +39,13 @@ class Em.Auth.Module.UrlAuthenticatable
     @params = canonicalized
 
   patch: ->
+    self = this
     Em.Route.reopen
       redirect: =>
-        @authenticate { async: false }
+        self.authenticate { async: false }
 
     # hijack the routing process to grab params
     # before ember's routing sanitizes the URL
-    self = this
     Em.Router.reopen
       init: ->
         self.retrieveParams()

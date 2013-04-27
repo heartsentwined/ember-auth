@@ -33,7 +33,8 @@ class Em.Auth.Module.Rememberable
     @auth._session.remove 'ember-auth-rememberable'
 
   patch: ->
+    self = this
     Em.Route.reopen
-      redirect: =>
-        if @auth.rememberableAutoRecall && !@auth.signedIn
-          @recall { async: false }
+      redirect: ->
+        if self.auth.rememberableAutoRecall && !self.auth.signedIn
+          self.recall { async: false }
