@@ -3,6 +3,7 @@ class Em.Auth.Module
 
   init: ->
     for key in @auth.modules
+      key    = Em.String.camelize key
       module = Em.String.classify key
       if Em.Auth.Module[module]?
         @set "module.#{key}", Em.Auth.Module[module].create { auth: @auth }
