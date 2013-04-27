@@ -3,7 +3,7 @@ describe 'Em.Auth', ->
   spy  = null
 
   beforeEach ->
-    auth = emAuth.create()
+    auth = authTest.create()
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()
@@ -15,7 +15,7 @@ describe 'Em.Auth', ->
 
     it "initializes a #{obj}", ->
       spy = sinon.collection.spy Em.Auth[klass], 'create'
-      auth = emAuth.create()
+      auth = authTest.create()
       expect(spy).toHaveBeenCalledWithExactly { auth: auth }
       expect(auth.get("_#{obj}")).not.toBeNull()
 
@@ -26,7 +26,7 @@ describe 'Em.Auth', ->
         override = Em.Auth[klass].create
         data = {}
         data["_#{obj}"] = override
-        auth = emAuth.create data
+        auth = authTest.create data
       expect(auth.get("_#{obj}")).toEqual override
 
   follow 'auth initializer', 'request'

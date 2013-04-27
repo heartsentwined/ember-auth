@@ -4,7 +4,7 @@ describe 'Em.Auth.Request.Jquery', ->
   adapter = null
 
   beforeEach ->
-    auth = emAuth.create { requestAdapter: 'jquery' }
+    auth = authTest.create { requestAdapter: 'jquery' }
     adapter = auth._request.adapter
   afterEach ->
     auth.destroy() if auth

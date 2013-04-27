@@ -9,4 +9,4 @@ create = (opts) ->
     modules:         []
   Em.run -> Em.Auth.create jQuery.extend true, def, opts
 
-exports.emAuth = { create: create }
+exports.authTest = { create: create }

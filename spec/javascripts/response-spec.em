@@ -4,7 +4,7 @@ describe 'Em.Auth.Response', ->
   response = null
 
   beforeEach ->
-    auth = emAuth.create()
+    auth = authTest.create()
     response = auth._response
   afterEach ->
     Em.run -> auth.destroy()

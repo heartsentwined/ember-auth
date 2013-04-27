@@ -39,7 +39,7 @@ controller = (name)  -> lookup "controller:#{name.toLowerCase()}"
 setInitUrl = (route) -> router().get('location').setURL route
 toRoute    = (route) -> router().handleURL route
 
-exports.em =
+exports.appTest =
   create:      create
   ready:       ready
   destroy:     destroy

@@ -3,7 +3,7 @@ describe 'Em.Auth.Response.Json', ->
   adapter = null
 
   beforeEach ->
-    auth = emAuth.create { responseAdapter: 'json' }
+    auth = authTest.create { responseAdapter: 'json' }
     adapter = auth._response.adapter
   afterEach ->
     auth.destroy() if auth

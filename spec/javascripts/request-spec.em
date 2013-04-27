@@ -4,7 +4,7 @@ describe 'Em.Auth.Request', ->
   request = null
 
   beforeEach ->
-    auth = emAuth.create()
+    auth = authTest.create()
     request = auth._request
   afterEach ->
     auth.destroy() if auth
@@ -30,7 +30,7 @@ describe 'Em.Auth.Request', ->
       beforeEach ->
         opts = { responseAdapter: 'dummy', strategyAdapter: 'dummy' }
         opts["#{type}EndPoint"] = '/foo'
-        auth = emAuth.create opts
+        auth = authTest.create opts
         request = auth._request
 
       it 'resolves url', ->
@@ -63,21 +63,21 @@ describe 'Em.Auth.Request', ->
         expect(auth._request.resolveUrl("/#{input}")).toEqual output
 
     describe 'baseUrl defined with trialing slash', ->
-      beforeEach -> auth = emAuth.create { baseUrl: 'foo/' }
+      beforeEach -> auth = authTest.create { baseUrl: 'foo/' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl defined without trialing slash', ->
-      beforeEach -> auth = emAuth.create { baseUrl: 'foo' }
+      beforeEach -> auth = authTest.create { baseUrl: 'foo' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl = null', ->
-      beforeEach -> auth = emAuth.create { baseUrl: null }
+      beforeEach -> auth = authTest.create { baseUrl: null }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }
 
     describe 'baseUrl = empty string', ->
-      beforeEach -> auth = emAuth.create { baseUrl: '' }
+      beforeEach -> auth = authTest.create { baseUrl: '' }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }

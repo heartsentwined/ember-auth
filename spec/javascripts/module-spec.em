@@ -3,7 +3,7 @@ describe 'Em.Auth.Module', ->
   spy  = null
 
   beforeEach ->
-    auth = emAuth.create()
+    auth = authTest.create()
   afterEach ->
     auth.destroy() if auth
     delete Em.Auth.Module.FooBar if Em.Auth.Module.FooBar?
@@ -12,15 +12,15 @@ describe 'Em.Auth.Module', ->
   it 'initializes modules', ->
     class Em.Auth.Module.FooBar
     spy = sinon.collection.spy Em.Auth.Module.FooBar, 'create'
-    auth = emAuth.create { modules: ['fooBar'] }
+    auth = authTest.create { modules: ['fooBar'] }
     expect(spy).toHaveBeenCalledWithExactly { auth: auth }
 
   it 'throws if module not found', ->
-    expect(-> emAuth.create { modules: ['fooBar'] }).toThrow()
+    expect(-> authTest.create { modules: ['fooBar'] }).toThrow()
 
   it 'sets initialized modules in auth.module', ->
     class Em.Auth.Module.FooBar
       baz: ->
-    auth = emAuth.create { modules: ['fooBar'] }
+    auth = authTest.create { modules: ['fooBar'] }
     expect(auth.module['fooBar']).toBeDefined()
     expect(auth.module['fooBar'].baz).toBeDefined()

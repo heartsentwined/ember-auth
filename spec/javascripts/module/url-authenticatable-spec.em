@@ -4,7 +4,7 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
   urlAuth = null
 
   beforeEach ->
-    auth = emAuth.create { modules: ['urlAuthenticatable'] }
+    auth = authTest.create { modules: ['urlAuthenticatable'] }
     urlAuth = auth.module.urlAuthenticatable
   afterEach ->
     auth.destroy() if auth
@@ -112,21 +112,21 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
 
   describe 'auto authenticate', ->
     beforeEach ->
-      em.create (app) ->
+      appTest.create (app) ->
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        app.Auth = emAuth.create { modules: ['urlAuthenticatable'] }
+        app.Auth = authTest.create { modules: ['urlAuthenticatable'] }
         urlAuth = app.Auth.module.urlAuthenticatable
     afterEach ->
-      em.destroy()
+      appTest.destroy()
 
     it 'retrieves param', ->
       spy = sinon.collection.spy urlAuth, 'retrieveParams'
-      em.ready()
+      appTest.ready()
       expect(spy).toHaveBeenCalled()
 
     it 'auto authenticate on any route entry', ->
       spy = sinon.collection.spy urlAuth, 'authenticate'
-      em.ready()
-      em.toRoute 'foo'
+      appTest.ready()
+      appTest.toRoute 'foo'
       expect(spy).toHaveBeenCalledWithExactly { async: false }

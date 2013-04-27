@@ -3,7 +3,7 @@ describe 'Em.Auth.Module.EmberData', ->
   spy  = null
 
   beforeEach ->
-    auth = emAuth.create { modules: ['emberData'] }
+    auth = authTest.create { modules: ['emberData'] }
   afterEach ->
     auth.destroy() if auth
 

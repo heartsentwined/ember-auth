@@ -4,7 +4,7 @@ describe 'Em.Auth.Session', ->
   session = null
 
   beforeEach ->
-    auth    = emAuth.create()
+    auth    = authTest.create()
     session = auth._session
   afterEach ->
     auth.destroy() if auth

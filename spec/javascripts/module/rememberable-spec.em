@@ -4,7 +4,7 @@ describe 'Em.Auth.Module.Rememberable', ->
   rememberable = null
 
   beforeEach ->
-    auth = emAuth.create { modules: ['rememberable'] }
+    auth = authTest.create { modules: ['rememberable'] }
     rememberable = auth.module.rememberable
   afterEach ->
     auth.destroy() if auth
@@ -136,37 +136,37 @@ describe 'Em.Auth.Module.Rememberable', ->
 
   describe 'auto recall', ->
     beforeEach ->
-      em.create (app) ->
+      appTest.create (app) ->
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        app.Auth = emAuth.create { modules: ['rememberable'] }
+        app.Auth = authTest.create { modules: ['rememberable'] }
         spy = sinon.collection.spy app.Auth.module.rememberable, 'recall'
     afterEach ->
-      em.destroy()
+      appTest.destroy()
 
     describe 'rememberableAutoRecall = false', ->
-      beforeEach -> em.run (app) -> app.Auth.rememberableAutoRecall = false
+      beforeEach -> appTest.run (app) -> app.Auth.rememberableAutoRecall = false
 
       it 'does not recall session', ->
-        em.ready()
-        em.toRoute 'foo'
+        appTest.ready()
+        appTest.toRoute 'foo'
         expect(spy).not.toHaveBeenCalled()
 
     describe 'signed in', ->
-      beforeEach -> em.run (app) -> app.Auth._session.start()
+      beforeEach -> appTest.run (app) -> app.Auth._session.start()
 
       it 'does not recall session', ->
-        em.ready()
-        em.toRoute 'foo'
+        appTest.ready()
+        appTest.toRoute 'foo'
         expect(spy).not.toHaveBeenCalled()
 
     describe 'rememberableAutoRecall = true', ->
-      beforeEach -> em.run (app) -> app.Auth.rememberableAutoRecall = true
+      beforeEach -> appTest.run (app) -> app.Auth.rememberableAutoRecall = true
 
       describe 'not signed in', ->
-        beforeEach -> em.run (app) -> app.Auth._session.clear()
+        beforeEach -> appTest.run (app) -> app.Auth._session.clear()
 
         it 'recalls session', ->
-          em.ready()
-          em.toRoute 'foo'
+          appTest.ready()
+          appTest.toRoute 'foo'
           expect(spy).toHaveBeenCalledWithExactly { async: false }
