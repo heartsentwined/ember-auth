@@ -9,10 +9,8 @@ class Em.Auth.Module.UrlAuthenticatable
     return if @auth.signedIn
     @canonicalizeParams()
     return if jQuery.isEmptyObject @params
-    data = {}
-    data.async = opts.async if opts.async?
-    data = jQuery.extend data, @params
-    @auth.signIn { data: data }
+    opts.data = jQuery.extend true, @params, (opts.data || {})
+    @auth.signIn opts
 
   retrieveParams: ->
     @params = jQuery.url().param(@auth.urlAuthenticatableParamsKey)
