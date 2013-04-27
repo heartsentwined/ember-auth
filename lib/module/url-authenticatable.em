@@ -45,7 +45,8 @@ class Em.Auth.Module.UrlAuthenticatable
 
     # hijack the routing process to grab params
     # before ember's routing sanitizes the URL
+    self = this
     Em.Router.reopen
-      init: =>
-        @retrieveParams()
-        super
+      init: ->
+        self.retrieveParams()
+        super.apply(this, arguments)
