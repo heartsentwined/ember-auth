@@ -4,11 +4,8 @@ describe 'Em.Auth.Module.Rememberable', ->
   rememberable = null
 
   beforeEach ->
-    Em.run ->
-      auth = Em.Auth.create
-        responseAdapter: 'dummy'
-        modules: ['rememberable']
-      rememberable = auth.module.rememberable
+    auth = emAuth.create { modules: ['rememberable'] }
+    rememberable = auth.module.rememberable
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()
@@ -142,12 +139,7 @@ describe 'Em.Auth.Module.Rememberable', ->
       em.create (app) ->
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        app.Auth = Em.Auth.create
-          requestAdapter:  'dummy'
-          responseAdapter: 'dummy'
-          strategyAdapter: 'dummy'
-          sessionAdapter:  'dummy'
-          modules: ['rememberable']
+        app.Auth = emAuth.create { modules: ['rememberable'] }
         spy = sinon.collection.spy app.Auth.module.rememberable, 'recall'
     afterEach ->
       em.destroy()

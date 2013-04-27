@@ -4,9 +4,8 @@ describe 'Em.Auth.Session', ->
   session = null
 
   beforeEach ->
-    Em.run ->
-      auth    = Em.Auth.create()
-      session = auth._session
+    auth    = emAuth.create()
+    session = auth._session
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()

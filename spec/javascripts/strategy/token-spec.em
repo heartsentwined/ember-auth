@@ -4,9 +4,8 @@ describe 'Em.Auth.Strategy.Token', ->
   output  = null
 
   beforeEach ->
-    Em.run ->
-      auth    = Em.Auth.create { responseAdapter: 'dummy' }
-      adapter = auth._strategy.adapter
+    auth = emAuth.create { strategyAdapter: 'token' }
+    adapter = auth._strategy.adapter
   afterEach ->
     auth.destroy() if auth
     auth   = null

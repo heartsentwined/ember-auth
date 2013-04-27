@@ -4,9 +4,8 @@ describe 'Em.Auth.Strategy', ->
   strategy = null
 
   beforeEach ->
-    Em.run ->
-      auth     = Em.Auth.create()
-      strategy = auth._strategy
+    auth = Em.Auth.create()
+    strategy = auth._strategy
   afterEach ->
     auth.destroy()
     sinon.collection.restore()

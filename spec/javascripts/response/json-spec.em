@@ -3,9 +3,8 @@ describe 'Em.Auth.Response.Json', ->
   adapter = null
 
   beforeEach ->
-    Em.run ->
-      auth    = Em.Auth.create { responseAdapter: 'json' }
-      adapter = auth._response.adapter
+    auth = emAuth.create { responseAdapter: 'json' }
+    adapter = auth._response.adapter
   afterEach ->
     auth.destroy() if auth
 

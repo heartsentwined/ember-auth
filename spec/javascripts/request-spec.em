@@ -4,11 +4,8 @@ describe 'Em.Auth.Request', ->
   request = null
 
   beforeEach ->
-    Em.run ->
-      auth = Em.Auth.create
-        responseAdapter: 'dummy'
-        strategyAdapter: 'dummy'
-      request = auth._request
+    auth = emAuth.create()
+    request = auth._request
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()
@@ -33,9 +30,8 @@ describe 'Em.Auth.Request', ->
       beforeEach ->
         opts = { responseAdapter: 'dummy', strategyAdapter: 'dummy' }
         opts["#{type}EndPoint"] = '/foo'
-        Em.run ->
-          auth    = Em.Auth.create opts
-          request = auth._request
+        auth = emAuth.create opts
+        request = auth._request
 
       it 'resolves url', ->
         spy = sinon.collection.spy request, 'resolveUrl'
@@ -67,21 +63,21 @@ describe 'Em.Auth.Request', ->
         expect(auth._request.resolveUrl("/#{input}")).toEqual output
 
     describe 'baseUrl defined with trialing slash', ->
-      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: 'foo/' }
+      beforeEach -> auth = emAuth.create { baseUrl: 'foo/' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl defined without trialing slash', ->
-      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: 'foo' }
+      beforeEach -> auth = emAuth.create { baseUrl: 'foo' }
       follow 'request resolve url',
       { input: 'bar', output: 'foo/bar', isAppend: true }
 
     describe 'baseUrl = null', ->
-      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: null }
+      beforeEach -> auth = emAuth.create { baseUrl: null }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }
 
     describe 'baseUrl = empty string', ->
-      beforeEach -> Em.run -> auth = Em.Auth.create { baseUrl: '' }
+      beforeEach -> auth = emAuth.create { baseUrl: '' }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }

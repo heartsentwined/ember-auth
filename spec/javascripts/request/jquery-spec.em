@@ -4,11 +4,8 @@ describe 'Em.Auth.Request.Jquery', ->
   adapter = null
 
   beforeEach ->
-    Em.run ->
-      auth = Em.Auth.create
-        requestAdapter:  'jquery'
-        responseAdapter: 'dummy'
-      adapter = auth._request.adapter
+    auth = emAuth.create { requestAdapter: 'jquery' }
+    adapter = auth._request.adapter
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()

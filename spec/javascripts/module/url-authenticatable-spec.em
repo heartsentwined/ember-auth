@@ -4,14 +4,8 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
   urlAuth = null
 
   beforeEach ->
-    Em.run ->
-      auth = Em.Auth.create
-        requestAdapter:  'dummy'
-        responseAdapter: 'dummy'
-        strategyAdapter: 'dummy'
-        sessionAdapter:  'dummy'
-        modules: ['urlAuthenticatable']
-      urlAuth = auth.module.urlAuthenticatable
+    auth = emAuth.create { modules: ['urlAuthenticatable'] }
+    urlAuth = auth.module.urlAuthenticatable
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()
@@ -121,12 +115,7 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
       em.create (app) ->
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        app.Auth = Em.Auth.create
-          requestAdapter:  'dummy'
-          responseAdapter: 'dummy'
-          strategyAdapter: 'dummy'
-          sessionAdapter:  'dummy'
-          modules: ['urlAuthenticatable']
+        app.Auth = emAuth.create { modules: ['urlAuthenticatable'] }
         urlAuth = app.Auth.module.urlAuthenticatable
     afterEach ->
       em.destroy()

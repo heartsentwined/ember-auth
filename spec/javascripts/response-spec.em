@@ -4,9 +4,8 @@ describe 'Em.Auth.Response', ->
   response = null
 
   beforeEach ->
-    Em.run ->
-      auth     = Em.Auth.create { responseAdapter: 'dummy' }
-      response = auth._response
+    auth = emAuth.create()
+    response = auth._response
   afterEach ->
     Em.run -> auth.destroy()
     sinon.collection.restore()
