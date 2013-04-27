@@ -139,8 +139,6 @@ describe 'Em.Auth.Module.Rememberable', ->
 
   describe 'auto recall', ->
     beforeEach ->
-      #Em.run ->
-        #auth =
       em.create (app) ->
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
