@@ -1,8 +1,7 @@
 #= require jquery.url
 class Em.Auth.Module.UrlAuthenticatable
-  params: {}
-
   init: ->
+    @params? || (@params = {})
     @patch()
 
   authenticate: (opts = {}) ->

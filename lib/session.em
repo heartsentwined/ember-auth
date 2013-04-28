@@ -1,14 +1,15 @@
 class Em.Auth.Session
-  signedIn: false
-  userId:   null
-  user:     null
-
   init: ->
-    adapter = Em.String.classify @auth.sessionAdapter
-    if Em.Auth.Session[adapter]?
-      @adapter = Em.Auth.Session[adapter].create { auth: @auth }
-    else
-      throw "Adapter not found: Em.Auth.Session.#{adapter}"
+    @signedIn? || (@signedIn = false)
+    @userId?   || (@userId   = null)
+    @user?     || (@user     = null)
+
+    unless @adapter?
+      adapter = Em.String.classify @auth.sessionAdapter
+      if Em.Auth.Session[adapter]?
+        @adapter = Em.Auth.Session[adapter].create { auth: @auth }
+      else
+        throw "Adapter not found: Em.Auth.Session.#{adapter}"
 
     @auth.on 'signInSuccess',  => @start()
     @auth.on 'signInSuccess',  => @findUser()

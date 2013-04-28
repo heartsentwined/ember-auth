@@ -1,10 +1,12 @@
 class Em.Auth.Request
   init: ->
-    adapter = Em.String.classify @auth.requestAdapter
-    if Em.Auth.Request[adapter]?
-      @adapter = Em.Auth.Request[adapter].create { auth: @auth }
-    else
-      throw "Adapter not found: Em.Auth.Request.#{adapter}"
+    unless @adapter?
+      adapter = Em.String.classify @auth.requestAdapter
+      if Em.Auth.Request[adapter]?
+        @adapter = Em.Auth.Request[adapter].create { auth: @auth }
+      else
+        throw "Adapter not found: Em.Auth.Request.#{adapter}"
+
     @inject()
 
   signIn:  (opts) ->

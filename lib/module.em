@@ -1,14 +1,15 @@
 class Em.Auth.Module
-  module: {}
-
   init: ->
-    for key in @auth.modules
-      key    = Em.String.camelize key
-      module = Em.String.classify key
-      if Em.Auth.Module[module]?
-        @set "module.#{key}", Em.Auth.Module[module].create { auth: @auth }
-      else
-        throw "Module not found: Em.Auth.Module.#{module}"
+    unless @module?
+      @module = {}
+      for key in @auth.modules
+        key    = Em.String.camelize key
+        module = Em.String.classify key
+        if Em.Auth.Module[module]?
+          @set "module.#{key}", Em.Auth.Module[module].create { auth: @auth }
+        else
+          throw "Module not found: Em.Auth.Module.#{module}"
+
     @inject()
 
   inject: ->

@@ -1,7 +1,7 @@
 class Em.Auth.Request.Jquery
-  jqxhr: null
-
-  init: -> @inject()
+  init: ->
+    @jqxhr? || (@jqxhr = null)
+    @inject()
 
   signIn: (url, opts = {}) ->
     @send(jQuery.extend true, { url: url, type: 'POST' }, opts)

@@ -1,16 +1,10 @@
 class Em.Auth extends Em.Object with Em.Evented
-  _request:  null
-  _response: null
-  _strategy: null
-  _session:  null
-  _module:   null
-
   init: ->
-    @_request  ||= Em.Auth.Request.create  { auth: this }
-    @_response ||= Em.Auth.Response.create { auth: this }
-    @_strategy ||= Em.Auth.Strategy.create { auth: this }
-    @_session  ||= Em.Auth.Session.create  { auth: this }
-    @_module   ||= Em.Auth.Module.create   { auth: this }
+    @_request?  || (@_request  = Em.Auth.Request.create  { auth: this })
+    @_response? || (@_response = Em.Auth.Response.create { auth: this })
+    @_strategy? || (@_strategy = Em.Auth.Strategy.create { auth: this })
+    @_session?  || (@_session  = Em.Auth.Session.create  { auth: this })
+    @_module?   || (@_module   = Em.Auth.Module.create   { auth: this })
 
   # =====================
   # Config

@@ -1,7 +1,7 @@
 class Em.Auth.Strategy.Token
-  authToken: null
-
-  init: -> @inject()
+  init: ->
+    @authToken? || (@authToken = null)
+    @inject()
 
   serialize: (opts = {}) ->
     return opts unless @auth.signedIn
