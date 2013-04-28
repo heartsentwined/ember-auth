@@ -6,9 +6,9 @@ example 'adapter init', (env) ->
     opts["#{env}Adapter"] = 'dummy'
     spy  = sinon.collection.spy Em.Auth[klass].Dummy, 'create'
     auth = null
-    auth = emAuth.create opts
+    auth = authTest.create opts
     expect(spy).toHaveBeenCalledWithExactly { auth: auth }
 
   it 'throws if adapter not found', ->
     opts["#{env}Adapter"] = 'foo'
-    expect(-> emAuth.create opts).toThrow()
+    expect(-> authTest.create opts).toThrow()
