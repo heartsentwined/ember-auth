@@ -1,4 +1,5 @@
 #= require jquery.url
+$ = jQuery
 class Em.Auth.Module.UrlAuthenticatable
   init: ->
     @params? || (@params = {})
@@ -7,18 +8,18 @@ class Em.Auth.Module.UrlAuthenticatable
   authenticate: (opts = {}) ->
     return if @auth.signedIn
     @canonicalizeParams()
-    return if jQuery.isEmptyObject @params
-    opts.data = jQuery.extend true, @params, (opts.data || {})
+    return if $.isEmptyObject @params
+    opts.data = $.extend true, @params, (opts.data || {})
     @auth.signIn opts
 
   retrieveParams: ->
-    @params = jQuery.url().param(@auth.urlAuthenticatableParamsKey)
+    @params = $.url().param(@auth.urlAuthenticatableParamsKey)
 
   canonicalizeParams: (obj = @params) ->
     params = {}
     if !obj?
       params = {}
-    else if jQuery.isArray obj
+    else if $.isArray obj
       params[k] = v for v, k in obj
     else if typeof obj != 'object'
       params[String(obj)] = String(obj)
