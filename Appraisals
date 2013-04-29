@@ -7,5 +7,6 @@ EMBER_VERSIONS = %w(
 EMBER_VERSIONS.each do |version|
   appraise "ember-#{version}" do
     gem 'ember-source', version
+    gem 'handlebars-source', '>= 1.0.0.rc2'
   end
 end
