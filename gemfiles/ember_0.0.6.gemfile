@@ -10,6 +10,6 @@ gem "jasmine-headless-webkit", :git=>"git://github.com/heartsentwined/jasmine-he
 gem "guard-jasmine-headless-webkit", :git=>"git://github.com/heartsentwined/guard-jasmine-headless-webkit.git", :branch=>"ember-script"
 gem "ember-data-source", "~> 0.0.5"
 gem "appraisal", "~> 0.5"
-gem "ember-source", "1.0.0.rc2.0"
+gem "ember-source", "0.0.6"
 gem "handlebars-source", ">= 1.0.0.rc2"
 
