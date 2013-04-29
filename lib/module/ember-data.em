@@ -6,6 +6,7 @@ class Em.Auth.Module.EmberData
     if DS? && DS.RESTAdapter?
       DS.RESTAdapter.reopen
         ajax: (url, type, settings) ->
+          settings       ||= {}
           settings.url     = url
           settings.type    = type
           settings.context = this
