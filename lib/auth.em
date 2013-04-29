@@ -42,3 +42,11 @@ class Em.Auth extends Em.Object with Em.Evented
 
   # module.authRedirectable
   authRedirectableRoute: 'index'
+
+  # module.actionRedirectable
+  actionRedirectableSignInRoute: false # or string for route name
+  actionRedirectableSignOutRoute: false # ditto
+  actionRedirectableSignInSmart: false
+  actionRedirectableSignOutSmart: false
+  actionRedirectableSignInBlacklist: [] # list of routes that should redir to fb
+  actionRedirectableSignOutBlacklist: [] # ditto
