@@ -6,6 +6,7 @@ describe 'Em.Auth.Request.Jquery', ->
   beforeEach ->
     auth = authTest.create { requestAdapter: 'jquery' }
     adapter = auth._request.adapter
+    $.mockjaxSettings.logging = false
   afterEach ->
     auth.destroy() if auth
     sinon.collection.restore()
