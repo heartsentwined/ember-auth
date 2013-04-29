@@ -9,7 +9,7 @@ gem 'jasmine-headless-webkit',       git: 'git://github.com/heartsentwined/jasmi
 gem 'guard-jasmine-headless-webkit', git: 'git://github.com/heartsentwined/guard-jasmine-headless-webkit.git', branch: 'ember-script'
 
 gem 'ember-source',                  '~> 0.0.5'
-gem 'handlebars-source',             '1.0.0.rc3'
+gem 'handlebars-source',             '~> 1.0.0.rc2'
 gem 'ember-data-source',             '~> 0.0.5'
 
 gem 'appraisal',                     '~> 0.5'
