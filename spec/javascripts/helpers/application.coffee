@@ -34,10 +34,8 @@ run = (callback) ->
 
 lookup     = (name)  -> app().__container__.lookup(name)
 router     =         -> lookup 'router:main'
+toRoute    = (route) -> router().transitionTo route
 controller = (name)  -> lookup "controller:#{name.toLowerCase()}"
-
-setInitUrl = (route) -> router().get('location').setURL route
-toRoute    = (route) -> router().handleURL route
 
 exports.appTest =
   create:      create
@@ -47,6 +45,5 @@ exports.appTest =
   lookup:      lookup
   router:      router
   controller:  controller
-  setInitUrl:  setInitUrl
   toRoute:     toRoute
   currentPath: -> currentPath
