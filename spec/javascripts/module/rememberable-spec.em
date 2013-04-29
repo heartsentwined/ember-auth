@@ -137,9 +137,9 @@ describe 'Em.Auth.Module.Rememberable', ->
   describe 'auto recall', ->
     beforeEach ->
       appTest.create (app) ->
+        app.Auth = authTest.create { modules: ['rememberable'] }
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        app.Auth = authTest.create { modules: ['rememberable'] }
         spy = sinon.collection.spy app.Auth.module.rememberable, 'recall'
     afterEach ->
       appTest.destroy()
