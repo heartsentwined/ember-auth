@@ -39,3 +39,6 @@ class Em.Auth extends Em.Object with Em.Evented
 
   # module.urlAuthenticatable
   urlAuthenticatableParamsKey: null
+
+  # module.authRedirectable
+  authRedirectableRoute: 'index'
