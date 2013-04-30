@@ -18,7 +18,7 @@ class Em.Auth.Session
     @inject()
 
   findUser: ->
-    if model = @auth.userModel
+    if @userId && (model = @auth.userModel)
       @user = model.find @userId
 
   start: ->

@@ -24,7 +24,7 @@ class Em.Auth.Strategy.Token
 
   deserialize: (data = {}) ->
     @authToken            = data[@auth.tokenKey]
-    @auth._session.userId = data[@auth.tokenIdKey]
+    @auth._session.userId = data[@auth.tokenIdKey] if @auth.tokenIdKey
 
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side

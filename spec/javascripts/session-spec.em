@@ -33,22 +33,30 @@ describe 'Em.Auth.Session', ->
 
   describe '#findUser', ->
     model = { find: -> }
-
     beforeEach ->
-      Em.run -> session.userId = 1
       spy = sinon.collection.spy model, 'find'
 
-    describe 'userModel set', ->
-      it 'delegates to .find()', ->
-        Em.run ->
-          auth.userModel = model
-          session.findUser()
-        expect(spy).toHaveBeenCalledWithExactly(1)
+    describe 'userId set', ->
+      beforeEach -> Em.run -> session.userId = null
 
-    describe 'userModel not set', ->
       it 'does nothing', ->
         Em.run -> session.findUser()
         expect(spy).not.toHaveBeenCalled()
+
+    describe 'userId set', ->
+      beforeEach -> Em.run -> session.userId = 1
+
+      describe 'userModel not set', ->
+        it 'does nothing', ->
+          Em.run -> session.findUser()
+          expect(spy).not.toHaveBeenCalled()
+
+      describe 'userModel set', ->
+        it 'delegates to .find()', ->
+          Em.run ->
+            auth.userModel = model
+            session.findUser()
+          expect(spy).toHaveBeenCalledWithExactly(1)
 
   describe '#start', ->
     it 'sets signedIn', ->
