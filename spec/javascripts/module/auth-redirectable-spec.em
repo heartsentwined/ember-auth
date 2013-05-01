@@ -8,6 +8,7 @@ describe 'Em.Auth.Module.AuthRedirectable', ->
     authRedir = auth.module.authRedirectable
     appTest.create (app) ->
       app.Auth = authTest.create { modules: ['authRedirectable'] }
+      spy = sinon.collection.spy app.Auth, 'trigger'
   afterEach ->
     appTest.destroy()
     auth.destroy() if auth
@@ -27,6 +28,11 @@ describe 'Em.Auth.Module.AuthRedirectable', ->
       appTest.toRoute 'public'
       expect(appTest.currentPath()).toEqual 'public'
 
+    it 'does not trigger authAccess event', ->
+      appTest.ready()
+      appTest.toRoute 'public'
+      expect(spy).not.toHaveBeenCalled()
+
   describe 'protected route', ->
     beforeEach ->
       appTest.run (app) ->
@@ -45,6 +51,11 @@ describe 'Em.Auth.Module.AuthRedirectable', ->
         appTest.toRoute 'protected'
         expect(appTest.currentPath()).toEqual 'sign-in'
 
+      it 'triggers authAccess event', ->
+        appTest.ready()
+        appTest.toRoute 'protected'
+        expect(spy).toHaveBeenCalledWithExactly('authAccess')
+
     describe 'signed in', ->
       beforeEach -> appTest.run (app) -> app.Auth._session.start()
 
@@ -52,3 +63,8 @@ describe 'Em.Auth.Module.AuthRedirectable', ->
         appTest.ready()
         appTest.toRoute 'protected'
         expect(appTest.currentPath()).toEqual 'protected'
+
+      it 'does not trigger authAccess event', ->
+        appTest.ready()
+        appTest.toRoute 'protected'
+        expect(spy).not.toHaveBeenCalled()
