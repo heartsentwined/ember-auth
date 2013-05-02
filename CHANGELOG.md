@@ -1,3 +1,7 @@
+# 6.0.1 (3 May 2013)
+
+* Bugfix: Modules should not override each other (#48)
+
 # 6.0.0 (2 May 2013)
 
 * Bugfix: User model not autoloading (#43)
