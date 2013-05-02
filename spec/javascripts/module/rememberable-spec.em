@@ -41,7 +41,7 @@ describe 'Em.Auth.Module.Rememberable', ->
 
       describe 'retrieveToken succeeds', ->
         beforeEach ->
-          Em.run -> auth.rememberableTokenKey = 'key'
+          Em.run -> auth.rememberable.tokenKey = 'key'
           sinon.collection.stub rememberable, 'retrieveToken', -> 'foo'
 
         it 'calls signIn', ->
@@ -65,7 +65,7 @@ describe 'Em.Auth.Module.Rememberable', ->
     beforeEach ->
       storeTokenSpy = sinon.collection.spy rememberable, 'storeToken'
       forgetSpy     = sinon.collection.spy rememberable, 'forget'
-      Em.run -> auth.rememberableTokenKey = 'key'
+      Em.run -> auth.rememberable.tokenKey = 'key'
 
     it 'resets fromRecall marker', ->
       Em.run -> rememberable.remember()
@@ -126,7 +126,7 @@ describe 'Em.Auth.Module.Rememberable', ->
     auth._session, 'retrieve', ['ember-auth-rememberable']
 
   it 'delegates #storeToken to session#store', ->
-    Em.run -> auth.rememberablePeriod = 1
+    Em.run -> auth.rememberable.period = 1
     follow 'delegation', rememberable, 'storeToken', ['foo'], \
     auth._session, 'store', ['ember-auth-rememberable', 'foo', { expires: 1 }]
 
@@ -144,8 +144,9 @@ describe 'Em.Auth.Module.Rememberable', ->
     afterEach ->
       appTest.destroy()
 
-    describe 'rememberableAutoRecall = false', ->
-      beforeEach -> appTest.run (app) -> app.Auth.rememberableAutoRecall = false
+    describe 'autoRecall = false', ->
+      beforeEach ->
+        appTest.run (app) -> app.Auth.rememberable.autoRecall = false
 
       it 'does not recall session', ->
         appTest.ready()
@@ -160,8 +161,9 @@ describe 'Em.Auth.Module.Rememberable', ->
         appTest.toRoute 'foo'
         expect(spy).not.toHaveBeenCalled()
 
-    describe 'rememberableAutoRecall = true', ->
-      beforeEach -> appTest.run (app) -> app.Auth.rememberableAutoRecall = true
+    describe 'autoRecall = true', ->
+      beforeEach ->
+        appTest.run (app) -> app.Auth.rememberable.autoRecall = true
 
       describe 'not signed in', ->
         beforeEach -> appTest.run (app) -> app.Auth._session.clear()

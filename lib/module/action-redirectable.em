@@ -1,6 +1,8 @@
 $ = jQuery
 class Em.Auth.Module.ActionRedirectable
   init: ->
+    @config? || (@config = @auth.actionRedirectable)
+
     @initPath?     || (@initPath     = null)
     @isInit?       || (@isInit       = true)
     @signInRedir?  || (@signInRedir  = null)
@@ -20,7 +22,7 @@ class Em.Auth.Module.ActionRedirectable
     route.substr(0, route.lastIndexOf('.index'))
 
   getBlacklist: (env) ->
-    return [] unless blacklist = @auth.get "actionRedirectable#{env}Blacklist"
+    return [] unless blacklist = @config["#{env}Blacklist"]
     @canonicalizeRoute r for r in blacklist
 
   # returns
@@ -30,9 +32,8 @@ class Em.Auth.Module.ActionRedirectable
   resolveRedirect: (env) ->
     return null unless env in ['signIn', 'signOut'] # unknown arg
 
-    klass     = Em.String.classify env
-    isSmart   = @auth.get "actionRedirectable#{klass}Smart"
-    fallback  = @canonicalizeRoute @auth.get "actionRedirectable#{klass}Route"
+    isSmart   = @config["#{env}Smart"]
+    fallback  = @canonicalizeRoute @config["#{env}Route"]
 
     # redirect turned off
     return null       unless fallback
@@ -46,12 +47,11 @@ class Em.Auth.Module.ActionRedirectable
     return unless @isInit
     routeName = @canonicalizeRoute routeName
     for env in ['signIn', 'signOut']
-      klass = Em.String.classify env
       # reset, we might have reg-ed rubbish in intermediate routes
       # (e.g. application)
       @set "#{env}Redir", null
       if $.inArray(routeName, @getBlacklist(env)) != -1
-        @set "#{env}Redir", [@auth.get "actionRedirectable#{klass}Route"]
+        @set "#{env}Redir", [@config["#{env}Route"]]
 
   registerRedirect: (args) ->
     routeName = @canonicalizeRoute args[0]

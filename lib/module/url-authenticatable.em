@@ -3,6 +3,7 @@ $ = jQuery
 class Em.Auth.Module.UrlAuthenticatable
   init: ->
     @params? || (@params = {})
+    @config? || (@config = @auth.urlAuthenticatable)
     @patch()
 
   authenticate: (opts = {}) ->
@@ -13,7 +14,7 @@ class Em.Auth.Module.UrlAuthenticatable
     @auth.signIn opts
 
   retrieveParams: ->
-    @params = $.url().param(@auth.urlAuthenticatableParamsKey)
+    @params = $.url().param(@config.paramsKey)
 
   canonicalizeParams: (obj = @params) ->
     params = {}

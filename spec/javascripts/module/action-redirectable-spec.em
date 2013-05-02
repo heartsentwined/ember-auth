@@ -22,7 +22,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
 
   example 'get blacklist', (env) ->
     beforeEach ->
-      Em.run -> auth.set "actionRedirectable#{env}Blacklist", ['foo', 'bar']
+      Em.run -> auth.set "actionRedirectable.#{env}Blacklist", ['foo', 'bar']
 
     it "returns #{env} blacklist config", ->
       expect(actionRedir.getBlacklist(env)).toEqual ['foo', 'bar']
@@ -38,22 +38,20 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
     describe 'signOut', -> follow 'get blacklist', 'signOut'
 
   example 'resolve redirect', (env) ->
-    klass = Em.String.classify env
-
     describe 'redirect turned off', ->
       beforeEach ->
-        Em.run -> auth.set "actionRedirectable#{klass}Route", false
+        Em.run -> auth.set "actionRedirectable.#{env}Route", false
 
       it 'returns null', ->
         expect(actionRedir.resolveRedirect(env)).toBeNull()
 
     describe 'redirect turned on', ->
       beforeEach ->
-        Em.run -> auth.set "actionRedirectable#{klass}Route", 'foo'
+        Em.run -> auth.set "actionRedirectable.#{env}Route", 'foo'
 
       describe 'smart turned off', ->
         beforeEach ->
-          Em.run -> auth.set "actionRedirectable#{klass}Smart", false
+          Em.run -> auth.set "actionRedirectable.#{env}Smart", false
 
         it 'returns fallback route', ->
           expect(actionRedir.resolveRedirect(env)).toEqual ['foo']
@@ -61,7 +59,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
       describe 'smart turned on', ->
         beforeEach ->
           Em.run ->
-            auth.set "actionRedirectable#{klass}Smart", true
+            auth.set "actionRedirectable.#{env}Smart", true
             actionRedir.initPath = 'foo'
 
         describe 'redirect route registered', ->
@@ -108,8 +106,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
 
       example 'init redirect reg', (env) ->
         beforeEach ->
-          klass = Em.String.classify env
-          Em.run -> auth.set "actionRedirectable#{klass}Route", 'fallback'
+          Em.run -> auth.set "actionRedirectable.#{env}Route", 'fallback'
 
         describe 'route in blacklist', ->
           it 'registers fallback route', ->

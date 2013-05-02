@@ -1,5 +1,7 @@
 class Em.Auth.Module.AuthRedirectable
-  init: -> @patch()
+  init: ->
+    @config? || (@config = @auth.authRedirectable)
+    @patch()
 
   patch: ->
     self = this
@@ -7,5 +9,5 @@ class Em.Auth.Module.AuthRedirectable
       redirect: ->
         unless self.auth.signedIn
           self.auth.trigger 'authAccess'
-          @transitionTo self.auth.authRedirectableRoute
+          @transitionTo self.config.route
     @auth.AuthRedirectable = @AuthRedirectable

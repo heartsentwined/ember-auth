@@ -57,7 +57,7 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
     beforeEach ->
       spy = sinon.collection.stub jQuery, 'url', \
       -> { param: (arg) -> { key: arg } }
-      Em.run -> auth.urlAuthenticatableParamsKey = 'foo'
+      Em.run -> auth.urlAuthenticatable.paramsKey = 'foo'
       urlAuth.retrieveParams()
 
     it 'delegates to $.url()', ->

@@ -1,5 +1,6 @@
 class Em.Auth.Module.Rememberable
   init: ->
+    @config? || (@config = @auth.rememberable)
     @auth.on 'signInSuccess',  => @remember()
     @auth.on 'signInError',    => @forget()
     @auth.on 'signOutSuccess', => @forget()
@@ -9,11 +10,11 @@ class Em.Auth.Module.Rememberable
     if !@auth.signedIn && (token = @retrieveToken())
       @fromRecall = true
       opts.data ||= {}
-      opts.data[@auth.rememberableTokenKey] = token
+      opts.data[@config.tokenKey] = token
       @auth.signIn opts
 
   remember: ->
-    if token = @auth.response?[@auth.rememberableTokenKey]
+    if token = @auth.response?[@config.tokenKey]
       @storeToken(token) unless token == @retrieveToken()
     else
       @forget() unless @fromRecall
@@ -27,7 +28,7 @@ class Em.Auth.Module.Rememberable
 
   storeToken: (token) ->
     @auth._session.store 'ember-auth-rememberable', token,
-      expires: @auth.rememberablePeriod
+      expires: @config.period
 
   removeToken: ->
     @auth._session.remove 'ember-auth-rememberable'
@@ -36,5 +37,5 @@ class Em.Auth.Module.Rememberable
     self = this
     Em.Route.reopen
       redirect: ->
-        if self.auth.rememberableAutoRecall && !self.auth.signedIn
+        if self.config.autoRecall && !self.auth.signedIn
           self.recall { async: false }

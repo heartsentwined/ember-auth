@@ -19,34 +19,38 @@ class Em.Auth extends Em.Object with Em.Evented
   modules: ['emberData']
 
   # request
-  signInEndPoint: null
-  signOutEndPoint: null
+  signInEndPoint: null  # req
+  signOutEndPoint: null # req
   baseUrl: null
 
   # session
   userModel: null
 
   # strategy.token
-  tokenKey: null
-  tokenIdKey: null
+  tokenKey: null # req
+  tokenIdKey: null #req
   tokenLocation: 'param'
   tokenHeaderKey: null
 
   # module.rememberable
-  rememberableTokenKey: null
-  rememberablePeriod: 14
-  rememberableAutoRecall: true
+  rememberable:
+    tokenKey: null # req
+    period: 14
+    autoRecall: true
 
   # module.urlAuthenticatable
-  urlAuthenticatableParamsKey: null
+  urlAuthenticatable:
+    paramsKey: null # req
 
   # module.authRedirectable
-  authRedirectableRoute: 'index'
+  authRedirectable:
+    route: 'index'
 
   # module.actionRedirectable
-  actionRedirectableSignInRoute: false # or string for route name
-  actionRedirectableSignOutRoute: false # ditto
-  actionRedirectableSignInSmart: false
-  actionRedirectableSignOutSmart: false
-  actionRedirectableSignInBlacklist: [] # list of routes that should redir to fb
-  actionRedirectableSignOutBlacklist: [] # ditto
+  actionRedirectable:
+    signInRoute: false # or string for route name
+    signOutRoute: false # ditto
+    signInSmart: false
+    signOutSmart: false
+    signInBlacklist: [] # list of routes that should redir to fallback
+    signOutBlacklist: [] # ditto

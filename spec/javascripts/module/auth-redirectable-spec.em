@@ -41,7 +41,7 @@ describe 'Em.Auth.Module.AuthRedirectable', ->
           @route 'sign-in'
         app.ProtectedRoute = Em.Route.extend app.Auth.AuthRedirectable
         app.SignInRoute = Em.Route.extend()
-        app.Auth.authRedirectableRoute = 'sign-in'
+        app.Auth.authRedirectable.route = 'sign-in'
 
     describe 'not signed in', ->
       beforeEach -> appTest.run (app) -> app.Auth._session.clear()
