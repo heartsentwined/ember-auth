@@ -44,7 +44,7 @@ class Em.Auth extends Em.Object with Em.Evented
 
   # module.authRedirectable
   authRedirectable:
-    route: 'index'
+    route: null
 
   # module.actionRedirectable
   actionRedirectable:
