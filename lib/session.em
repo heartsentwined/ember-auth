@@ -17,8 +17,9 @@ class Em.Auth.Session
 
     @inject()
 
+  +observer userId
   findUser: ->
-    if @userId && (model = @auth.userModel)
+    if @userId && (modelKey = @auth.userModel) && (model = Ember.get modelKey)
       @user = model.find @userId
 
   start: ->

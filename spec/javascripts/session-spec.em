@@ -53,8 +53,9 @@ describe 'Em.Auth.Session', ->
 
       describe 'userModel set', ->
         it 'delegates to .find()', ->
+          sinon.collection.stub Ember, 'get', -> model
           Em.run ->
-            auth.userModel = model
+            auth.userModel = 'Foo'
             session.findUser()
           expect(spy).toHaveBeenCalledWithExactly(1)
 
