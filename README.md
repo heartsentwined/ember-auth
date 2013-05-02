@@ -4,6 +4,7 @@ ember-auth
 [![Build Status](https://secure.travis-ci.org/heartsentwined/ember-auth.png)](http://travis-ci.org/heartsentwined/ember-auth)
 [![Gem Version](https://badge.fury.io/rb/ember-auth-source.png)](http://badge.fury.io/rb/ember-auth-source)
 [![NPM version](https://badge.fury.io/js/ember-auth.png)](http://badge.fury.io/js/ember-auth)
+[![Support ember-auth](http://www.pledgie.com/campaigns/19972.png?skin_name=chrome)](http://pledgie.com/campaigns/19972)
 
 `ember-auth` is an authentication framework for [ember.js](http://emberjs.com/).
 
