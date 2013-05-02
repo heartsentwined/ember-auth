@@ -7,6 +7,7 @@
   * Factor most choices into adapters
   * Remove `Auth*` extensions of various ember classes,
     in favor of direct patching the underlying ember classes
+  * Everything now written in ember-script
   * Remove mini rails app for dev environment
   * Use `jasmine-headless-webkit` for testing
 * Feature: app-specific ember-auth instances
