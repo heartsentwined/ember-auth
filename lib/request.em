@@ -10,9 +10,11 @@ class Em.Auth.Request
     @inject()
 
   signIn:  (opts) ->
-    @adapter.signIn  @resolveUrl(@auth.signInEndPoint),  opts
+    url = @resolveUrl @auth.signInEndPoint
+    @adapter.signIn  url, @auth._strategy.serialize(opts)
   signOut: (opts) ->
-    @adapter.signOut @resolveUrl(@auth.signOutEndPoint), opts
+    url = @resolveUrl @auth.signOutEndPoint
+    @adapter.signOut url, @auth._strategy.serialize(opts)
   send:    (opts) -> @adapter.send @auth._strategy.serialize(opts)
 
   # different base url support

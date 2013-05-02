@@ -43,6 +43,11 @@ describe 'Em.Auth.Request', ->
         request[type]('bar')
         expect(spy).toHaveBeenCalledWithExactly('/foo', 'bar')
 
+      it 'serializes opts', ->
+        spy = sinon.collection.spy auth._strategy, 'serialize'
+        request[type]('foo')
+        expect(spy).toHaveBeenCalledWithExactly('foo')
+
   follow 'request server api', 'signIn'
   follow 'request server api', 'signOut'
 
