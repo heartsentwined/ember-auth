@@ -24,3 +24,11 @@ describe 'Em.Auth.Module', ->
     auth = authTest.create { modules: ['fooBar'] }
     expect(auth.module['fooBar']).toBeDefined()
     expect(auth.module['fooBar'].baz).toBeDefined()
+
+  it 'initializes modules in specified order', ->
+    class Em.Auth.Module.Foo
+    class Em.Auth.Module.Bar
+    fooSpy = sinon.collection.spy Em.Auth.Module.Foo, 'create'
+    barSpy = sinon.collection.spy Em.Auth.Module.Bar, 'create'
+    auth = authTest.create { modules: ['foo', 'bar'] }
+    sinon.assert.callOrder(fooSpy, barSpy)
