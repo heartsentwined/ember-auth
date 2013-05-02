@@ -1,3 +1,9 @@
+# 6.0.0 (2 May 2013)
+
+* Bugfix: User model not autoloading (#43)
+* Bugfix: Sign in / out functions should include authentication info, if any
+* BC Break: `userModel` now expects a string, not a class
+
 # 5.0.0 (2 May 2013)
 
 * Major rewrite:
