@@ -1,7 +1,30 @@
-# Master
+# 5.0.0 (2 May 2013)
 
+* Major rewrite:
+  * Remove global `Auth` namespace; use `Ember.Auth`
+  * Break logic into `request`, `response`, `strategy`, `session` components
+  * Proper module system
+  * Factor most choices into adapters
+  * Remove `Auth*` extensions of various ember classes,
+    in favor of direct patching the underlying ember classes
+  * Remove mini rails app for dev environment
+  * Use `jasmine-headless-webkit` for testing
+* Feature: app-specific ember-auth instances
+  \- allow for multiple apps (with separate ember-auth instances)
+* Feature: `request`, `response`, `strategy`, `session` adapters
+* Feature: customizable module precedences
+* BC Break: (basically everything)
+* Bugfix: `ember-data` override conditional on its presence (#35)
+  (@mastropinguino)
 * Bugfix: auth token injection for `FormData` objects (#38) (@mastropinguino)
+* Bugfix: `DS.RESTAdapter.ajax()` fix for `null/undefined` settings (#44)
+  (@seanrucker)
 * Bugfix: smart redirect now works with routes with dynamic segments
+
+Upgrade Guide
+-------------
+
+Not available (yet?). Basically everything is BC-broken.
 
 # 4.1.4 (18 Apr 2013)
 
