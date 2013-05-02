@@ -670,6 +670,7 @@ void function () {
       self = this;
       get$(Em, 'Route').reopen({
         activate: function () {
+          this._super.apply(this, arguments);
           self.router || (self.router = get$(this, 'router'));
           return self.registerInitRedirect(get$(this, 'routeName'));
         }
@@ -707,6 +708,7 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'AuthRedirectable', Ember.Object.extend({
     self = this;
     set$(this, 'AuthRedirectable', Ember.Mixin.create({
       redirect: function () {
+        this._super.apply(this, arguments);
         if (!get$(get$(self, 'auth'), 'signedIn')) {
           get$(self, 'auth').trigger('authAccess');
           return this.transitionTo(get$(get$(self, 'config'), 'route'));
@@ -793,6 +795,7 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'Rememberable', Ember.Object.extend({
     self = this;
     return get$(Em, 'Route').reopen({
       redirect: function () {
+        this._super.apply(this, arguments);
         if (get$(get$(self, 'config'), 'autoRecall') && !get$(get$(self, 'auth'), 'signedIn'))
           return self.recall({ async: false });
       }
@@ -1136,6 +1139,7 @@ void function () {
       self = this;
       get$(Em, 'Route').reopen({
         redirect: function () {
+          this._super.apply(this, arguments);
           return self.authenticate({ async: false });
         }
       });
