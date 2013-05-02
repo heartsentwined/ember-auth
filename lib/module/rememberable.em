@@ -37,5 +37,6 @@ class Em.Auth.Module.Rememberable
     self = this
     Em.Route.reopen
       redirect: ->
+        super.apply this, arguments
         if self.config.autoRecall && !self.auth.signedIn
           self.recall { async: false }

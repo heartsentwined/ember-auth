@@ -43,6 +43,7 @@ class Em.Auth.Module.UrlAuthenticatable
     self = this
     Em.Route.reopen
       redirect: ->
+        super.apply this, arguments
         self.authenticate { async: false }
 
     # hijack the routing process to grab params

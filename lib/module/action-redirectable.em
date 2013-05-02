@@ -76,6 +76,7 @@ class Em.Auth.Module.ActionRedirectable
     Em.Route.reopen
       # init hook doesn't have @routeName yet
       activate: ->
+        super.apply this, arguments
         self.router ||= @router
         self.registerInitRedirect @routeName
 
