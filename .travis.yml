@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
 install: 'bundle install && bundle exec rake appraisal:install'
-script: 'bundle exec guard-jasmine --server-timeout=60 && bundle exec rake appraisal test[60]'
+script: 'bundle exec jasmine:headless && bundle exec rake appraisal jasmine:headless'
 notifications:
   email:
     on_success: always
