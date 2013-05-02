@@ -43,6 +43,9 @@ You are welcome! As usual:
 Tests
 -----
 
+You can be lazy and just open a PR.
+[Travis](https://travis-ci.org) will run the tests.
+
 `ember-auth` tests are written in [jasmine](http://pivotal.github.com/jasmine/),
 run on a mini rails app.
 
