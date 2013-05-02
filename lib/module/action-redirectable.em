@@ -81,7 +81,7 @@ class Em.Auth.Module.ActionRedirectable
 
     Em.Router.reopen # transitionTo & friends might not originate from route
       init: ->
-        super.apply(this, arguments)
+        super.apply this, arguments
         self.initPath ||= @location.getURL() # test this? TODO
       transitionTo: ->
         args = Array::slice.call arguments
