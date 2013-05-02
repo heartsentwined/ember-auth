@@ -26,8 +26,8 @@
 * Bugfix: `Auth.Route` now calls `_super()`
 * Bugfix: Url Authentication not properly reading params from URL (#37)
 * Feature: optional flags to enable Remember Me's auto-recall behavior,
-    and Url Authentication's authenticate behavior, on regular `Em.Route`s
-    in addition to `Auth.Route`s (#36)
+  and Url Authentication's authenticate behavior, on regular `Em.Route`s
+  in addition to `Auth.Route`s (#36)
 
 # 4.0.1 (17 Apr 2013)
 
@@ -37,7 +37,7 @@
 
 * Feature: pass any params for URL authentication (#33)
 * BC Break: URL Authentication params are now mandatorily scoped under a new
-    config setting `urlAuthenticationParamsKey`.
+  config setting `urlAuthenticationParamsKey`.
 
 Upgrade Guide
 -------------
@@ -82,7 +82,7 @@ http://www.example.com/?auth[auth_token]=fja8hfhf4/#/posts/5
 # 3.1.0 (12 Apr 2013)
 
 * Feature: url authentication (`example.com?auth_token=lJfajl79`) (#27)
-    (@seanrucker)
+  (@seanrucker)
 * Bugfix: previous remember me cookies are now cleared on successful sign in
 
 # 3.0.4 (9 Apr 2013)
@@ -92,7 +92,7 @@ http://www.example.com/?auth[auth_token]=fja8hfhf4/#/posts/5
 # 3.0.3 (9 Apr 2013)
 
 * Bugfix: `Auth.ajax`: auth token not set when customized with `data` without
-    overriding the corresponding token key (#25)
+  overriding the corresponding token key (#25)
 
 # 3.0.2 (6 Apr 2013)
 
@@ -103,26 +103,26 @@ http://www.example.com/?auth[auth_token]=fja8hfhf4/#/posts/5
 \* `3.0.0` contained errors. This has been fixed in `3.0.1` already.
 
 * Major rewrite:
-    * Mini Rails app for dev environment
-    * Distribution files now built with `sprockets`
-    * `rake` tasks substituted `cake` tasks
-    * Added test suites, using `jasmine`
-    * Moved distribution files from `lib/` to `dist/`
-    * Moved source files from `src/` to `lib/`
-    * Removed `component.json` in favor of auto-generation with git tags
-    * Versioning centralized in `package.json`
-    * Packaged as source gem
+  * Mini Rails app for dev environment
+  * Distribution files now built with `sprockets`
+  * `rake` tasks substituted `cake` tasks
+  * Added test suites, using `jasmine`
+  * Moved distribution files from `lib/` to `dist/`
+  * Moved source files from `src/` to `lib/`
+  * Removed `component.json` in favor of auto-generation with git tags
+  * Versioning centralized in `package.json`
+  * Packaged as source gem
 * Feature: `Auth.ajax` now customizable
 * Feature: Authorization header supported
 * Feature: Userland sign-in and sign-out controllers now extensible from any
-    base controller, instead of being restricted to `Ember.ObjectController`
+  base controller, instead of being restricted to `Ember.ObjectController`
 * BC Break: `Auth.ajax` signature changed
 * BC Break: `Auth.Config.rememberUsingLocalStorage` is now
-    `Auth.Config.rememberStorage`, with possible values
-    `cookie` (default) and `localStorage`
+  `Auth.Config.rememberStorage`, with possible values
+  `cookie` (default) and `localStorage`
 * BC Break: `Auth.Config.requestHeaderAuthorization` is now
-    `Auth.Config.requestTokenLocation`, with possible values
-    `param` (default), `authHeader` and `customHeader`
+  `Auth.Config.requestTokenLocation`, with possible values
+  `param` (default), `authHeader` and `customHeader`
 * BC Break: `Auth.SignInController` and `Auth.SignOutController` are now mixins
 
 Upgrade Guide
@@ -202,7 +202,7 @@ App.SignOutController = Em.ObjectController.extend(Auth.SignOutController, {})
 # 2.5.0 (3 Apr 2013)
 
 * Feature: Authenticated requests available for non `ember-data` requests (#18)
-    (@seanrucker)
+  (@seanrucker)
 
 # 2.4.1 (2 Apr 2013)
 
