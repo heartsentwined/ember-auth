@@ -53,11 +53,7 @@ run on a mini rails app.
 
 1. Grab a copy of ruby. [RVM](http://rvm.io/) recommended.
 2. `bundle install` to install dependencies.
-3. You need [phantomjs](http://phantomjs.org/) to run tests. Example:
-
-        # sudo apt-get install phantomjs
-
-4. `jasmine-headless-webkit` or `(bundle exec) rake jasmine:headless`
+3. `jasmine-headless-webkit` or `(bundle exec) rake jasmine:headless`
    to run tests, or `guard` for continuous integration testing.
 
 `ember-auth` has been setup with [guard](https://github.com/guard/guard),
