@@ -54,10 +54,14 @@ set$(get$(Em, 'Auth'), 'Request', Ember.Object.extend({
     return this.inject();
   },
   signIn: function (opts) {
-    return get$(this, 'adapter').signIn(this.resolveUrl(get$(get$(this, 'auth'), 'signInEndPoint')), opts);
+    var url;
+    url = this.resolveUrl(get$(get$(this, 'auth'), 'signInEndPoint'));
+    return get$(this, 'adapter').signIn(url, get$(get$(this, 'auth'), '_strategy').serialize(opts));
   },
   signOut: function (opts) {
-    return get$(this, 'adapter').signOut(this.resolveUrl(get$(get$(this, 'auth'), 'signOutEndPoint')), opts);
+    var url;
+    url = this.resolveUrl(get$(get$(this, 'auth'), 'signOutEndPoint'));
+    return get$(this, 'adapter').signOut(url, get$(get$(this, 'auth'), '_strategy').serialize(opts));
   },
   send: function (opts) {
     return get$(this, 'adapter').send(get$(get$(this, 'auth'), '_strategy').serialize(opts));
@@ -364,11 +368,11 @@ set$(get$(Em, 'Auth'), 'Session', Ember.Object.extend({
     }));
     return this.inject();
   },
-  findUser: function () {
-    var model;
-    if (get$(this, 'userId') && (model = get$(get$(this, 'auth'), 'userModel')))
+  findUser: Ember.observer(function () {
+    var model, modelKey;
+    if (get$(this, 'userId') && (modelKey = get$(get$(this, 'auth'), 'userModel')) && (model = Ember.get(modelKey)))
       return set$(this, 'user', model.find(get$(this, 'userId')));
-  },
+  }, 'userId'),
   start: function () {
     return set$(this, 'signedIn', true);
   },
