@@ -10,21 +10,13 @@ ember-auth
 **Important!** `ember-auth` is no replacement for secure server-side API code.
 Read the [security page](https://github.com/heartsentwined/ember-auth/wiki/Security) for more information.
 
-Installation
-============
-
-Read the [installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install).
-
-Getting started
-===============
-
-A [demo and tutorial](https://github.com/heartsentwined/ember-auth-rails-demo)
-for rails + devise + ember-auth is available.
-
-Documentation
-=============
-
-At the [ember-auth site](http://ember-auth.herokuapp.com).
+* Install:
+  [Installation notes](https://github.com/heartsentwined/ember-auth/wiki/Install)
+* Getting started:
+  A [demo and tutorial](https://github.com/heartsentwined/ember-auth-rails-demo)
+  for rails + devise + ember-auth is available.
+* Docs:
+  at the [ember-auth site](http://ember-auth.herokuapp.com).
 
 Versioning
 ==========
