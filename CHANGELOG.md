@@ -1,3 +1,7 @@
+# Master
+
+* Bugfix: restoring test suite passing
+
 # 6.0.1 (3 May 2013)
 
 * Bugfix: Modules should not override each other (#48)
