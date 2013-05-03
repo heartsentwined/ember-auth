@@ -7,7 +7,8 @@ describe 'Em.Auth.Module.Rememberable', ->
     auth = authTest.create { modules: ['rememberable'] }
     rememberable = auth.module.rememberable
   afterEach ->
-    auth.destroy() if auth
+    # for some reason, if we destroy() it, it will break other suites
+    #auth.destroy() if auth
     sinon.collection.restore()
 
   it 'remember on signInSuccess', ->
