@@ -26,8 +26,10 @@ Documentation
 Versioning
 ==========
 
-`ember-auth` uses [Semantic Versioning](http://semver.org/). You can safely
-use the [pessimistic version constraint operator](http://docs.rubygems.org/read/chapter/16#page74)
+`ember-auth` uses [Semantic Versioning](http://semver.org/) *strictly*.
+Even the most minor BC-breaking change will trigger a major version bump.
+That means you can safely use the
+[pessimistic version constraint operator](http://docs.rubygems.org/read/chapter/16#page74)
 (`~> 1.2`) for rubygems, or `>= 1.2 && < 2.0` for other dependency managers.
 
 Contributing
