@@ -39,7 +39,388 @@
 Upgrade Guide
 -------------
 
-Not available (yet?). Basically everything is BC-broken.
+### Top-level namespace + Auth.Config
+
+`ember-auth` is now attached to the `Ember` namespace; userland code is also
+now expected to initialize its own copy of `ember-auth` under the application
+namespace.
+
+Configuration is now done when `create()`ing an `Em.Auth` object.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen({ foo: 'bar' })
+```
+
+After:
+
+```coffeescript
+App = Em.Application.create()
+# immediately after the above line
+App.Auth = Em.Auth.create({ foo: 'bar' })
+```
+
+Note also that some configuration keys and/or their expected values have
+changed.
+
+### Adapters
+
+`ember-auth` is now configurable with an array of "adapters".
+This will setup an equivalent for the previous versions' default behavior:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  requestAdapter: 'jquery' # this is default
+  responseAdapter: 'json'  # this is default
+  strategyAdapter: 'token' # this is default
+  sessionAdapter: 'cookie' # this is default
+```
+
+You can actually omit all of them, since they are defaults.
+
+### Sign in / out API end points
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  tokenCreateUrl: '/users/sign_in'
+  tokenDestroyUrl: '/users/sign_out'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  signInEndPoint: '/users/sign_in'
+  signOutEndPoint: '/users/sign_out'
+```
+
+### Token configuration
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  tokenkey: 'auth_token'
+  idKey: 'user_id'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  tokenkey: 'auth_token'
+  tokenIdKey: 'user_id'
+```
+
+### Different token locations
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  # case (1)
+  requestTokenLocation: 'param'
+  tokenKey: 'auth_token'
+
+  # case (2)
+  requestTokenLocation: 'authHeader'
+  requestHeaderKey: 'TOKEN'
+
+  # case (3)
+  requestTokenLocation: 'customHeader'
+  requestHeaderKey: 'X-API-TOKEN'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  # case (1)
+  tokenLocation: 'param'
+  tokenKey: 'auth_token'
+
+  # case (2)
+  tokenLocation: 'authHeader'
+  tokenHeaderKey: 'TOKEN'
+
+  # case (3)
+  tokenLocation: 'customHeader'
+  tokenHeaderKey: 'X-API-TOKEN'
+```
+
+### Auto-load current user object
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  userModel: App.Member
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  userModel: 'App.Member' # pass the string, not a class App.Member
+
+# access the current user object
+App.Auth.get('user')
+```
+
+### Different API base URL
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  baseUrl: 'https://api.example.com'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  baseUrl: 'https://api.example.com'
+```
+
+### ember-data DS.adapter patch
+
+This has been moved to its own module called `emberData`.
+`Auth.RESTAdapter` is gone - you can just use `DS.RESTAdapter`
+after enabling the module.
+
+Before:
+
+```coffeescript
+App.Store = DS.Store.extend
+  adapter: Auth.RESTAdapter.create()
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  modules: ['emberData'] # this is also the default
+
+App.Store = DS.Store.extend
+  adapter: DS.RESTAdapter.create() # i.e. no special code needed
+```
+
+### Not using Auth.RESTAdapter
+
+The `emberData` module is enabled by default. You need to remove it explicitly.
+
+Before:
+
+```coffeescript
+App.Store = DS.Store.extend
+  adapter: DS.RESTAdapter.create()
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  modules: [] # 'emberData' removed
+
+App.Store = DS.Store.extend
+  adapter: DS.RESTAdapter.create() # i.e. no special code needed
+```
+
+### Auth.authToken conditional logic
+
+Branching by `Auth.authToken` would still work, but it is preferrable to
+change it to `App.Auth.signedIn`.
+
+Before:
+
+```coffeescript
+if Auth.get('authToken')
+```
+
+```handlebars
+{{#if Auth.authToken}}
+```
+
+After:
+
+```coffeescript
+if App.Auth.get('signedIn')
+```
+
+```handlebars
+{{#if App.Auth.signedIn}}
+```
+
+### Sign in / Sign out methods
+
+Before:
+
+```coffeescript
+Auth.signIn { foo: 'bar' }
+Auth.signOut { foo: 'bar' }
+```
+
+After:
+
+```coffeescript
+App.Auth.signIn { data: { foo: 'bar' } }
+App.Auth.signOut { data: { foo: 'bar' } }
+```
+
+### Authenticated requests
+
+Before:
+
+```coffeescript
+Auth.ajax { url: '/api/foo', type: 'POST', foo_key: 'bar_data' }
+```
+
+After:
+
+```coffeescript
+App.Auth.send { url: '/api/foo', type: 'POST', data: { foo_key: 'bar_data' } }
+```
+
+### Auth.Route
+
+The previous `Auth.Route` had multiple responsibilities.
+
+If you want to redirect unauthenticated users away from the `Auth.Route`,
+enable the `authRedirectable` module and include the `App.Auth.Redirectable`
+mixin (instead of extending from `Auth.Route`).
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  signInRoute: 'sign_in'
+  authRedirect: true
+
+App.SecretRoute = Auth.Route.extend()
+```
+
+After:
+
+```javascript
+App.Auth = Em.Auth.create
+  modules: ['authRedirectable']
+  authRedirectable:
+    route: 'sign_in'
+
+App.SecretRoute = Em.Route.extend App.Auth.AuthRedirectable
+```
+
+If you are looking for the `authAccess` event, again you need to enable the `authRedirectable` module, and then listen to it via the *main auth object*,
+instead of on the route.
+
+Before:
+
+```coffeescript
+App.SecretRoute = Auth.Route.extend
+  init: ->
+    @on 'authAccess', -> doSomething()
+```
+
+After:
+
+```coffeescript
+App.Secret = Em.Route.extend App.Auth.AuthRedirectable,
+  init: ->
+    App.Auth.on 'authAccess', -> doSomething()
+```
+
+There had been a scoping option in the old `rememberMe` and `urlAuthentication`
+modules, that could isolate the methods to an `Auth.Route`. This has been
+removed; the new `rememberable` and `urlAuthenticatable` modules, when enabled,
+will apply its features / logic on all `Em.Route`s.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  # case (1)
+  rememberAutoRecallRouteScope: 'auth' # this was the default
+
+  # case (2)
+  rememberAutoRecallRouteScope: 'both'
+
+  # case (3)
+  urlAuthenticationRouteScope: 'auth' # this was the default
+
+  # case (4)
+  urlAuthenticationRouteScope: 'both'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  # case (1)
+  # feature removed; converge into case (2)
+
+  # case (2)
+  modules: ['rememberable']
+  # see section below for upgrade guide for the 'rememberable' module
+
+  # case (3)
+  # feature removed; converge into case (4)
+
+  # case (4)
+  modules: ['urlAuthenticatable']
+  # see section below for upgrade guide for the 'urlAuthenticatable' module
+```
+
+If you have grouped custom logic within an `Auth.Route` (auth-related logic,
+perhaps?), then you need to subclass `Ember.Route` in userland code,
+and then proceed as usual.
+
+Before:
+
+```coffeescript
+# case (1)
+Auth.Config.reopen
+  signInRoute: 'sign_in'
+  authRedirect: true
+
+Auth.Route.reopen
+  # some custom logic
+
+App.SecretRoute = Auth.Route.extend()
+
+# case (2)
+Auth.Config.reopen
+  authRedirect: false # this was the default
+
+Auth.Route.reopen
+  # some custom logic
+
+App.SecretRoute = Auth.Route.extend()
+```
+
+After:
+
+```coffeescript
+# case (1)
+App.Auth = Em.Auth.create
+  modules: ['authRedirectable']
+  authRedirectable:
+    route: 'sign_in'
+
+App.MySubclassedRoute = Em.Route.extend App.Auth.AuthRedirectable,
+  # custom logic here
+
+App.SecretRoute = App.MySubclassedRoute.extend()
+
+# case (2)
+App.MySubclassedRoute = Em.Route.extend
+  # custom logic here
+
+App.SecretRoute = App.MySubclassedRoute.extend()
+```
 
 # 4.1.4 (18 Apr 2013)
 
