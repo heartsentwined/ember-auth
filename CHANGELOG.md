@@ -15,6 +15,12 @@
 Upgrade Guide
 -------------
 
+This is a reference Upgrade Guide. For `v4.x` to `v5.x` or `v6.x`, *all*
+code has been BC-broken and needs upgrading. You are encouraged to use the
+[official docs and code generator](http://ember-auth.herokuapp.com/docs) to
+*generate* the new `ember-auth` code for your use case, and only refer to this
+upgrade guide afterwards as a reference checklist.
+
 ### Top-level namespace + Auth.Config
 
 `ember-auth` is now attached to the `Ember` namespace; userland code is also
