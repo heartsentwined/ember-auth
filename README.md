@@ -20,6 +20,8 @@ Documentation
   for rails + devise + ember-auth is available.
 * Full docs:
   at the [ember-auth site](http://ember-auth.herokuapp.com).
+* Upgrade guide for users from previous Major Versions:
+  at the [changelog](https://github.com/heartsentwined/ember-auth/blob/master/CHANGELOG.md)
 
 Versioning
 ==========
