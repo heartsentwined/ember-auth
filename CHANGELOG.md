@@ -12,30 +12,6 @@
 * Bugfix: Sign in / out functions should include authentication info, if any
 * BC Break: `userModel` now expects a string, not a class
 
-# 5.0.0 (2 May 2013)
-
-* Major rewrite:
-  * Remove global `Auth` namespace; use `Ember.Auth`
-  * Break logic into `request`, `response`, `strategy`, `session` components
-  * Proper module system
-  * Factor most choices into adapters
-  * Remove `Auth*` extensions of various ember classes,
-    in favor of direct patching the underlying ember classes
-  * Everything now written in ember-script
-  * Remove mini rails app for dev environment
-  * Use `jasmine-headless-webkit` for testing
-* Feature: app-specific ember-auth instances
-  \- allow for multiple apps (with separate ember-auth instances)
-* Feature: `request`, `response`, `strategy`, `session` adapters
-* Feature: customizable module precedences
-* BC Break: (basically everything)
-* Bugfix: `ember-data` override conditional on its presence (#35)
-  (@mastropinguino)
-* Bugfix: auth token injection for `FormData` objects (#38) (@mastropinguino)
-* Bugfix: `DS.RESTAdapter.ajax()` fix for `null/undefined` settings (#44)
-  (@seanrucker)
-* Bugfix: smart redirect now works with routes with dynamic segments
-
 Upgrade Guide
 -------------
 
@@ -317,6 +293,9 @@ App.SecretRoute = Em.Route.extend App.Auth.AuthRedirectable
 If you are looking for the `authAccess` event, again you need to enable the `authRedirectable` module, and then listen to it via the *main auth object*,
 instead of on the route.
 
+The route's `routeName` property will let you know in which route the event
+was fired.
+
 Before:
 
 ```coffeescript
@@ -421,6 +400,324 @@ App.MySubclassedRoute = Em.Route.extend
 
 App.SecretRoute = App.MySubclassedRoute.extend()
 ```
+
+### Post-sign in / sign out redirects
+
+This has been moved to its own module `actionRedirectable`.
+`Auth.SignInController`, `Auth.SignOutController`, and the `registerRedirect()`
+call are all gone (and unnecessary) in the new version.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  # case (1): post-sign in, static
+  signInRedirectFallbackRoute: 'account'
+
+  # case (2): post-sign out, static
+  signOutRedirectFallbackRoute: 'home'
+
+  # case (3): post-sign in, smart
+  signInRoute: 'sign_in'
+  smartSignInRedirect: true
+  signInRedirectFallbackRoute: 'account'
+
+  # case (4): post-sign out, smart
+  signOutRoute: 'sign_out'
+  smartSignOutRedirect: true
+  signOutRedirectFallbackRoute: 'home'
+
+# common controller modificiations:
+
+App.SignInController = Ember.ObjectController.extend Auth.SignInController,
+  signIn: ->
+    @registerRedirect()
+    # ...
+
+App.SignOutController = Ember.ObjectController.extend Auth.SignOutController,
+  signOut: ->
+    @registerRedirect()
+    # ...
+```
+
+After:
+
+```coffeescript
+App.Auth = Ember.Auth.create
+  modules: ['actionRedirectable']
+  actionRedirectable:
+    # case (1): post-sign in, static
+    signInRoute: 'account'
+
+    # case (2): post-sign out, static
+    signOutRoute: 'home'
+
+    # case (3): post-sign in, smart
+    signInRoute: 'account'
+    signInSmart: true
+    signInBlacklist: ['sign_in']
+
+    # case (4): post-sign out, smart
+    signOutRoute: 'home'
+    signOutSmart: true
+    signOutBlacklist: ['sign_out']
+
+# no ember-auth code needed in controllers:
+
+App.SignInController = Ember.ObjectController.extend
+  signIn: ->
+    # ...
+
+App.SignOutController = Ember.ObjectController.extend
+  signOut: ->
+    # ...
+```
+
+### Remember me
+
+The remembered session storage location now respects a `session` adapter
+setting. The old remember me module defaults to `cookie` for storage,
+and `localStorage` is available.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  rememberMe: true
+  rememberTokenKey: 'remember_token'
+  rememberPeriod: 14 # this is the default
+
+  # case (1): auto recall turned off
+  rememberAutoRecall: false # default true
+
+  # case (2): use localStorage to store remembered sessions
+  rememberStorage: 'localStorage' # default 'cookie'
+```
+
+After:
+
+```coffeescript
+App.Auth = Ember.Auth.create
+  modules: ['rememberable']
+  rememberable:
+    tokenKey: 'remember_token'
+    period: 14  # this is the default
+
+    # case (1): auto recall turned off
+    autoRecall: false # default true
+
+  # case (2): use localStorage to store remembered sessions
+  sessionAdapter: 'localStorage' # default 'cookie'
+```
+
+The `rememberAutoRecallRouteScope` setting is removed. Previously, the default
+was to isolate auto recall to only happen on `Auth.Route`s.
+The new `rememberable` module, when enabled, will auto recall the remembered
+session on all `Em.Route`s.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  # case (1)
+  rememberAutoRecallRouteScope: 'auth' # this was the default
+
+  # case (2)
+  rememberAutoRecallRouteScope: 'both'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  # case (1)
+  # feature removed; converge into case (2)
+
+  # case (2)
+  modules: ['rememberable']
+  # just enable the module, and follow settings as described above
+```
+
+Low-level manual management of remember sessions:
+
+Before:
+
+```coffeescript
+Auth.Module.RememberMe.recall { async: false }
+Auth.Module.RememberMe.remember()
+Auth.Module.RememberMe.forget()
+```
+
+After:
+
+```coffeescript
+App.Auth.get('module.rememberable').recall { async: false }
+App.Auth.get('module.rememberable').remember()
+App.Auth.get('module.rememberable').forget()
+```
+
+### URL authentication
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  urlAuthentication: true
+  urlAuthenticationParamsKey: 'auth'
+```
+
+After:
+
+```coffeescript
+App.Auth = Ember.Auth.create
+  modules: ['urlAuthenticatable']
+  urlAuthenticatable:
+    paramsKey: 'auth'
+```
+
+The `urlAuthenticationRouteScope` setting is removed. Previously, the default
+was to isolate auto authenticate to only happen on `Auth.Route`s.
+The new `urlAuthenticatable` module, when enabled, will auto authenicate
+the user on all `Em.Route`s.
+
+Before:
+
+```coffeescript
+Auth.Config.reopen
+  # case (1)
+  urlAuthenticationRouteScope: 'auth' # this was the default
+
+  # case (2)
+  urlAuthenticationRouteScope: 'both'
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  # case (1)
+  # feature removed; converge into case (2)
+
+  # case (2)
+  modules: ['urlAuthenticatable']
+  # just enable the module, and follow settings as described above
+```
+
+### Token authentication API events
+
+Before:
+
+```coffeescript
+Auth.on 'signInSuccess',   -> doSomething()
+Auth.on 'signInError',     -> doSomething()
+Auth.on 'signInComplete',  -> doSomething()
+Auth.on 'signOutSuccess',  -> doSomething()
+Auth.on 'signOutError',    -> doSomething()
+Auth.on 'signOutComplete', -> doSomething()
+```
+
+After:
+
+```coffeescript
+App.Auth.on 'signInSuccess',   -> doSomething()
+App.Auth.on 'signInError',     -> doSomething()
+App.Auth.on 'signInComplete',  -> doSomething()
+App.Auth.on 'signOutSuccess',  -> doSomething()
+App.Auth.on 'signOutError',    -> doSomething()
+App.Auth.on 'signOutComplete', -> doSomething()
+```
+
+### authAccess event
+
+If you are looking for the `authAccess` event, again you need to enable the `authRedirectable` module, and then listen to it via the *main auth object*,
+instead of on the route.
+
+The route's `routeName` property will let you know in which route the event
+was fired.
+
+Before:
+
+```coffeescript
+App.SecretRoute = Auth.Route.extend
+  init: ->
+    @on 'authAccess', -> doSomething()
+```
+
+After:
+
+```coffeescript
+App.Secret = Em.Route.extend App.Auth.AuthRedirectable,
+  init: ->
+    App.Auth.on 'authAccess', -> doSomething()
+
+# or just listen for the event somewhere else
+App.Auth.on 'authAccess', -> doSomething()
+```
+
+### Customized ajax calls
+
+`jQuery.ajax` is no longer the only way to send requests in `ember-auth`.
+Depending on your use case, you might want to customize the top level method
+`send()`, or the one in the `jQuery` request adapter.
+
+Before:
+
+```coffeescript
+Auth.reopen
+  ajax: (settings) ->
+    settings.contentType = 'foo'
+    @_super settings
+```
+
+After:
+
+```coffeescript
+App.Auth.reopen
+  send: (settings) ->
+    settings.contentType = 'foo'
+    @_super settings
+
+# or
+
+# first choose jquery as your requestAdapter
+App.Auth = Ember.Auth.create
+  requestAdapter: 'jquery' # default 'jquery'
+
+# then customize it
+App.Auth._request.adapter.reopen
+  send: (settings) ->
+    settings.contentType = 'foo'
+    @_super settings
+```
+
+# 5.0.0 (2 May 2013)
+
+* Major rewrite:
+  * Remove global `Auth` namespace; use `Ember.Auth`
+  * Break logic into `request`, `response`, `strategy`, `session` components
+  * Proper module system
+  * Factor most choices into adapters
+  * Remove `Auth*` extensions of various ember classes,
+    in favor of direct patching the underlying ember classes
+  * Everything now written in ember-script
+  * Remove mini rails app for dev environment
+  * Use `jasmine-headless-webkit` for testing
+* Feature: app-specific ember-auth instances
+  \- allow for multiple apps (with separate ember-auth instances)
+* Feature: `request`, `response`, `strategy`, `session` adapters
+* Feature: customizable module precedences
+* BC Break: (basically everything)
+* Bugfix: `ember-data` override conditional on its presence (#35)
+  (@mastropinguino)
+* Bugfix: auth token injection for `FormData` objects (#38) (@mastropinguino)
+* Bugfix: `DS.RESTAdapter.ajax()` fix for `null/undefined` settings (#44)
+  (@seanrucker)
+* Bugfix: smart redirect now works with routes with dynamic segments
+
+Upgrade Guide
+-------------
+
+See `v6.x` Upgrade Guide.
 
 # 4.1.4 (18 Apr 2013)
 
