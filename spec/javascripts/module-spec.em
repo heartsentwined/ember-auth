@@ -7,6 +7,8 @@ describe 'Em.Auth.Module', ->
   afterEach ->
     auth.destroy() if auth
     delete Em.Auth.Module.FooBar if Em.Auth.Module.FooBar?
+    delete Em.Auth.Module.Foo if Em.Auth.Module.FooBar?
+    delete Em.Auth.Module.Bar if Em.Auth.Module.FooBar?
     sinon.collection.restore()
 
   it 'initializes modules', ->
