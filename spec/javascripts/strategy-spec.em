@@ -12,11 +12,11 @@ describe 'Em.Auth.Strategy', ->
 
   follow 'adapter init', 'strategy'
 
-  it 'deserialize on signInSuccess', ->
-    follow 'events', auth, 'signInSuccess', strategy, 'deserialize'
+  follow 'events', 'signInSuccess', 'deserialize', ->
+    beforeEach -> @emitter = auth; @listener = strategy
 
-  it '', ->
-    follow 'adapter delegation', strategy, 'serialize', ['foo']
+  follow 'adapter delegation', 'serialize', ['foo'], ->
+    beforeEach -> @type = strategy
 
   # special treatment for deserialize
   describe '#deserialize', ->
@@ -26,3 +26,6 @@ describe 'Em.Auth.Strategy', ->
         auth._response.response = 'foo'
         strategy.deserialize()
       expect(spy).toHaveBeenCalledWithExactly('foo')
+
+  follow 'adapter sync event', ->
+    beforeEach -> @type = strategy

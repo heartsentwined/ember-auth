@@ -13,13 +13,16 @@ describe 'Em.Auth.Response', ->
   follow 'adapter init', 'response'
 
   describe '#canonicalize', ->
-    it '', ->
-      follow 'adapter delegation', response, 'canonicalize', ['foo']
+    follow 'adapter delegation', 'canonicalize', ['foo'], ->
+      beforeEach -> @type = response
 
-    it 'sets responseData with canonicalize result', ->
+    it 'sets response with canonicalize result', ->
       sinon.collection.stub response.adapter, 'canonicalize', (a) -> "_#{a}"
       Em.run -> response.canonicalize('foo')
       expect(response.response).toEqual '_foo'
 
-  it 'injects response', ->
-    follow 'property injection', response, auth, 'response'
+  follow 'property injection', 'response', ->
+    beforeEach -> @from = response; @to = auth
+
+  follow 'adapter sync event', ->
+    beforeEach -> @type = response

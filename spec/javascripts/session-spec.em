@@ -12,24 +12,26 @@ describe 'Em.Auth.Session', ->
 
   follow 'adapter init', 'session'
 
-  it '', ->
-    follow 'adapter delegation', session, 'retrieve', ['foo', 'bar']
-    follow 'adapter delegation', session, 'store', ['foo', 'bar', 'baz']
-    follow 'adapter delegation', session, 'remove', ['foo', 'bar']
+  follow 'adapter delegation', 'retrieve', ['foo', 'bar'], ->
+    beforeEach -> @type = session
+  follow 'adapter delegation', 'store', ['foo', 'bar', 'baz'], ->
+    beforeEach -> @type = session
+  follow 'adapter delegation', 'remove', ['foo', 'bar'], ->
+    beforeEach -> @type = session
 
-  it 'injects signedIn', ->
-    follow 'property injection', session, auth, 'signedIn'
-  it 'injects userId', ->
-    follow 'property injection', session, auth, 'userId'
-  it 'injects user', ->
-    follow 'property injection', session, auth, 'user'
+  follow 'property injection', 'signedIn', ->
+    beforeEach -> @from = session; @to = auth
+  follow 'property injection', 'userId', ->
+    beforeEach -> @from = session; @to = auth
+  follow 'property injection', 'user', ->
+    beforeEach -> @from = session; @to = auth
 
-  it 'start on signInSuccess', ->
-    follow 'events', auth, 'signInSuccess', session, 'start'
-  it 'findUser on signInSuccess', ->
-    follow 'events', auth, 'signInSuccess', session, 'findUser'
-  it 'clear on signOutSuccess', ->
-    follow 'events', auth, 'signOutSuccess', session, 'clear'
+  follow 'events', 'signInSuccess', 'start', ->
+    beforeEach -> @emitter = auth; @listener = session
+  follow 'events', 'signInSuccess', 'findUser', ->
+    beforeEach -> @emitter = auth; @listener = session
+  follow 'events', 'signOutSuccess', 'clear', ->
+    beforeEach -> @emitter = auth; @listener = session
 
   describe '#findUser', ->
     model = { find: -> }
@@ -76,3 +78,6 @@ describe 'Em.Auth.Session', ->
     follow 'session data clearance', 'signedIn'
     follow 'session data clearance', 'userId'
     follow 'session data clearance', 'user'
+
+  follow 'adapter sync event', ->
+    beforeEach -> @type = session

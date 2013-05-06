@@ -11,12 +11,12 @@ describe 'Em.Auth.Module.Rememberable', ->
     #auth.destroy() if auth
     sinon.collection.restore()
 
-  it 'remember on signInSuccess', ->
-    follow 'events', auth, 'signInSuccess',  rememberable, 'remember'
-  it 'forget on signInError', ->
-    follow 'events', auth, 'signInError',    rememberable, 'forget'
-  it 'forget on signOutSuccess', ->
-    follow 'events', auth, 'signOutSuccess', rememberable, 'forget'
+  follow 'events', 'signInSuccess', 'remember', ->
+    beforeEach -> @emitter = auth; @listener = rememberable
+  follow 'events', 'signInError', 'forget', ->
+    beforeEach -> @emitter = auth; @listener = rememberable
+  follow 'events', 'signOutSuccess', 'forget', ->
+    beforeEach -> @emitter = auth; @listener = rememberable
 
   describe '#recall', ->
     beforeEach ->
@@ -118,22 +118,22 @@ describe 'Em.Auth.Module.Rememberable', ->
           Em.run -> rememberable.remember()
           expect(storeTokenSpy).not.toHaveBeenCalled()
 
-  it 'delegates #forget to #removeToken', ->
-    follow 'delegation', rememberable, 'forget', [], \
-    rememberable, 'removeToken', []
+  follow 'delegation', 'forget', [], 'removeToken', [], ->
+    beforeEach -> @from = rememberable; @to = rememberable
 
-  it 'delegates #retrieveToken to session#retrieve', ->
-    follow 'delegation', rememberable, 'retrieveToken', [], \
-    auth._session, 'retrieve', ['ember-auth-rememberable']
+  follow 'delegation', 'retrieveToken', [], \
+  'retrieve', ['ember-auth-rememberable'], ->
+    beforeEach -> @from = rememberable; @to = auth._session
 
-  it 'delegates #storeToken to session#store', ->
-    Em.run -> auth.rememberable.period = 1
-    follow 'delegation', rememberable, 'storeToken', ['foo'], \
-    auth._session, 'store', ['ember-auth-rememberable', 'foo', { expires: 1 }]
+  follow 'delegation', 'storeToken', ['foo'], \
+  'store', ['ember-auth-rememberable', 'foo', { expires: 1 }], ->
+    beforeEach ->
+      @from = rememberable; @to = auth._session
+      Em.run -> auth.rememberable.period = 1
 
-  it 'delegates #removeToken to session#remove', ->
-    follow 'delegation', rememberable, 'removeToken', [], \
-    auth._session, 'remove', ['ember-auth-rememberable']
+  follow 'delegation', 'removeToken', [], \
+  'remove', ['ember-auth-rememberable'], ->
+    beforeEach -> @from = rememberable; @to = auth._session
 
   describe 'auto recall', ->
     beforeEach ->

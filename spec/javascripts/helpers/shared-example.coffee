@@ -1,18 +1,22 @@
-window.sharedExampleGroups = {}
+exports = exports ? this
 
-window.example = (exampleName, callback) ->
-  window.sharedExampleGroups[exampleName] = callback
+class SharedExample
+  _examples: {}
 
-window.follow = ->
-  exampleName  = _.first(arguments)
-  exampleArgs  = _.select(_.rest(arguments), (arg) -> !_.isFunction(arg))
-  innerBlock   = _.detect(arguments, (arg) -> _.isFunction(arg))
-  exampleGroup = window.sharedExampleGroups[exampleName]
+  example: (name, callback) ->
+    SharedExample::_examples[name] = callback
 
-  if exampleGroup
-    describe "follows example '#{exampleName}'", ->
-      exampleGroup.apply this, exampleArgs
-      if innerBlock then innerBlock()
-  else
-    it "cannot find example '#{exampleName}'", ->
-      expect(false).toEqual(true) # dummy
+  follow: (name, args..., callback) ->
+    args.push callback unless typeof callback == 'function'
+    if (example = SharedExample::_examples[name])?
+      describe "follows #{name}", ->
+        callback() if typeof callback == 'function'
+        example.apply this, args
+    else
+      it "cannot find example #{name}", ->
+        expect(false).toEqual true # dummy
+
+sharedExample = new SharedExample
+
+exports.example = sharedExample.example
+exports.follow  = sharedExample.follow

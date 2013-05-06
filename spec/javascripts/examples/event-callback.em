@@ -1,4 +1,5 @@
-example 'events', (eventObj, event, callbackObj, callback) ->
-  spy = sinon.collection.spy callbackObj, callback
-  Em.run -> eventObj.trigger event
-  expect(spy).toHaveBeenCalled()
+example 'events', (event, callback) ->
+  it "##{callback} on #{event}", ->
+    spy = sinon.collection.spy @listener, callback
+    Em.run => @emitter.trigger event
+    expect(spy).toHaveBeenCalled()

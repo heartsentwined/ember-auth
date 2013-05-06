@@ -11,8 +11,8 @@ describe 'Em.Auth.Strategy.Token', ->
     auth   = null
     output = null
 
-  it 'injects authToken', ->
-    follow 'property injection', adapter, auth, 'authToken'
+  follow 'property injection', 'authToken', ->
+    beforeEach -> @from = adapter; @to = auth
 
   describe '#serialize', ->
 

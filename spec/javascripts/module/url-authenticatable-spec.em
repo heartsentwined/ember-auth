@@ -67,38 +67,47 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
       expect(urlAuth.params).toEqual { key: 'foo' }
 
   describe '#canonicalizeParams', ->
-    example 'canonicalize', (env, input, output) ->
-      Em.run ->
-        env.params = input
-        env.canonicalizeParams()
-      expect(env.params).toEqual output
+    example 'canonicalize', (input, output) ->
+      it '', ->
+        Em.run =>
+          @urlAuth.params = input
+          @urlAuth.canonicalizeParams()
+        expect(@urlAuth.params).toEqual output
 
     describe 'null', ->
       it 'wraps to empty object', ->
-        follow 'canonicalize', urlAuth, null, {}
+        follow 'canonicalize', null, {}, ->
+          beforeEach -> @urlAuth = urlAuth
 
     describe 'primitive', ->
       it 'wraps to one-member object', ->
-        follow 'canonicalize', urlAuth, 'foo', { foo: 'foo' }
+        follow 'canonicalize', 'foo', { foo: 'foo' }, ->
+          beforeEach -> @urlAuth = urlAuth
 
       it 'removes trialing slash, if any', ->
-        follow 'canonicalize', urlAuth, 'foo/', { foo: 'foo' }
+        follow 'canonicalize', 'foo/', { foo: 'foo' }, ->
+          beforeEach -> @urlAuth = urlAuth
 
     describe 'array', ->
       it 'wraps to object with array indices as keys', ->
-        follow 'canonicalize', urlAuth, [1, 2], { 0: '1', 1: '2' }
+        follow 'canonicalize', [1, 2], { 0: '1', 1: '2' }, ->
+          beforeEach -> @urlAuth = urlAuth
 
       it 'removes trialing slash, if any', ->
-        follow 'canonicalize', urlAuth, ['a/', 'b'], { 0: 'a', 1: 'b' }
+        follow 'canonicalize', ['a/', 'b'], { 0: 'a', 1: 'b' }, ->
+          beforeEach -> @urlAuth = urlAuth
 
     describe 'empty object', ->
       it 'does nothing', ->
-        follow 'canonicalize', urlAuth, {}, {}
+        follow 'canonicalize', {}, {}, ->
+          beforeEach -> @urlAuth = urlAuth
 
     describe 'simple object', ->
       it 'removes trailing slash, if any', ->
-        follow 'canonicalize', urlAuth, { foo: 'foo'  }, { foo: 'foo' }
-        follow 'canonicalize', urlAuth, { foo: 'foo/' }, { foo: 'foo' }
+        follow 'canonicalize', { foo: 'foo'  }, { foo: 'foo' }, ->
+          beforeEach -> @urlAuth = urlAuth
+        follow 'canonicalize', { foo: 'foo/' }, { foo: 'foo' }, ->
+          beforeEach -> @urlAuth = urlAuth
 
     describe 'deep object', ->
       it 'removes trailing slash, if any', ->
@@ -108,7 +117,8 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
         output =
           a: { b: 'b', c: 'c' }
           d: 'd'
-        follow 'canonicalize', urlAuth, input, output
+        follow 'canonicalize', input, output, ->
+          beforeEach -> @urlAuth = urlAuth
 
   describe 'auto authenticate', ->
     beforeEach ->

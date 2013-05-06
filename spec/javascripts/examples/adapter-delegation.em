@@ -1,6 +1,5 @@
-example 'adapter delegation', (env, method, args) ->
-  describe "##{method}", ->
-    it 'delegates to adapter', ->
-      spy = sinon.collection.spy env.adapter, method
-      Em.run -> env[method].apply(env, args)
-      expect(spy).toHaveBeenCalledWithExactly.apply(expect(spy), args)
+example 'adapter delegation', (method, args) ->
+  it "delegates ##{method} to adapter", ->
+    spy = sinon.collection.spy @type.adapter, method
+    Em.run => @type[method].apply(@type, args)
+    expect(spy).toHaveBeenCalledWithExactly.apply(expect(spy), args)

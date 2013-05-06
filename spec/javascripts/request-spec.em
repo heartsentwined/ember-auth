@@ -52,8 +52,9 @@ describe 'Em.Auth.Request', ->
   follow 'request server api', 'signOut'
 
   describe '#send', ->
-    it 'delegates to adapter#send', ->
-      follow 'adapter delegation', request, 'send', ['foo']
+    follow 'adapter delegation', 'send', ['foo'], ->
+      beforeEach -> @type = request
+
     it 'serializes opts', ->
       spy = sinon.collection.spy auth._strategy, 'serialize'
       request.send('foo')
@@ -86,3 +87,6 @@ describe 'Em.Auth.Request', ->
       beforeEach -> auth = authTest.create { baseUrl: '' }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }
+
+  follow 'adapter sync event', ->
+    beforeEach -> @type = request
