@@ -1,6 +1,8 @@
-# Master
+# 6.0.2 (6 May 2013)
 
+* Bugfix: events should fire after `ember-auth` has completed its own hooks
 * Bugfix: restoring test suite passing
+* Specs no longer depend on underscore.js
 
 # 6.0.1 (3 May 2013)
 

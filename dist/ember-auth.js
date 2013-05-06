@@ -9,6 +9,17 @@ set$(Em, 'Auth', get$(Em, 'Object').extend(get$(Em, 'Evented'), {
     null != get$(this, '_session') || set$(this, '_session', get$(get$(Em, 'Auth'), 'Session').create({ auth: this }));
     return null != get$(this, '_module') || set$(this, '_module', get$(get$(Em, 'Auth'), 'Module').create({ auth: this }));
   },
+  trigger: function () {
+    get$(this, 'syncEvent').apply(this, arguments);
+    return this._super.apply(this, arguments);
+  },
+  syncEvent: function () {
+    get$(get$(this, '_request'), 'syncEvent').apply(get$(this, '_request'), arguments);
+    get$(get$(this, '_response'), 'syncEvent').apply(get$(this, '_response'), arguments);
+    get$(get$(this, '_strategy'), 'syncEvent').apply(get$(this, '_strategy'), arguments);
+    get$(get$(this, '_session'), 'syncEvent').apply(get$(this, '_session'), arguments);
+    return get$(get$(this, '_module'), 'syncEvent').apply(get$(this, '_module'), arguments);
+  },
   requestAdapter: 'jquery',
   responseAdapter: 'json',
   strategyAdapter: 'token',
@@ -52,6 +63,10 @@ set$(get$(Em, 'Auth'), 'Request', Ember.Object.extend({
       }
     }
     return this.inject();
+  },
+  syncEvent: function () {
+    if (null != get$(get$(this, 'adapter'), 'syncEvent'))
+      return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
   },
   signIn: function (opts) {
     var url;
@@ -216,6 +231,10 @@ set$(get$(Em, 'Auth'), 'Response', Ember.Object.extend({
     }
     return this.inject();
   },
+  syncEvent: function () {
+    if (null != get$(get$(this, 'adapter'), 'syncEvent'))
+      return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
+  },
   canonicalize: function (input) {
     return set$(this, 'response', get$(this, 'adapter').canonicalize(input));
   },
@@ -253,18 +272,24 @@ var get$ = Ember.get;
 var set$ = Ember.set;
 set$(get$(Em, 'Auth'), 'Strategy', Ember.Object.extend({
   init: function () {
-    var adapter, this$;
+    var adapter;
     if (!(null != get$(this, 'adapter'))) {
       adapter = get$(Em, 'String').classify(get$(get$(this, 'auth'), 'strategyAdapter'));
       if (null != get$(get$(Em, 'Auth'), 'Strategy')[adapter]) {
-        set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Strategy')[adapter].create({ auth: get$(this, 'auth') }));
+        return set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Strategy')[adapter].create({ auth: get$(this, 'auth') }));
       } else {
         throw 'Adapter not found: Em.Auth.Strategy.' + adapter;
       }
     }
-    return get$(this, 'auth').on('signInSuccess', (this$ = this, function () {
-      return this$.deserialize();
-    }));
+  },
+  syncEvent: function (name, args) {
+    args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
+    switch (name) {
+    case 'signInSuccess':
+      this.deserialize();
+    }
+    if (null != get$(get$(this, 'adapter'), 'syncEvent'))
+      return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
   },
   serialize: function (opts) {
     return get$(this, 'adapter').serialize(opts);
@@ -345,7 +370,7 @@ var get$ = Ember.get;
 var set$ = Ember.set;
 set$(get$(Em, 'Auth'), 'Session', Ember.Object.extend({
   init: function () {
-    var adapter, this$, this$1, this$2;
+    var adapter, this$, this$1;
     null != get$(this, 'signedIn') || set$(this, 'signedIn', false);
     null != get$(this, 'userId') || set$(this, 'userId', null);
     null != get$(this, 'user') || set$(this, 'user', null);
@@ -360,19 +385,27 @@ set$(get$(Em, 'Auth'), 'Session', Ember.Object.extend({
     get$(this, 'auth').on('signInSuccess', (this$ = this, function () {
       return this$.start();
     }));
-    get$(this, 'auth').on('signInSuccess', (this$1 = this, function () {
-      return this$1.findUser();
-    }));
-    get$(this, 'auth').on('signOutSuccess', (this$2 = this, function () {
-      return this$2.clear();
+    get$(this, 'auth').on('signOutSuccess', (this$1 = this, function () {
+      return this$1.clear();
     }));
     return this.inject();
   },
+  syncEvent: function (name, args) {
+    args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
+    switch (name) {
+    case 'signInSuccess':
+      this.findUser();
+    }
+    if (null != get$(get$(this, 'adapter'), 'syncEvent'))
+      return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
+  },
   findUser: Ember.observer(function () {
     var model, modelKey;
-    if (get$(this, 'userId') && (modelKey = get$(get$(this, 'auth'), 'userModel')) && (model = Ember.get(modelKey)))
+    if (!(get$(this, 'signedIn') && get$(this, 'userId')))
+      return;
+    if ((modelKey = get$(get$(this, 'auth'), 'userModel')) && (model = Ember.get(modelKey)))
       return set$(this, 'user', model.find(get$(this, 'userId')));
-  }, 'userId'),
+  }, 'signedIn', 'userId'),
   start: function () {
     return set$(this, 'signedIn', true);
   },
@@ -564,6 +597,18 @@ set$(get$(Em, 'Auth'), 'Module', Ember.Object.extend({
     }
     return this.inject();
   },
+  syncEvent: function () {
+    var args;
+    args = arguments;
+    return function (accum$) {
+      var _, module;
+      for (_ in get$(this, 'module')) {
+        module = get$(this, 'module')[_];
+        accum$.push(null != get$(module, 'syncEvent') ? get$(module, 'syncEvent').apply(module, args) : void 0);
+      }
+      return accum$;
+    }.call(this, []);
+  },
   inject: function () {
     var this$;
     return get$(this, 'auth').reopen({
@@ -743,18 +788,19 @@ var get$ = Ember.get;
 var set$ = Ember.set;
 set$(get$(get$(Em, 'Auth'), 'Module'), 'Rememberable', Ember.Object.extend({
   init: function () {
-    var this$, this$1, this$2;
     null != get$(this, 'config') || set$(this, 'config', get$(get$(this, 'auth'), 'rememberable'));
-    get$(this, 'auth').on('signInSuccess', (this$ = this, function () {
-      return this$.remember();
-    }));
-    get$(this, 'auth').on('signInError', (this$1 = this, function () {
-      return this$1.forget();
-    }));
-    get$(this, 'auth').on('signOutSuccess', (this$2 = this, function () {
-      return this$2.forget();
-    }));
     return this.patch();
+  },
+  syncEvent: function (name, args) {
+    args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
+    switch (name) {
+    case 'signInSuccess':
+      return this.remember();
+    case 'signInError':
+      return this.forget();
+    case 'signOutSuccess':
+      return this.forget();
+    }
   },
   recall: function (opts) {
     var token;
