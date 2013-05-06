@@ -9,6 +9,9 @@ class Em.Auth.Request
 
     @inject()
 
+  syncEvent: ->
+    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
+
   signIn:  (opts) ->
     url = @resolveUrl @auth.signInEndPoint
     @adapter.signIn  url, @auth._strategy.serialize(opts)

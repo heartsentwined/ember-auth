@@ -1,10 +1,13 @@
 class Em.Auth.Module.Rememberable
   init: ->
     @config? || (@config = @auth.rememberable)
-    @auth.on 'signInSuccess',  => @remember()
-    @auth.on 'signInError',    => @forget()
-    @auth.on 'signOutSuccess', => @forget()
     @patch()
+
+  syncEvent: (name, args...) ->
+    switch name
+      when 'signInSuccess'  then @remember()
+      when 'signInError'    then @forget()
+      when 'signOutSuccess' then @forget()
 
   recall: (opts = {}) ->
     if !@auth.signedIn && (token = @retrieveToken())

@@ -34,3 +34,22 @@ describe 'Em.Auth.Module', ->
     barSpy = sinon.collection.spy Em.Auth.Module.Bar, 'create'
     auth = authTest.create { modules: ['foo', 'bar'] }
     sinon.assert.callOrder(fooSpy, barSpy)
+
+  describe '#syncEvent', ->
+    it 'delegates to #syncEvent of each loaded module', ->
+      class Em.Auth.Module.Foo
+        syncEvent: ->
+      class Em.Auth.Module.Bar
+        syncEvent: ->
+      auth = authTest.create { modules: ['foo', 'bar'] }
+      fooSpy = sinon.collection.spy auth.module.foo, 'syncEvent'
+      barSpy = sinon.collection.spy auth.module.bar, 'syncEvent'
+      auth._module.syncEvent 'foo'
+      expect(fooSpy).toHaveBeenCalledWithExactly 'foo'
+      expect(barSpy).toHaveBeenCalledWithExactly 'foo'
+      sinon.assert.callOrder(fooSpy, barSpy)
+
+    it 'allows undefined #syncEvent in modules', ->
+      class Em.Auth.Module.Foo
+      auth = authTest.create { modules: ['foo'] }
+      expect(-> auth._module.syncEvent()).not.toThrow()

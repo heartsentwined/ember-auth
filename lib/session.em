@@ -11,11 +11,15 @@ class Em.Auth.Session
       else
         throw "Adapter not found: Em.Auth.Session.#{adapter}"
 
-    @auth.on 'signInSuccess',  => @start()
-    @auth.on 'signInSuccess',  => @findUser()
+    @auth.on 'signInSuccess', => @start()
     @auth.on 'signOutSuccess', => @clear()
 
     @inject()
+
+  syncEvent: (name, args...) ->
+    switch name
+      when 'signInSuccess' then @findUser()
+    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
   +observer userId
   findUser: ->

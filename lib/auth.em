@@ -6,6 +6,17 @@ class Em.Auth extends Em.Object with Em.Evented
     @_session?  || (@_session  = Em.Auth.Session.create  { auth: this })
     @_module?   || (@_module   = Em.Auth.Module.create   { auth: this })
 
+  trigger: ->
+    @syncEvent.apply this, arguments
+    super.apply this, arguments
+
+  syncEvent: ->
+    @_request.syncEvent.apply @_request, arguments
+    @_response.syncEvent.apply @_response, arguments
+    @_strategy.syncEvent.apply @_strategy, arguments
+    @_session.syncEvent.apply @_session, arguments
+    @_module.syncEvent.apply @_module, arguments
+
   # =====================
   # Config
   # =====================

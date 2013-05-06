@@ -11,6 +11,9 @@ class Em.Auth.Response
 
     @inject()
 
+  syncEvent: ->
+    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
+
   canonicalize: (input) -> @response = @adapter.canonicalize input
 
   inject: ->

@@ -34,3 +34,30 @@ describe 'Em.Auth', ->
   follow 'auth initializer', 'strategy'
   follow 'auth initializer', 'session'
   follow 'auth initializer', 'module'
+
+  describe '#trigger', ->
+    it 'triggers event', ->
+      listener = { foo: -> }
+      spy      = sinon.collection.spy listener, 'foo'
+      auth.on 'foo', -> listener.foo()
+      auth.trigger 'foo'
+      expect(spy).toHaveBeenCalled()
+
+    follow 'delegation', 'trigger', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth
+
+  describe '#syncEvent', ->
+    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth._request
+
+    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth._response
+
+    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth._strategy
+
+    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth._session
+
+    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
+      beforeEach -> @from = auth; @to = auth._module

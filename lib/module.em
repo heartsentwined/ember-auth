@@ -12,6 +12,11 @@ class Em.Auth.Module
 
     @inject()
 
+  syncEvent: ->
+    args = arguments
+    for _, module of @module
+      module.syncEvent.apply module, args if module.syncEvent?
+
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen

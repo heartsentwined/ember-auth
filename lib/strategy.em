@@ -7,7 +7,10 @@ class Em.Auth.Strategy
       else
         throw "Adapter not found: Em.Auth.Strategy.#{adapter}"
 
-    @auth.on 'signInSuccess', => @deserialize()
+  syncEvent: (name, args...) ->
+    switch name
+      when 'signInSuccess' then @deserialize()
+    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
   serialize:   (opts) -> @adapter.serialize   opts
   deserialize:        -> @adapter.deserialize @auth.response
