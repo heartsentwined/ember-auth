@@ -21,9 +21,10 @@ class Em.Auth.Session
       when 'signInSuccess' then @findUser()
     @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
-  +observer userId
+  +observer signedIn, userId
   findUser: ->
-    if @userId && (modelKey = @auth.userModel) && (model = Ember.get modelKey)
+    return unless @signedIn && @userId
+    if (modelKey = @auth.userModel) && (model = Ember.get modelKey)
       @user = model.find @userId
 
   start: ->

@@ -38,28 +38,38 @@ describe 'Em.Auth.Session', ->
     beforeEach ->
       spy = sinon.collection.spy model, 'find'
 
-    describe 'userId set', ->
-      beforeEach -> Em.run -> session.userId = null
+    describe 'not signed in', ->
+      beforeEach -> Em.run -> session.clear()
 
       it 'does nothing', ->
         Em.run -> session.findUser()
         expect(spy).not.toHaveBeenCalled()
 
-    describe 'userId set', ->
-      beforeEach -> Em.run -> session.userId = 1
+    describe 'signed in', ->
+      beforeEach -> Em.run -> session.start()
 
-      describe 'userModel not set', ->
+      describe 'userId not set', ->
+        beforeEach -> Em.run -> session.userId = null
+
         it 'does nothing', ->
           Em.run -> session.findUser()
           expect(spy).not.toHaveBeenCalled()
 
-      describe 'userModel set', ->
-        it 'delegates to .find()', ->
-          sinon.collection.stub Ember, 'get', -> model
-          Em.run ->
-            auth.userModel = 'Foo'
-            session.findUser()
-          expect(spy).toHaveBeenCalledWithExactly(1)
+      describe 'userId set', ->
+        beforeEach -> Em.run -> session.userId = 1
+
+        describe 'userModel not set', ->
+          it 'does nothing', ->
+            Em.run -> session.findUser()
+            expect(spy).not.toHaveBeenCalled()
+
+        describe 'userModel set', ->
+          it 'delegates to .find()', ->
+            sinon.collection.stub Ember, 'get', -> model
+            Em.run ->
+              auth.userModel = 'Foo'
+              session.findUser()
+            expect(spy).toHaveBeenCalledWithExactly(1)
 
   describe '#start', ->
     it 'sets signedIn', ->
