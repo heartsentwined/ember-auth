@@ -258,6 +258,8 @@ var get$ = Ember.get;
 var set$ = Ember.set;
 set$(get$(get$(Em, 'Auth'), 'Response'), 'Json', Ember.Object.extend({
   canonicalize: function (input) {
+    if (!input)
+      return {};
     switch (typeof input) {
     case 'object':
       return input;

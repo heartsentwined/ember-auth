@@ -1,3 +1,7 @@
+# 6.0.3 (9 May 2013)
+
+* Bugfix: allow empty string JSON response
+
 # 6.0.2 (6 May 2013)
 
 * Bugfix: events should fire after `ember-auth` has completed its own hooks
