@@ -4,7 +4,7 @@ class Em.Auth.Module
       @module = {}
       for key in @auth.modules
         key    = Em.String.camelize key
-        module = Em.String.classify key
+        module = Em.String.capitalize Em.String.camelize key
         if Em.Auth.Module[module]?
           @set "module.#{key}", Em.Auth.Module[module].create { auth: @auth }
         else

@@ -1,7 +1,7 @@
 class Em.Auth.Request
   init: ->
     unless @adapter?
-      adapter = Em.String.classify @auth.requestAdapter
+      adapter = Em.String.capitalize Em.String.camelize @auth.requestAdapter
       if Em.Auth.Request[adapter]?
         @adapter = Em.Auth.Request[adapter].create { auth: @auth }
       else

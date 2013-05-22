@@ -1,7 +1,7 @@
 class Em.Auth.Strategy
   init: ->
     unless @adapter?
-      adapter = Em.String.classify @auth.strategyAdapter
+      adapter = Em.String.capitalize Em.String.camelize @auth.strategyAdapter
       if Em.Auth.Strategy[adapter]?
         @adapter = Em.Auth.Strategy[adapter].create { auth: @auth }
       else

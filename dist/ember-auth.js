@@ -55,7 +55,7 @@ set$(get$(Em, 'Auth'), 'Request', Ember.Object.extend({
   init: function () {
     var adapter;
     if (!(null != get$(this, 'adapter'))) {
-      adapter = get$(Em, 'String').classify(get$(get$(this, 'auth'), 'requestAdapter'));
+      adapter = get$(Em, 'String').capitalize(get$(Em, 'String').camelize(get$(get$(this, 'auth'), 'requestAdapter')));
       if (null != get$(get$(Em, 'Auth'), 'Request')[adapter]) {
         set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Request')[adapter].create({ auth: get$(this, 'auth') }));
       } else {
@@ -222,7 +222,7 @@ set$(get$(Em, 'Auth'), 'Response', Ember.Object.extend({
     var adapter;
     null != get$(this, 'response') || set$(this, 'response', {});
     if (!(null != get$(this, 'adapter'))) {
-      adapter = get$(Em, 'String').classify(get$(get$(this, 'auth'), 'responseAdapter'));
+      adapter = get$(Em, 'String').capitalize(get$(Em, 'String').camelize(get$(get$(this, 'auth'), 'responseAdapter')));
       if (null != get$(get$(Em, 'Auth'), 'Response')[adapter]) {
         set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Response')[adapter].create({ auth: get$(this, 'auth') }));
       } else {
@@ -276,7 +276,7 @@ set$(get$(Em, 'Auth'), 'Strategy', Ember.Object.extend({
   init: function () {
     var adapter;
     if (!(null != get$(this, 'adapter'))) {
-      adapter = get$(Em, 'String').classify(get$(get$(this, 'auth'), 'strategyAdapter'));
+      adapter = get$(Em, 'String').capitalize(get$(Em, 'String').camelize(get$(get$(this, 'auth'), 'strategyAdapter')));
       if (null != get$(get$(Em, 'Auth'), 'Strategy')[adapter]) {
         return set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Strategy')[adapter].create({ auth: get$(this, 'auth') }));
       } else {
@@ -377,7 +377,7 @@ set$(get$(Em, 'Auth'), 'Session', Ember.Object.extend({
     null != get$(this, 'userId') || set$(this, 'userId', null);
     null != get$(this, 'user') || set$(this, 'user', null);
     if (!(null != get$(this, 'adapter'))) {
-      adapter = get$(Em, 'String').classify(get$(get$(this, 'auth'), 'sessionAdapter'));
+      adapter = get$(Em, 'String').capitalize(get$(Em, 'String').camelize(get$(get$(this, 'auth'), 'sessionAdapter')));
       if (null != get$(get$(Em, 'Auth'), 'Session')[adapter]) {
         set$(this, 'adapter', get$(get$(Em, 'Auth'), 'Session')[adapter].create({ auth: get$(this, 'auth') }));
       } else {
@@ -394,22 +394,17 @@ set$(get$(Em, 'Auth'), 'Session', Ember.Object.extend({
   },
   syncEvent: function (name, args) {
     args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
-    switch (name) {
-    case 'signInSuccess':
-      this.findUser();
-    }
     if (null != get$(get$(this, 'adapter'), 'syncEvent'))
       return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
   },
-  findUser: Ember.observer(function () {
+  findUser: function () {
     var model, modelKey;
-    if (!(get$(this, 'signedIn') && get$(this, 'userId')))
-      return;
-    if ((modelKey = get$(get$(this, 'auth'), 'userModel')) && (model = Ember.get(modelKey)))
+    if (get$(this, 'userId') && (modelKey = get$(get$(this, 'auth'), 'userModel')) && (model = Ember.get(modelKey)))
       return set$(this, 'user', model.find(get$(this, 'userId')));
-  }, 'signedIn', 'userId'),
+  },
   start: function () {
-    return set$(this, 'signedIn', true);
+    set$(this, 'signedIn', true);
+    return this.findUser();
   },
   clear: function () {
     set$(this, 'signedIn', false);
@@ -589,7 +584,7 @@ set$(get$(Em, 'Auth'), 'Module', Ember.Object.extend({
       for (var i$ = 0, length$ = get$(get$(this, 'auth'), 'modules').length; i$ < length$; ++i$) {
         key = get$(get$(this, 'auth'), 'modules')[i$];
         key = get$(Em, 'String').camelize(key);
-        module = get$(Em, 'String').classify(key);
+        module = get$(Em, 'String').capitalize(get$(Em, 'String').camelize(key));
         if (null != get$(get$(Em, 'Auth'), 'Module')[module]) {
           this.set('module.' + key, get$(get$(Em, 'Auth'), 'Module')[module].create({ auth: get$(this, 'auth') }));
         } else {

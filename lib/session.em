@@ -5,7 +5,7 @@ class Em.Auth.Session
     @user?     || (@user     = null)
 
     unless @adapter?
-      adapter = Em.String.classify @auth.sessionAdapter
+      adapter = Em.String.capitalize Em.String.camelize @auth.sessionAdapter
       if Em.Auth.Session[adapter]?
         @adapter = Em.Auth.Session[adapter].create { auth: @auth }
       else
@@ -17,18 +17,19 @@ class Em.Auth.Session
     @inject()
 
   syncEvent: (name, args...) ->
-    switch name
-      when 'signInSuccess' then @findUser()
+    #switch name
+      #when 'signInSuccess' then @findUser()
     @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
-  +observer signedIn, userId
+  #+observer signedIn, userId
   findUser: ->
-    return unless @signedIn && @userId
-    if (modelKey = @auth.userModel) && (model = Ember.get modelKey)
+    #return unless @signedIn && @userId
+    if @userId && (modelKey = @auth.userModel) && (model = Ember.get modelKey)
       @user = model.find @userId
 
   start: ->
     @signedIn = true
+    @findUser()
 
   clear: ->
     @signedIn = false

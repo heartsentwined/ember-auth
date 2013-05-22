@@ -3,7 +3,7 @@ class Em.Auth.Response
     @response? || (@response = {})
 
     unless @adapter?
-      adapter = Em.String.classify @auth.responseAdapter
+      adapter = Em.String.capitalize Em.String.camelize @auth.responseAdapter
       if Em.Auth.Response[adapter]?
         @adapter = Em.Auth.Response[adapter].create { auth: @auth }
       else
