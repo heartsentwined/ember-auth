@@ -1,3 +1,9 @@
+# 6.0.4 (22 May 2013)
+
+* Compatibility with [ember-inflector](https://github.com/stefanpenner/ember-inflector):
+  use `capitalize(camelize())` instead of `classify()` to prevent class names
+  from being singularized
+
 # 6.0.3 (9 May 2013)
 
 * Bugfix: allow empty string JSON response
