@@ -72,4 +72,4 @@ Building distribution js files
 License
 =======
 
-GPL 3.0
+MIT

@@ -20,5 +20,5 @@ Gem::Specification.new do |gem|
     '!= 1.0.0.pre4.1', '!= 1.0.0.rc1.0.0', '!= 1.0.0.rc1.1', '!= 1.0.0.rc1.2'
   ]
 
-  gem.license     = 'GPL-3'
+  gem.license     = 'MIT'
 end

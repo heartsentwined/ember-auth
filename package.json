@@ -28,5 +28,5 @@
     "type": "git",
     "url": "https://github.com/heartsentwined/ember-auth"
   },
-  "license": "GPL-3.0"
+  "license": "MIT"
 }
