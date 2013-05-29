@@ -9,7 +9,7 @@ class Em.Auth.Strategy.Token
     switch @auth.tokenLocation
       when 'param'
         opts.data ||= {}
-        if FormData && opts.data instanceof FormData
+        if FormData? && opts.data instanceof FormData
           opts.data.append @auth.tokenKey, @authToken
         else
           opts.data[@auth.tokenKey] ||= @authToken
