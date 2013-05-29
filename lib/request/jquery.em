@@ -21,9 +21,10 @@ class Em.Auth.Request.Jquery
     def.dataType = 'json'
 
     if settings.data && !settings.contentType?
+      if settings.type? && settings.type.toUpperCase() != 'GET'
+        settings.data   = JSON.stringify(settings.data)
       if settings.type?.toUpperCase() != 'GET'
         def.contentType = 'application/json; charset=utf-8'
-        settings.data   = JSON.stringify(settings.data)
     settings = $.extend def, settings
 
     $.ajax(

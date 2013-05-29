@@ -1,5 +1,6 @@
 # master
 
+* Bugfix: don't serialize into JSON string when `type` not given (#56)
 * Bugfix: `FormData` not available in IE (#60)
 * swap out GPL-3.0 for MIT license (#59)
 

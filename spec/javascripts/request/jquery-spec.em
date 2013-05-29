@@ -61,7 +61,7 @@ describe 'Em.Auth.Request.Jquery', ->
             beforeEach ->
               Em.run -> adapter.send { data: { foo: 'bar' } }
             follow 'content type', 'application/json; charset=utf-8'
-            follow 'data', '{"foo":"bar"}', true
+            follow 'data', { foo: 'bar' }
 
           describe 'type given', ->
 
