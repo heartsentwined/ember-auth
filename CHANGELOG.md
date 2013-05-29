@@ -1,3 +1,7 @@
+# master
+
+* swap out GPL-3.0 for MIT license
+
 # 6.0.4 (22 May 2013)
 
 * Compatibility with [ember-inflector](https://github.com/stefanpenner/ember-inflector):
