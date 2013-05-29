@@ -1,6 +1,7 @@
 # master
 
-* swap out GPL-3.0 for MIT license
+* Bugfix: `FormData` not available in IE (#60)
+* swap out GPL-3.0 for MIT license (#59)
 
 # 6.0.4 (22 May 2013)
 
