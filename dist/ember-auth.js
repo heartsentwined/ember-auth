@@ -189,11 +189,12 @@ void function () {
         settings = {};
       def = {};
       set$(def, 'dataType', 'json');
-      if (get$(settings, 'data') && !(null != get$(settings, 'contentType')))
-        if ((null != get$(settings, 'type') ? get$(settings, 'type').toUpperCase() : void 0) !== 'GET') {
-          set$(def, 'contentType', 'application/json; charset=utf-8');
+      if (get$(settings, 'data') && !(null != get$(settings, 'contentType'))) {
+        if (null != get$(settings, 'type') && get$(settings, 'type').toUpperCase() !== 'GET')
           set$(settings, 'data', JSON.stringify(get$(settings, 'data')));
-        }
+        if ((null != get$(settings, 'type') ? get$(settings, 'type').toUpperCase() : void 0) !== 'GET')
+          set$(def, 'contentType', 'application/json; charset=utf-8');
+      }
       settings = $.extend(def, settings);
       return $.ajax(settings).done((this$ = this, function (json, status, jqxhr) {
         get$(get$(this$, 'auth'), '_response').canonicalize(json);
@@ -336,7 +337,7 @@ set$(get$(get$(Em, 'Auth'), 'Strategy'), 'Token', Ember.Object.extend({
     switch (get$(get$(this, 'auth'), 'tokenLocation')) {
     case 'param':
       opts.data || (opts.data = {});
-      if (FormData && get$(opts, 'data') instanceof FormData) {
+      if ('undefined' !== typeof FormData && null != FormData && get$(opts, 'data') instanceof FormData) {
         get$(opts, 'data').append(get$(get$(this, 'auth'), 'tokenKey'), get$(this, 'authToken'));
       } else {
         get$(opts, 'data')[get$(get$(this, 'auth'), 'tokenKey')] || (get$(opts, 'data')[get$(get$(this, 'auth'), 'tokenKey')] = get$(this, 'authToken'));

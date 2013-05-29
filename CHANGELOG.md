@@ -1,4 +1,4 @@
-# master
+# 6.0.5 (29 May 2013)
 
 * Bugfix: don't serialize into JSON string when `type` not given (#56)
 * Bugfix: `FormData` not available in IE (#60)
