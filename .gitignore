@@ -19,3 +19,4 @@ log
 .rvmrc
 *.bpkg
 .jhw-cache
+.DS_Store
