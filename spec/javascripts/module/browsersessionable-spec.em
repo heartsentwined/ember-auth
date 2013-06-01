@@ -11,11 +11,11 @@ describe 'Em.Auth.Module.Browsersessionable', ->
     #auth.destroy() if auth
     sinon.collection.restore()
 
-  follow 'events', 'signInSuccess', 'remember', ->
+  follow 'events', 'signInSuccess', 'storeSessionToken', ->
     beforeEach -> @emitter = auth; @listener = browsersessionable
-  follow 'events', 'signInError', 'forget', ->
+  follow 'events', 'signInError', 'deleteSessionToken', ->
     beforeEach -> @emitter = auth; @listener = browsersessionable
-  follow 'events', 'signOutSuccess', 'forget', ->
+  follow 'events', 'signOutSuccess', 'deleteSessionToken', ->
     beforeEach -> @emitter = auth; @listener = browsersessionable
 
   describe '#recall', ->
