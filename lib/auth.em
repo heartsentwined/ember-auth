@@ -48,6 +48,11 @@ class Em.Auth extends Em.Object with Em.Evented
     tokenKey: null # req
     period: 14
     autoRecall: true
+    
+  # module.browsersessionable
+  browsersessionable:
+    tokenkey: null # req
+    autoRecall: true
 
   # module.urlAuthenticatable
   urlAuthenticatable:
