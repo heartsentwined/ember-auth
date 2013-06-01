@@ -66,7 +66,7 @@ describe 'Em.Auth.Module.Browsersessionable', ->
     beforeEach ->
       storeTokenSpy = sinon.collection.spy browsersessionable, 'storeSessionToken'
       forgetSpy     = sinon.collection.spy browsersessionable, 'deleteSessionToken'
-      Em.run -> auth.rememberable.tokenKey = 'key'
+      Em.run -> auth.browsersessionable.tokenKey = 'key'
 
     it 'resets fromRecall marker', ->
       Em.run -> browsersessionable.storeSessionToken()
@@ -88,7 +88,7 @@ describe 'Em.Auth.Module.Browsersessionable', ->
         beforeEach ->
           sinon.collection.stub browsersessionable, 'retrieveToken', -> 'bar'
 
-        it 'delegates to #storeToken', ->
+        it 'delegates to #storeSessionToken', ->
           Em.run -> browsersessionable.storeSessionToken()
           expect(storeTokenSpy).toHaveBeenCalledWithExactly('foo')
 
@@ -103,14 +103,14 @@ describe 'Em.Auth.Module.Browsersessionable', ->
         beforeEach -> Em.run -> browsersessionable.fromRecall = true
 
         it 'does nothing', ->
-          Em.run -> browsersessionable.remember()
+          Em.run -> browsersessionable.storeSessionToken()
           expect(storeTokenSpy).not.toHaveBeenCalled()
           expect(forgetSpy).not.toHaveBeenCalled()
 
       describe 'sign in not originating from recall', ->
         beforeEach -> Em.run -> browsersessionable.fromRecall = false
 
-        it 'delegates to #forget', ->
+        it 'delegates to #deleteSessionToken', ->
           Em.run -> browsersessionable.storeSessionToken()
           expect(forgetSpy).toHaveBeenCalled()
 
@@ -118,7 +118,7 @@ describe 'Em.Auth.Module.Browsersessionable', ->
           Em.run -> browsersessionable.storeSessionToken()
           expect(storeTokenSpy).not.toHaveBeenCalled()
 
-  follow 'delegation', 'forget', [], 'removeToken', [], ->
+  follow 'delegation', 'deleteSessionToken', [], 'removeToken', [], ->
     beforeEach -> @from = browsersessionable; @to = browsersessionable
 
   follow 'delegation', 'retrieveToken', [], \
