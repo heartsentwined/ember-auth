@@ -22,6 +22,9 @@ describe 'Em.Auth.Module.Rememberable', ->
     beforeEach ->
       spy = sinon.collection.spy auth, 'signIn'
 
+    follow 'return promise', ->
+      beforeEach -> @return = rememberable.recall()
+
     describe 'signed in', ->
       beforeEach -> Em.run -> auth._session.start()
 
@@ -172,4 +175,4 @@ describe 'Em.Auth.Module.Rememberable', ->
         it 'recalls session', ->
           appTest.ready()
           appTest.toRoute 'foo'
-          expect(spy).toHaveBeenCalledWithExactly { async: false }
+          expect(spy).toHaveBeenCalled()

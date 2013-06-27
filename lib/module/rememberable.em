@@ -10,11 +10,14 @@ class Em.Auth.Module.Rememberable
       when 'signOutSuccess' then @forget()
 
   recall: (opts = {}) ->
-    if !@auth.signedIn && (token = @retrieveToken())
-      @fromRecall = true
-      opts.data ||= {}
-      opts.data[@config.tokenKey] = token
-      @auth.signIn opts
+    @auth.wrapDeferred (resolve, reject) =>
+      if !@auth.signedIn && (token = @retrieveToken())
+        @fromRecall = true
+        opts.data ||= {}
+        opts.data[@config.tokenKey] = token
+        @auth.signIn(opts).then -> resolve(), -> reject()
+      else
+        resolve()
 
   remember: ->
     if token = @auth.response?[@config.tokenKey]
@@ -39,7 +42,6 @@ class Em.Auth.Module.Rememberable
   patch: ->
     self = this
     Em.Route.reopen
-      redirect: ->
-        super.apply this, arguments
-        if self.config.autoRecall && !self.auth.signedIn
-          self.recall { async: false }
+      beforeModel: ->
+        self.auth.followPromise super.apply(this, arguments), ->
+          self.recall() if self.config.autoRecall && !self.auth.signedIn
