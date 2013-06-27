@@ -12,7 +12,7 @@ describe 'Em.Auth.Request', ->
 
   follow 'adapter init', 'request'
 
-  example 'request method injection', (method) ->
+  example 'request method', (method) ->
     it "injects #{method} method to Auth", ->
       expect(auth[method]).toBeDefined()
 
@@ -21,9 +21,12 @@ describe 'Em.Auth.Request', ->
       Em.run -> auth[method]('foo')
       expect(spy).toHaveBeenCalledWithExactly('foo')
 
-  follow 'request method injection', 'signIn'
-  follow 'request method injection', 'signOut'
-  follow 'request method injection', 'send'
+    follow 'return promise', ->
+      beforeEach -> @return = auth[method]()
+
+  follow 'request method', 'signIn'
+  follow 'request method', 'signOut'
+  follow 'request method', 'send'
 
   example 'request server api', (type) ->
     describe "##{type}", ->

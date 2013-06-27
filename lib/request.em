@@ -13,12 +13,15 @@ class Em.Auth.Request
     @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
   signIn:  (opts) ->
-    url = @resolveUrl @auth.signInEndPoint
-    @adapter.signIn  url, @auth._strategy.serialize(opts)
+    @auth.ensurePromise =>
+      url = @resolveUrl @auth.signInEndPoint
+      @adapter.signIn  url, @auth._strategy.serialize(opts)
   signOut: (opts) ->
-    url = @resolveUrl @auth.signOutEndPoint
-    @adapter.signOut url, @auth._strategy.serialize(opts)
-  send:    (opts) -> @adapter.send @auth._strategy.serialize(opts)
+    @auth.ensurePromise =>
+      url = @resolveUrl @auth.signOutEndPoint
+      @adapter.signOut url, @auth._strategy.serialize(opts)
+  send:    (opts) ->
+    @auth.ensurePromise => @adapter.send @auth._strategy.serialize(opts)
 
   # different base url support
   # @param {path} string the path for resolving full URL
