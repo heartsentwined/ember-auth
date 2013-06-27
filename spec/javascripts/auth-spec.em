@@ -61,3 +61,55 @@ describe 'Em.Auth', ->
 
     follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
       beforeEach -> @from = auth; @to = auth._module
+
+  describe '#ensurePromise', ->
+
+    describe 'callback returns promise', ->
+      it "returns callback's promise", ->
+        promise = Em.Deferred.create()
+        ret = auth.ensurePromise -> promise
+        expect(ret).toEqual promise
+
+    describe 'callback does not return promise', ->
+      it 'returns new promise', ->
+        ret = auth.ensurePromise -> null
+        expect(ret.then).toBeDefined()
+
+  describe '#followPromise', ->
+
+    describe 'return is a promise', ->
+      it 'executes callback only when promise resolves', ->
+        promise = Em.Deferred.create()
+        count = 0
+        auth.followPromise promise, -> count++
+        expect(count).toEqual 0
+        Em.run -> promise.resolve promise
+        expect(count).toEqual 1
+
+    describe 'return is not a promise', ->
+      it 'executes callback immediately', ->
+        count = 0
+        auth.followPromise null, -> count++
+        expect(count).toEqual 1
+
+  describe '#wrapDeferred', ->
+    it 'returns a promise', ->
+      expect(auth.wrapDeferred(->).then).toBeDefined()
+
+    it 'can resolve', ->
+      promise = Em.Deferred.create()
+      count = 0
+      callback = (resolve) -> promise.then -> resolve()
+      auth.wrapDeferred(callback).then -> count++
+      expect(count).toEqual 0
+      Em.run -> promise.resolve promise
+      expect(count).toEqual 1
+
+    it 'can reject', ->
+      promise = Em.Deferred.create()
+      count = 0
+      callback = (resolve, reject) -> promise.then -> reject()
+      auth.wrapDeferred(callback).then null, -> count++
+      expect(count).toEqual 0
+      Em.run -> promise.resolve promise
+      expect(count).toEqual 1

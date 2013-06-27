@@ -17,6 +17,27 @@ class Em.Auth extends Em.Object with Em.Evented
     @_session.syncEvent.apply @_session, arguments
     @_module.syncEvent.apply @_module, arguments
 
+  ensurePromise: (callback) ->
+    if (ret = callback())?.then?
+      ret
+    else
+      deferred = Em.Deferred.create()
+      deferred.resolve deferred
+      deferred
+
+  followPromise: (ret, callback) ->
+    if ret?.then?
+      ret.then -> callback()
+    else
+      callback()
+
+  wrapDeferred: (callback) ->
+    deferred = Em.Deferred.create()
+    resolve  = -> deferred.resolve deferred
+    reject   = -> deferred.reject deferred
+    callback resolve, reject
+    deferred
+
   # =====================
   # Config
   # =====================
