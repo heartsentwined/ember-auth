@@ -1,5 +1,6 @@
+# TODO remove < rc6 support
 EMBER_VERSIONS = %w(
-1.0.0.rc4
+1.0.0.rc6 1.0.0.rc5 1.0.0.rc4
 1.0.0.rc3.4 1.0.0.rc3.3 1.0.0.rc3.2 1.0.0.rc3.1 1.0.0.rc3
 1.0.0.rc2.2 1.0.0.rc2.1 1.0.0.rc2.0
 1.0.0.rc1.4 1.0.0.rc1.3
