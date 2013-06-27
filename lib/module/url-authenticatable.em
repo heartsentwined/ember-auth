@@ -7,11 +7,12 @@ class Em.Auth.Module.UrlAuthenticatable
     @patch()
 
   authenticate: (opts = {}) ->
-    return if @auth.signedIn
-    @canonicalizeParams()
-    return if $.isEmptyObject @params
-    opts.data = $.extend true, @params, (opts.data || {})
-    @auth.signIn opts
+    @auth.wrapDeferred (resolve, reject) =>
+      return resolve() if @auth.signedIn
+      @canonicalizeParams()
+      return resolve() if $.isEmptyObject @params
+      opts.data = $.extend true, @params, (opts.data || {})
+      @auth.signIn(opts).then -> resolve(), -> reject()
 
   retrieveParams: ->
     @params = $.url().param(@config.paramsKey)
@@ -42,9 +43,9 @@ class Em.Auth.Module.UrlAuthenticatable
   patch: ->
     self = this
     Em.Route.reopen
-      redirect: ->
-        super.apply this, arguments
-        self.authenticate { async: false }
+      beforeModel: ->
+        self.auth.followPromise super.apply(this, arguments), ->
+          self.authenticate()
 
     # hijack the routing process to grab params
     # before ember's routing sanitizes the URL

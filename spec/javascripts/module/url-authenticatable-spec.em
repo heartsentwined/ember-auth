@@ -14,6 +14,9 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
     cParamsSpy = null
     signInSpy  = null
 
+    follow 'return promise', ->
+      beforeEach -> @return = urlAuth.authenticate()
+
     beforeEach ->
       cParamsSpy = sinon.collection.spy urlAuth, 'canonicalizeParams'
       signInSpy  = sinon.collection.spy auth, 'signIn'
@@ -139,4 +142,4 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
       spy = sinon.collection.spy urlAuth, 'authenticate'
       appTest.ready()
       appTest.toRoute 'foo'
-      expect(spy).toHaveBeenCalledWithExactly { async: false }
+      expect(spy).toHaveBeenCalled()
