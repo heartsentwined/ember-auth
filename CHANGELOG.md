@@ -1,3 +1,74 @@
+# master
+
+* Rewrite for [new router](https://gist.github.com/machty/5723945)
+  * `request` methods
+  * modules:
+    * `actionRedirectable`
+    * `authRedirectable`
+    * `rememberable`
+    * `urlAuthenticatable`
+* Auto-recall from `rememberable` and auto-auth from `urlAuthenticatable`
+  no longer request with `{ async: false }`
+* BC Break: the following methods now return a promise:
+  * `auth.signIn` (and its underlying `auth._request.signIn`)
+  * `auth.signOut` (ditto, `auth._request.signOut`)
+  * `auth.send` (ditto, `auth._request.send`)
+  * `(rememberable).recall`
+  * `(route).beforeModel`, if any of these modules are enabled:
+    * `actionRedirectable`
+    * `authRedirectable`
+    * `rememberable`
+    * `urlAuthenticatable`
+* BC Break: the following modules now utilize the `beforeModel` hook:
+  * `actionRedirectable` (no longer using the `activate` hook)
+  * `authRedirectable` (ditto, `redirect`)
+  * `rememberable` (ditto, `redirect`)
+  * `urlAuthenticatable` (ditto, `redirect`)
+  * They all return `promise`s from `beforeModel`
+* Sidenote: the following methods in the `jquery` `requestAdapter` had already
+  been returning `promise`s before, but now this fact is *relied upon*:
+  * `signIn`
+  * `signOut`
+  * `send`
+  * (in other words, the underlying `$.ajax` returns a `promise`)
+* BC Break: `ember-auth` now requires at least ember `rc6`
+
+Upgrade Guide
+-------------
+
+If you are using any of these modules:
+
+* `actionRedirectable`
+* `authRedirectable`
+* `rememberable`
+* `urlAuthenticatable`
+
+and you need to use the `beforeModel` hook, then you must return a `promise`
+from the hook too (and the usual `@_super()`):
+
+```coffeescript
+App.FooRoute = Em.Route.extend
+  beforeModel: ->
+    @_super.apply(this, arguments).then -> doSomething()
+
+  # or
+
+  beforeModel: ->
+    doSomething()
+    @_super.apply(this, arguments) # ember-auth will already return a promise
+```
+
+Also note the change in return values of some methods. (See BC Break above)
+They now return promises, meaning you should write
+
+```coffeescript
+changedMethod().then (success) -> handleSuccess(), (error), handleError()
+```
+
+if you had been relying on the return values of these methods.
+(In any case, the previous return values were undocumented side-effects of
+coffeescript returning the last lines of method bodies.)
+
 # 6.0.5 (29 May 2013)
 
 * Bugfix: don't serialize into JSON string when `type` not given (#56)
