@@ -6,9 +6,9 @@ class Em.Auth.Module.AuthRedirectable
   patch: ->
     self = this
     mixin @AuthRedirectable
-      redirect: ->
-        super.apply this, arguments
-        unless self.auth.signedIn
+      beforeModel: ->
+        self.auth.followPromise super.apply(this, arguments), =>
+          return if self.auth.signedIn
           self.auth.trigger 'authAccess'
           @transitionTo self.config.route
     @auth.AuthRedirectable = @AuthRedirectable
