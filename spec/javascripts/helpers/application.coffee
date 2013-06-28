@@ -34,7 +34,7 @@ run = (callback) ->
 
 lookup     = (name)  -> app().__container__.lookup(name)
 router     =         -> lookup 'router:main'
-toRoute    = (route) -> router().transitionTo route
+toRoute    = (route) -> Em.run -> router().transitionTo route
 controller = (name)  -> lookup "controller:#{name.toLowerCase()}"
 
 exports.appTest =
