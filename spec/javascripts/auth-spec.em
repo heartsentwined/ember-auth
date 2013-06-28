@@ -77,7 +77,10 @@ describe 'Em.Auth', ->
 
   describe '#followPromise', ->
 
-    describe 'return is a promise', ->
+    it 'returns a promise', ->
+      expect(auth.followPromise(null, ->)?.then).toBeDefined()
+
+    describe 'other return is a promise', ->
       it 'executes callback only when promise resolves', ->
         promise = Em.Deferred.create()
         count = 0
@@ -86,7 +89,7 @@ describe 'Em.Auth', ->
         Em.run -> promise.resolve promise
         expect(count).toEqual 1
 
-    describe 'return is not a promise', ->
+    describe 'other return is not a promise', ->
       it 'executes callback immediately', ->
         count = 0
         auth.followPromise null, -> count++

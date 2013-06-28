@@ -29,7 +29,7 @@ class Em.Auth extends Em.Object with Em.Evented
     if ret?.then?
       ret.then -> callback()
     else
-      callback()
+      @ensurePromise -> callback()
 
   wrapDeferred: (callback) ->
     deferred = Em.Deferred.create()
