@@ -54,24 +54,22 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
           Em.run -> auth.set "actionRedirectable.#{env}Smart", false
 
         it 'returns fallback route', ->
-          expect(actionRedir.resolveRedirect(env)).toEqual ['foo']
+          expect(actionRedir.resolveRedirect(env)).toEqual 'foo'
 
       describe 'smart turned on', ->
         beforeEach ->
-          Em.run ->
-            auth.set "actionRedirectable.#{env}Smart", true
-            actionRedir.initPath = 'foo'
+          Em.run -> auth.set "actionRedirectable.#{env}Smart", true
 
-        describe 'redirect route registered', ->
-          beforeEach -> Em.run -> actionRedir.set "#{env}Redir", ['foo']
+        describe 'transition registered', ->
+          beforeEach -> Em.run -> actionRedir.set "#{env}Redir", {a:1}
 
-          it 'returns registered redirect route', ->
-            expect(actionRedir.resolveRedirect(env)).toEqual ['foo']
+          it 'returns registered transition', ->
+            expect(actionRedir.resolveRedirect(env)).toEqual {a:1}
 
-        describe 'no redirect route registered', ->
-          beforeEach -> Em.run -> actionRedir.set "#{env}Redir", null
+        describe 'no transition registered', ->
+          beforeEach -> Em.run -> actionRedir.set "#{env}Transition", null
 
-          it 'returns init path', ->
+          it 'returns fallback route', ->
             expect(actionRedir.resolveRedirect(env)).toEqual 'foo'
 
   describe '#resolveRedirect', ->
@@ -81,59 +79,14 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
     it 'returns null for unrecognized env', ->
         expect(actionRedir.resolveRedirect('foo')).toBeNull()
 
-  describe '#registerInitRedirect', ->
-
-    describe 'isInit = false', ->
-      beforeEach -> Em.run -> actionRedir.isInit = false
-
-      it 'does nothing', ->
-        spy = sinon.collection.spy actionRedir, 'set'
-        actionRedir.registerInitRedirect 'foo'
-        expect(spy).not.toHaveBeenCalled()
-
-    describe 'isInit = true', ->
-      beforeEach ->
-        Em.run ->
-          actionRedir.isInit = true
-          # sham values. to test set-to-null where applicable
-          actionRedir.signInRoute  = 'dummy'
-          actionRedir.signOutRoute = 'dummy'
-
-      it 'runs given route through #canonicalizeRoute', ->
-        spy = sinon.collection.spy actionRedir, 'canonicalizeRoute'
-        actionRedir.registerInitRedirect 'foo'
-        expect(spy).toHaveBeenCalledWithExactly 'foo'
-
-      example 'init redirect reg', (env) ->
-        beforeEach ->
-          Em.run -> auth.set "actionRedirectable.#{env}Route", 'fallback'
-
-        describe 'route in blacklist', ->
-          it 'registers fallback route', ->
-            sinon.collection.stub actionRedir, 'getBlacklist', \
-            (arg) -> ["#{arg}-foo"]
-            Em.run -> actionRedir.registerInitRedirect "#{env}-foo"
-            expect(actionRedir.get "#{env}Redir").toEqual ['fallback']
-
-        describe 'route not in blacklist', ->
-          it 'registers nothing', ->
-            sinon.collection.stub actionRedir, 'getBlacklist', -> []
-            Em.run -> actionRedir.registerInitRedirect "#{env}-foo"
-            expect(actionRedir.get "#{env}Redir").toEqual null
-
-      follow 'init redirect reg', 'signIn'
-      follow 'init redirect reg', 'signOut'
-
   describe '#registerRedirect', ->
 
-    it 'flags as no longer init', ->
-      Em.run -> actionRedir.isInit = true # give something for it to reset
-      Em.run -> actionRedir.registerRedirect ['foo']
-      expect(actionRedir.isInit).toEqual false
+    # a mock transition
+    transition = (route) -> { targetName: route }
 
-    it 'runs given route through #canonicalizeRoute', ->
+    it 'runs route through #canonicalizeRoute', ->
       spy = sinon.collection.spy actionRedir, 'canonicalizeRoute'
-      actionRedir.registerRedirect ['foo', 'bar']
+      actionRedir.registerRedirect transition 'foo'
       expect(spy).toHaveBeenCalledWithExactly 'foo'
 
     example 'redirect reg', (env) ->
@@ -141,14 +94,14 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
         it 'registers nothing', ->
           sinon.collection.stub actionRedir, 'getBlacklist', \
           (arg) -> ["#{arg}-foo"]
-          Em.run -> actionRedir.registerRedirect ["#{env}-foo", 'bar']
+          Em.run -> actionRedir.registerRedirect transition "#{env}-foo"
           expect(actionRedir.get "#{env}Redir").toEqual null
 
       describe 'route not in blacklist', ->
         it 'registers route with args', ->
           sinon.collection.stub actionRedir, 'getBlacklist', -> []
-          Em.run -> actionRedir.registerRedirect ["#{env}-foo", 'bar']
-          expect(actionRedir.get "#{env}Redir").toEqual ["#{env}-foo", 'bar']
+          Em.run -> actionRedir.registerRedirect transition "#{env}-foo"
+          expect(actionRedir.get "#{env}Redir").toEqual transition "#{env}-foo"
 
     follow 'redirect reg', 'signIn'
     follow 'redirect reg', 'signOut'
@@ -178,21 +131,46 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
       beforeEach ->
         appTest.create (app) ->
           app.Auth = Em.Auth.create { modules: ['actionRedirectable'] }
-          app.Router.map -> @route 'foo', { path: '/foo/:foo_id' }
+          app.Router.map ->
+            @route 'foo', { path: '/foo/:foo_id' }
+            @route 'bar'
           app.FooRoute = Em.Route.extend
             model: (params) -> app.Foo.find(params.foo_id)
+          app.BarRoute = Em.Route.extend()
           app.Foo = { find: (arg) -> Em.Object.create { _id: arg } }
           actionRedir = app.Auth.module.actionRedirectable
       afterEach ->
         appTest.destroy()
 
-      it 'supports redirect by transition', ->
+      # TODO
+      xit 'supports redirect by transition', ->
         appTest.run (app) ->
           sinon.collection.stub actionRedir, 'resolveRedirect', \
           -> ['foo', app.Foo.find(1)]
         appTest.ready()
         Em.run -> actionRedir.redirect()
         expect(appTest.currentPath()).toEqual 'foo'
+
+      it 'supports redirect by transition', ->
+        # grab an instance of a real transition
+        barTransition = null
+        appTest.run (app) ->
+          app.BarRoute.reopen
+            beforeModel: (transition) ->
+              auth.followPromise super.apply(this, arguments), ->
+                barTransition = transition
+                null # don't return transition!
+        appTest.ready()
+        appTest.toRoute 'bar'
+        expect(barTransition).not.toBeNull() # now barTransition is populated
+
+        appTest.toRoute 'foo'
+        expect(appTest.currentPath()).toEqual 'foo' # redirect away
+
+        # real test begins
+        sinon.collection.stub actionRedir, 'resolveRedirect', -> barTransition
+        Em.run -> actionRedir.redirect()
+        expect(appTest.currentPath()).toEqual 'bar'
 
       it 'supports redirect by path', ->
         sinon.collection.stub actionRedir, 'resolveRedirect', -> '/foo/1'
@@ -204,60 +182,20 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
     beforeEach ->
       appTest.create (app) ->
         app.Auth = Em.Auth.create { modules: ['actionRedirectable'] }
+        app.Router.map -> @route 'foo'
+        app.FooRoute = Em.Route.extend()
         actionRedir = app.Auth.module.actionRedirectable
     afterEach ->
       appTest.destroy()
 
-    describe 'on any route activation', ->
-      beforeEach ->
-        appTest.run (app) ->
-          app.Router.map -> @route 'foo'
-          app.FooRoute = Em.Route.extend()
+    it 'registers router instance', ->
+      expect(actionRedir.router).toBeNull()
+      appTest.ready()
+      appTest.toRoute 'foo'
+      expect(actionRedir.router).not.toBeNull()
 
-      it 'registers router instance', ->
-        expect(actionRedir.router).toBeNull()
-        appTest.ready()
-        appTest.toRoute 'foo'
-        expect(actionRedir.router).not.toBeNull()
-
-      it 'registers init redirect', ->
-        spy = sinon.collection.spy actionRedir, 'registerInitRedirect'
-        appTest.ready()
-        appTest.toRoute 'foo'
-        expect(spy).toHaveBeenCalledWithExactly 'foo'
-
-    example 'redirect reg integration', (route, transitionArgs) ->
-      it 'delegates to #registerInitRedirect on route activation', ->
-        spy = sinon.collection.spy actionRedir, 'registerInitRedirect'
-        appTest.ready()
-        appTest.toRoute.apply appTest, transitionArgs
-        expect(spy).toHaveBeenCalledWithExactly route
-
-      it 'delegates to #registerRedirect on route transitionTo', ->
-        spy = sinon.collection.spy actionRedir, 'registerRedirect'
-        appTest.ready()
-        appTest.router().transitionTo.apply appTest.router(), transitionArgs
-        expect(spy).toHaveBeenCalledWithExactly transitionArgs
-
-      it 'delegates to #registerRedirect on route replaceWith', ->
-        spy = sinon.collection.spy actionRedir, 'registerRedirect'
-        appTest.ready()
-        appTest.router().replaceWith.apply appTest.router(), transitionArgs
-        expect(spy).toHaveBeenCalledWithExactly transitionArgs
-
-    describe 'redirect registration', ->
-      describe 'static route', ->
-        beforeEach ->
-          appTest.run (app) ->
-            app.Router.map -> @route 'static'
-            app.StaticRoute = Em.Route.extend()
-
-        follow 'redirect reg integration', 'static', ['static']
-
-      describe 'dynamic route', ->
-        beforeEach ->
-          appTest.run (app) ->
-            app.Router.map -> @route 'dynamic', { path: '/dynamic/:segment' }
-            app.DynamicRoute = Em.Route.extend()
-
-        follow 'redirect reg integration', 'dynamic', ['dynamic', 'foo']
+    it 'registers redirect', ->
+      spy = sinon.collection.spy actionRedir, 'registerRedirect'
+      appTest.ready()
+      appTest.toRoute 'foo'
+      expect(spy).toHaveBeenCalled()
