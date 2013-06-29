@@ -63,7 +63,7 @@ Also note the change in return values of some methods. (See BC Break above)
 They now return promises, meaning you should write
 
 ```coffeescript
-changedMethod().then (success) -> handleSuccess(), (error), handleError()
+changedMethod().then (success) -> handleSuccess(), (error) -> handleError()
 ```
 
 if you had been relying on the return values of these methods.
