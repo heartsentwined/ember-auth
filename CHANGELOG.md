@@ -3,10 +3,10 @@
 * Rewrite for [new router](https://gist.github.com/machty/5723945)
   * `request` methods
   * modules:
-    * `actionRedirectable`
-    * `authRedirectable`
-    * `rememberable`
-    * `urlAuthenticatable`
+      * `actionRedirectable`
+      * `authRedirectable`
+      * `rememberable`
+      * `urlAuthenticatable`
 * Auto-recall from `rememberable` and auto-auth from `urlAuthenticatable`
   no longer request with `{ async: false }`
 * BC Break: the following methods now return a promise:
@@ -16,10 +16,10 @@
   * `(rememberable).recall`
   * `(urlAuthenticatable).authenticate`
   * `(route).beforeModel`, if any of these modules are enabled:
-    * `actionRedirectable`
-    * `authRedirectable`
-    * `rememberable`
-    * `urlAuthenticatable`
+      * `actionRedirectable`
+      * `authRedirectable`
+      * `rememberable`
+      * `urlAuthenticatable`
 * BC Break: the following modules now utilize the `beforeModel` hook:
   * `actionRedirectable` (no longer using the `activate` hook)
   * `authRedirectable` (ditto, `redirect`)
