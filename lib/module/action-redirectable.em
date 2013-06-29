@@ -58,8 +58,11 @@ class Em.Auth.Module.ActionRedirectable
   patch: ->
     self = this
     Em.Route.reopen
+      init: ->
+        self.router ||= @router
+        super.apply this, arguments
+
       beforeModel: (transition) ->
         self.auth.followPromise super.apply(this, arguments), =>
-          self.router ||= @router
           self.registerRedirect transition
           null # make sure it doesn't return any transition
