@@ -14,6 +14,7 @@
   * `auth.signOut` (ditto, `auth._request.signOut`)
   * `auth.send` (ditto, `auth._request.send`)
   * `(rememberable).recall`
+  * `(urlAuthenticatable).authenticate`
   * `(route).beforeModel`, if any of these modules are enabled:
     * `actionRedirectable`
     * `authRedirectable`
