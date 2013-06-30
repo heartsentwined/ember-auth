@@ -1,4 +1,4 @@
-# master
+# 7.0.0 (30 Jun 2013)
 
 * Rewrite for [new router](https://gist.github.com/machty/5723945)
   * `request` methods

@@ -3,19 +3,19 @@
   "summary": "Authentication framework for ember.js.",
   "description": "Authentication framework for ember.js.",
   "keywords": ["ember", "emberjs", "ember.js", "auth", "authentication"],
-  "homepage": "https://github.com/heartsentwined/ember-auth",
+  "homepage": "http://ember-auth.herokuapp.com",
   "bugs": "https://github.com/heartsentwined/ember-auth/issues",
-  "version": "6.0.5",
+  "version": "7.0.0",
   "main": "dist/ember-auth.js",
 
   "author": {
     "name": "heartsentwined",
-    "email": "heartsentwined@cogito-lab.com"
+    "email": "heartsentwined.me@gmail.com"
   },
   "maintainers": [
     {
       "name": "heartsentwined",
-      "email": "heartsentwined@cogito-lab.com"
+      "email": "heartsentwined.me@gmail.com"
     }
   ],
 

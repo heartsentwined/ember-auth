@@ -20,6 +20,39 @@ set$(Em, 'Auth', get$(Em, 'Object').extend(get$(Em, 'Evented'), {
     get$(get$(this, '_session'), 'syncEvent').apply(get$(this, '_session'), arguments);
     return get$(get$(this, '_module'), 'syncEvent').apply(get$(this, '_module'), arguments);
   },
+  ensurePromise: function (callback) {
+    var cache$, deferred, ret;
+    if (null != (null != (cache$ = ret = callback()) ? get$(cache$, 'then') : void 0)) {
+      return ret;
+    } else {
+      deferred = get$(Em, 'Deferred').create();
+      deferred.resolve(deferred);
+      return deferred;
+    }
+  },
+  followPromise: function (ret, callback) {
+    if (null != (null != ret ? get$(ret, 'then') : void 0)) {
+      return ret.then(function () {
+        return callback();
+      });
+    } else {
+      return this.ensurePromise(function () {
+        return callback();
+      });
+    }
+  },
+  wrapDeferred: function (callback) {
+    var deferred, reject, resolve;
+    deferred = get$(Em, 'Deferred').create();
+    resolve = function () {
+      return deferred.resolve(deferred);
+    };
+    reject = function () {
+      return deferred.reject(deferred);
+    };
+    callback(resolve, reject);
+    return deferred;
+  },
   requestAdapter: 'jquery',
   responseAdapter: 'json',
   strategyAdapter: 'token',
@@ -69,17 +102,26 @@ set$(get$(Em, 'Auth'), 'Request', Ember.Object.extend({
       return get$(get$(this, 'adapter'), 'syncEvent').apply(get$(this, 'adapter'), arguments);
   },
   signIn: function (opts) {
-    var url;
-    url = this.resolveUrl(get$(get$(this, 'auth'), 'signInEndPoint'));
-    return get$(this, 'adapter').signIn(url, get$(get$(this, 'auth'), '_strategy').serialize(opts));
+    var this$;
+    return get$(this, 'auth').ensurePromise((this$ = this, function () {
+      var url;
+      url = this$.resolveUrl(get$(get$(this$, 'auth'), 'signInEndPoint'));
+      return get$(this$, 'adapter').signIn(url, get$(get$(this$, 'auth'), '_strategy').serialize(opts));
+    }));
   },
   signOut: function (opts) {
-    var url;
-    url = this.resolveUrl(get$(get$(this, 'auth'), 'signOutEndPoint'));
-    return get$(this, 'adapter').signOut(url, get$(get$(this, 'auth'), '_strategy').serialize(opts));
+    var this$;
+    return get$(this, 'auth').ensurePromise((this$ = this, function () {
+      var url;
+      url = this$.resolveUrl(get$(get$(this$, 'auth'), 'signOutEndPoint'));
+      return get$(this$, 'adapter').signOut(url, get$(get$(this$, 'auth'), '_strategy').serialize(opts));
+    }));
   },
   send: function (opts) {
-    return get$(this, 'adapter').send(get$(get$(this, 'auth'), '_strategy').serialize(opts));
+    var this$;
+    return get$(this, 'auth').ensurePromise((this$ = this, function () {
+      return get$(this$, 'adapter').send(get$(get$(this$, 'auth'), '_strategy').serialize(opts));
+    }));
   },
   resolveUrl: function (path) {
     var base;
@@ -624,8 +666,6 @@ void function () {
   set$(get$(get$(Em, 'Auth'), 'Module'), 'ActionRedirectable', Ember.Object.extend({
     init: function () {
       null != get$(this, 'config') || set$(this, 'config', get$(get$(this, 'auth'), 'actionRedirectable'));
-      null != get$(this, 'initPath') || set$(this, 'initPath', null);
-      null != get$(this, 'isInit') || set$(this, 'isInit', true);
       null != get$(this, 'signInRedir') || set$(this, 'signInRedir', null);
       null != get$(this, 'signOutRedir') || set$(this, 'signOutRedir', null);
       null != get$(this, 'router') || set$(this, 'router', null);
@@ -666,34 +706,16 @@ void function () {
       if (!fallback)
         return null;
       if (!isSmart)
-        return [fallback];
-      return this.get('' + env + 'Redir') || get$(this, 'initPath');
+        return fallback;
+      return this.get('' + env + 'Redir') || fallback;
     },
-    registerInitRedirect: function (routeName) {
-      if (!get$(this, 'isInit'))
-        return;
-      routeName = this.canonicalizeRoute(routeName);
-      return function (accum$) {
-        var env;
-        for (var cache$ = [
-              'signIn',
-              'signOut'
-            ], i$ = 0, length$ = cache$.length; i$ < length$; ++i$) {
-          env = cache$[i$];
-          this.set('' + env + 'Redir', null);
-          accum$.push($.inArray(routeName, this.getBlacklist(env)) !== -1 ? this.set('' + env + 'Redir', [get$(this, 'config')['' + env + 'Route']]) : void 0);
-        }
-        return accum$;
-      }.call(this, []);
-    },
-    registerRedirect: function (args) {
+    registerRedirect: function (transition) {
       var routeName;
-      routeName = this.canonicalizeRoute(args[0]);
-      set$(this, 'isInit', false);
+      routeName = this.canonicalizeRoute(get$(transition, 'targetName'));
       if ($.inArray(routeName, this.getBlacklist('signIn')) === -1)
-        set$(this, 'signInRedir', args);
+        set$(this, 'signInRedir', transition);
       if ($.inArray(routeName, this.getBlacklist('signOut')) === -1)
-        return set$(this, 'signOutRedir', args);
+        return set$(this, 'signOutRedir', transition);
     },
     redirect: Ember.observer(function () {
       var env, result;
@@ -702,38 +724,24 @@ void function () {
         return;
       switch (typeof result) {
       case 'object':
-        return get$(get$(this, 'router'), 'transitionTo').apply(this, result);
+        return result.retry();
       case 'string':
-        get$(get$(this, 'router'), 'location').setURL(result);
-        return get$(this, 'router').handleURL(result);
+        return get$(this, 'router').transitionTo(result);
       }
     }, 'auth.signedIn'),
     patch: function () {
       var self;
       self = this;
-      get$(Em, 'Route').reopen({
-        activate: function () {
-          this._super.apply(this, arguments);
-          self.router || (self.router = get$(this, 'router'));
-          return self.registerInitRedirect(get$(this, 'routeName'));
-        }
-      });
-      return get$(Em, 'Router').reopen({
+      return get$(Em, 'Route').reopen({
         init: function () {
-          this._super.apply(this, arguments);
-          return self.initPath || (self.initPath = get$(this, 'location').getURL());
+          self.router || (self.router = get$(this, 'router'));
+          return this._super.apply(this, arguments);
         },
-        transitionTo: function () {
-          var args;
-          args = Array.prototype.slice.call(arguments);
-          self.registerRedirect(args);
-          return this._super.apply(this, args);
-        },
-        replaceWith: function () {
-          var args;
-          args = Array.prototype.slice.call(arguments);
-          self.registerRedirect(args);
-          return this._super.apply(this, args);
+        beforeModel: function (transition) {
+          return get$(self, 'auth').followPromise(this._super.apply(this, arguments), function () {
+            self.registerRedirect(transition);
+            return null;
+          });
         }
       });
     }
@@ -750,12 +758,14 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'AuthRedirectable', Ember.Object.extend({
     var self;
     self = this;
     set$(this, 'AuthRedirectable', Ember.Mixin.create({
-      redirect: function () {
-        this._super.apply(this, arguments);
-        if (!get$(get$(self, 'auth'), 'signedIn')) {
+      beforeModel: function () {
+        var this$;
+        return get$(self, 'auth').followPromise(this._super.apply(this, arguments), (this$ = this, function () {
+          if (get$(get$(self, 'auth'), 'signedIn'))
+            return;
           get$(self, 'auth').trigger('authAccess');
-          return this.transitionTo(get$(get$(self, 'config'), 'route'));
-        }
+          return this$.transitionTo(get$(get$(self, 'config'), 'route'));
+        }));
       }
     }));
     return set$(get$(this, 'auth'), 'AuthRedirectable', get$(this, 'AuthRedirectable'));
@@ -801,15 +811,24 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'Rememberable', Ember.Object.extend({
     }
   },
   recall: function (opts) {
-    var token;
+    var this$;
     if (null == opts)
       opts = {};
-    if (!get$(get$(this, 'auth'), 'signedIn') && (token = this.retrieveToken())) {
-      set$(this, 'fromRecall', true);
-      opts.data || (opts.data = {});
-      get$(opts, 'data')[get$(get$(this, 'config'), 'tokenKey')] = token;
-      return get$(this, 'auth').signIn(opts);
-    }
+    return get$(this, 'auth').wrapDeferred((this$ = this, function (resolve, reject) {
+      var token;
+      if (!get$(get$(this$, 'auth'), 'signedIn') && (token = this$.retrieveToken())) {
+        set$(this$, 'fromRecall', true);
+        opts.data || (opts.data = {});
+        get$(opts, 'data')[get$(get$(this$, 'config'), 'tokenKey')] = token;
+        return get$(this$, 'auth').signIn(opts).then(function () {
+          return resolve();
+        }, function () {
+          return reject();
+        });
+      } else {
+        return resolve();
+      }
+    }));
   },
   remember: function () {
     var token;
@@ -838,10 +857,11 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'Rememberable', Ember.Object.extend({
     var self;
     self = this;
     return get$(Em, 'Route').reopen({
-      redirect: function () {
-        this._super.apply(this, arguments);
-        if (get$(get$(self, 'config'), 'autoRecall') && !get$(get$(self, 'auth'), 'signedIn'))
-          return self.recall({ async: false });
+      beforeModel: function () {
+        return get$(self, 'auth').followPromise(this._super.apply(this, arguments), function () {
+          if (get$(get$(self, 'config'), 'autoRecall') && !get$(get$(self, 'auth'), 'signedIn'))
+            return self.recall();
+        });
       }
     });
   }
@@ -1130,15 +1150,22 @@ void function () {
       return this.patch();
     },
     authenticate: function (opts) {
+      var this$;
       if (null == opts)
         opts = {};
-      if (get$(get$(this, 'auth'), 'signedIn'))
-        return;
-      this.canonicalizeParams();
-      if ($.isEmptyObject(get$(this, 'params')))
-        return;
-      set$(opts, 'data', $.extend(true, get$(this, 'params'), get$(opts, 'data') || {}));
-      return get$(this, 'auth').signIn(opts);
+      return get$(this, 'auth').wrapDeferred((this$ = this, function (resolve, reject) {
+        if (get$(get$(this$, 'auth'), 'signedIn'))
+          return resolve();
+        this$.canonicalizeParams();
+        if ($.isEmptyObject(get$(this$, 'params')))
+          return resolve();
+        set$(opts, 'data', $.extend(true, get$(this$, 'params'), get$(opts, 'data') || {}));
+        return get$(this$, 'auth').signIn(opts).then(function () {
+          return resolve();
+        }, function () {
+          return reject();
+        });
+      }));
     },
     retrieveParams: function () {
       return set$(this, 'params', $.url().param(get$(get$(this, 'config'), 'paramsKey')));
@@ -1182,9 +1209,10 @@ void function () {
       var self;
       self = this;
       get$(Em, 'Route').reopen({
-        redirect: function () {
-          this._super.apply(this, arguments);
-          return self.authenticate({ async: false });
+        beforeModel: function () {
+          return get$(self, 'auth').followPromise(this._super.apply(this, arguments), function () {
+            return self.authenticate();
+          });
         }
       });
       return get$(Em, 'Router').reopen({
