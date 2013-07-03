@@ -1,3 +1,7 @@
+# master
+
+* Add `.DS_Store` to `.gitignore` (#73) (@kiwiupover)
+
 # 7.0.0 (30 Jun 2013)
 
 * Rewrite for [new router](https://gist.github.com/machty/5723945)
