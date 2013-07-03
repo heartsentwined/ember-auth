@@ -17,4 +17,7 @@ describe 'Em.Auth.Response.Json', ->
       expect(adapter.canonicalize '{"foo":"bar"}').toEqual { foo: 'bar' }
 
     it 'throws on invalid JSON', ->
+      expect(-> adapter.canonicalize '<!DOCTYPE html>').toThrow()
+
+    it 'throws on invalid JSON', ->
       expect(-> adapter.canonicalize 'foo').toThrow()
