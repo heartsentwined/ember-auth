@@ -13,3 +13,5 @@ gem 'handlebars-source',             '1.0.0.rc4'
 gem 'ember-data-source',             '~> 0.0.5'
 
 gem 'appraisal',                     '~> 0.5'
+
+gem 'json',                          '~> 1.7.7'
