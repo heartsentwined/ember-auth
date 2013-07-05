@@ -1,4 +1,4 @@
-# master
+# 7.0.1 (5 Jul 2013)
 
 * Add `.DS_Store` to `.gitignore` (#73) (@kiwiupover)
 * More robust `json` `responseAdapter` (#74) (@kiwiupover)
