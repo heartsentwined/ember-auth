@@ -2,6 +2,7 @@
 
 * Add `.DS_Store` to `.gitignore` (#73) (@kiwiupover)
 * More robust `json` `responseAdapter` (#74) (@kiwiupover)
+* `ember`, `ember-data`, `handlebars` version updates
 
 # 7.0.0 (30 Jun 2013)
 

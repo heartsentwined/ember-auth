@@ -5,7 +5,7 @@
   "keywords": ["ember", "emberjs", "ember.js", "auth", "authentication"],
   "homepage": "http://ember-auth.herokuapp.com",
   "bugs": "https://github.com/heartsentwined/ember-auth/issues",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "main": "dist/ember-auth.js",
 
   "author": {

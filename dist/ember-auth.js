@@ -301,13 +301,19 @@ var get$ = Ember.get;
 var set$ = Ember.set;
 set$(get$(get$(Em, 'Auth'), 'Response'), 'Json', Ember.Object.extend({
   canonicalize: function (input) {
+    var error;
     if (!input)
       return {};
     switch (typeof input) {
     case 'object':
       return input;
     case 'string':
-      return JSON.parse(input);
+      try {
+        return JSON.parse(input);
+      } catch (e$) {
+        error = e$;
+        throw 'Invalid JSON format';
+      }
     default:
       throw 'Invalid JSON format';
     }
