@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.files       = ['dist/ember-auth.js', 'lib/ember-auth/source.rb']
 
-  gem.add_dependency 'ember-source', '>= 1.0.0.rc6'
+  gem.add_dependency 'ember-source', '>= 1.0.0.rc6.2'
 
   gem.license     = 'MIT'
 end

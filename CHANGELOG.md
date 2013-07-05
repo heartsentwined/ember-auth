@@ -1,3 +1,9 @@
+# 7.0.2 (5 Jul 2013)
+
+* Drop `ember` `1.0.0.rc6` support
+  * Critical bug at emberjs/ember.js#2946
+  * First compatible release at `ember` `1.0.0.rc6.2`
+
 # 7.0.1 (5 Jul 2013)
 
 * Add `.DS_Store` to `.gitignore` (#73) (@kiwiupover)
