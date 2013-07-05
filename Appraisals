@@ -1,6 +1,6 @@
 # we now require features at rc6
 EMBER_VERSIONS = %w(
-1.0.0.rc6.2 1.0.0.rc6
+1.0.0.rc6.2
 )
 
 EMBER_DATA_VERSIONS = %w(

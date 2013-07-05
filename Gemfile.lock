@@ -117,7 +117,7 @@ DEPENDENCIES
   appraisal (~> 0.5)
   coffee-script (~> 2.2)
   ember-data-source (>= 0.0.5)
-  ember-source (~> 1.0.0.rc6)
+  ember-source (~> 1.0.0.rc6.2)
   ember_script (~> 0.0)
   guard-jasmine-headless-webkit!
   handlebars-source (~> 1.0.0.rc4)
