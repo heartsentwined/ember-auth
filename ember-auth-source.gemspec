@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.name        = 'ember-auth-source'
   gem.version     = package['version']
   gem.authors     = ['heartsentwined']
-  gem.email       = ['heartsentwined@cogito-lab.com']
+  gem.email       = ['heartsentwined.me@gmail.com']
   gem.date        = Time.now.strftime('%Y-%m-%d')
   gem.summary     = 'Ember-auth source code wrapper'
   gem.description = 'Ember-auth source code wrapper for ruby libs.'
