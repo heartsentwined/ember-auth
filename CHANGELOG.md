@@ -1,3 +1,9 @@
+# master
+
+* [`ember-model`][ember-model] support (#53)
+
+[ember-model]: https://github.com/ebryn/ember-model
+
 # 7.0.2 (5 Jul 2013)
 
 * Drop `ember` `1.0.0.rc6` support
