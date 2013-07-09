@@ -64,6 +64,19 @@ class Em.Auth extends Em.Object with Em.Evented
   tokenLocation: 'param'
   tokenHeaderKey: null
 
+  # module.actionRedirectable
+  actionRedirectable:
+    signInRoute: false # or string for route name
+    signOutRoute: false # ditto
+    signInSmart: false
+    signOutSmart: false
+    signInBlacklist: [] # list of routes that should redir to fallback
+    signOutBlacklist: [] # ditto
+
+  # module.authRedirectable
+  authRedirectable:
+    route: null
+
   # module.rememberable
   rememberable:
     tokenKey: null # req
@@ -73,16 +86,3 @@ class Em.Auth extends Em.Object with Em.Evented
   # module.urlAuthenticatable
   urlAuthenticatable:
     paramsKey: null # req
-
-  # module.authRedirectable
-  authRedirectable:
-    route: null
-
-  # module.actionRedirectable
-  actionRedirectable:
-    signInRoute: false # or string for route name
-    signOutRoute: false # ditto
-    signInSmart: false
-    signOutSmart: false
-    signInBlacklist: [] # list of routes that should redir to fallback
-    signOutBlacklist: [] # ditto
