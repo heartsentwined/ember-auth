@@ -89,5 +89,35 @@ describe 'Em.Auth.Session', ->
     follow 'session data clearance', 'userId'
     follow 'session data clearance', 'user'
 
+  example 'manual session methods', (method, event) ->
+    it "injects to Auth as #{method}Session", ->
+      expect(auth["#{method}Session"]).toBeDefined()
+
+    it 'delegates to session method', ->
+      spy = sinon.collection.spy session, method
+      Em.run -> auth["#{method}Session"]()
+      expect(session[method]).toHaveBeenCalled()
+
+    it "triggers #{event}", ->
+      spy = sinon.collection.spy auth, 'trigger'
+      Em.run -> session[method]()
+      expect(spy).toHaveBeenCalledWithExactly event
+
+  describe '#create', ->
+    follow 'manual session methods', 'create', 'signInSuccess'
+
+    it 'delegates to response#canonicalize', ->
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> session.create 'foo'
+      expect(spy).toHaveBeenCalledWithExactly 'foo'
+
+  describe '#destroy', ->
+    follow 'manual session methods', 'destroy', 'signOutSuccess'
+
+    it 'calls response#canonicalize with empty string', ->
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> session.destroy()
+      expect(spy).toHaveBeenCalledWithExactly ''
+
   follow 'adapter sync event', ->
     beforeEach -> @type = session

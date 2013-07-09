@@ -36,9 +36,20 @@ class Em.Auth.Session
   store:    (key, value, opts) -> @adapter.store    key, value, opts
   remove:   (key, opts)        -> @adapter.remove   key, opts
 
+  create: (input) ->
+    @auth._response.canonicalize input
+    @auth.trigger 'signInSuccess'
+
+  destroy: ->
+    @auth._response.canonicalize ''
+    @auth.trigger 'signOutSuccess'
+
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
       signedIn: Em.computed(=> @signedIn).property('_session.signedIn')
       userId:   Em.computed(=> @userId  ).property('_session.userId')
       user:     Em.computed(=> @user    ).property('_session.user')
+
+      createSession:  (input) => @create input
+      destroySession:         => @destroy()

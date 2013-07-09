@@ -1,6 +1,8 @@
 # master
 
 * [`ember-model`][ember-model] support (#53)
+* `auth.createSession()` and `auth.destroySession()`: manually injecting and
+  clearing auth sessions without hitting the server
 
 [ember-model]: https://github.com/ebryn/ember-model
 
