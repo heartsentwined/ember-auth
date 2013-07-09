@@ -17,13 +17,9 @@ class Em.Auth.Session
     @inject()
 
   syncEvent: (name, args...) ->
-    #switch name
-      #when 'signInSuccess' then @findUser()
     @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
-  #+observer signedIn, userId
   findUser: ->
-    #return unless @signedIn && @userId
     if @userId && (modelKey = @auth.userModel) && (model = Ember.get modelKey)
       @user = model.find @userId
 
