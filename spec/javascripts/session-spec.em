@@ -25,6 +25,10 @@ describe 'Em.Auth.Session', ->
     beforeEach -> @from = session; @to = auth
   follow 'property injection', 'user', ->
     beforeEach -> @from = session; @to = auth
+  follow 'property injection', 'startTime', ->
+    beforeEach -> @from = session; @to = auth
+  follow 'property injection', 'endTime', ->
+    beforeEach -> @from = session; @to = auth
 
   follow 'events', 'signInSuccess', 'start', ->
     beforeEach -> @emitter = auth; @listener = session
@@ -77,7 +81,24 @@ describe 'Em.Auth.Session', ->
       Em.run -> session.start()
       expect(session.signedIn).toBeTruthy()
 
+    it 'sets startTime', ->
+      expect(session.startTime).toEqual null
+      Em.run -> session.start()
+      expect(session.startTime instanceof Date).toBeTruthy()
+
+    it 'clears endTime', ->
+      Em.run -> session.endTime = new Date()
+      expect(session.endTime).toBeTruthy()
+      Em.run -> session.start()
+      expect(session.endTime).toBeFalsy()
+
   describe '#clear', ->
+    it 'sets endTime', ->
+      Em.run -> session.endTime = null
+      expect(session.endTime).toBeFalsy()
+      Em.run -> session.clear()
+      expect(session.endTime instanceof Date).toBeTruthy()
+
     example 'session data clearance', (property) ->
       it "clears #{property}", ->
         Em.run -> session.set property, 'foo'
@@ -88,6 +109,7 @@ describe 'Em.Auth.Session', ->
     follow 'session data clearance', 'signedIn'
     follow 'session data clearance', 'userId'
     follow 'session data clearance', 'user'
+    follow 'session data clearance', 'startTime'
 
   example 'manual session methods', (method, event) ->
     it "injects to Auth as #{method}Session", ->

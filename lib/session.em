@@ -24,13 +24,17 @@ class Em.Auth.Session
       @user = model.find @userId
 
   start: ->
-    @signedIn = true
+    @signedIn  = true
+    @startTime = new Date()
+    @endTime   = null
     @findUser()
 
   clear: ->
-    @signedIn = false
-    @userId   = null
-    @user     = null
+    @signedIn  = false
+    @userId    = null
+    @user      = null
+    @startTime = null
+    @endTime   = new Date()
 
   retrieve: (key, opts)        -> @adapter.retrieve key, opts
   store:    (key, value, opts) -> @adapter.store    key, value, opts
@@ -47,9 +51,11 @@ class Em.Auth.Session
   inject: ->
     # TODO make these two-way bindings instead of read-only from auth side
     @auth.reopen
-      signedIn: Em.computed(=> @signedIn).property('_session.signedIn')
-      userId:   Em.computed(=> @userId  ).property('_session.userId')
-      user:     Em.computed(=> @user    ).property('_session.user')
+      signedIn:  Em.computed(=> @signedIn ).property('_session.signedIn')
+      userId:    Em.computed(=> @userId   ).property('_session.userId')
+      user:      Em.computed(=> @user     ).property('_session.user')
+      startTime: Em.computed(=> @startTime).property('_session.startTime')
+      endTime:   Em.computed(=> @endTime  ).property('_session.endTime')
 
       createSession:  (input) => @create input
       destroySession:         => @destroy()

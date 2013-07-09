@@ -3,6 +3,8 @@
 * [`ember-model`][ember-model] support (#53)
 * `auth.createSession()` and `auth.destroySession()`: manually injecting and
   clearing auth sessions without hitting the server
+* `auth.startTime`: start time of the current session (cleared on sign out)
+* `auth.endTime`: end time of the last session (cleared on sign in)
 
 [ember-model]: https://github.com/ebryn/ember-model
 
