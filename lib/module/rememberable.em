@@ -15,7 +15,10 @@ class Em.Auth.Module.Rememberable
         @fromRecall = true
         opts.data ||= {}
         opts.data[@config.tokenKey] = token
-        @auth.signIn(opts).then -> resolve(), -> reject()
+        # still resolve on failure:
+        # - it means a signInError, let error handling proceed from that
+        # - allows other codes to continue
+        @auth.signIn(opts).then -> resolve(), -> resolve()
       else
         resolve()
 

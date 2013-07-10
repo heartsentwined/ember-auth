@@ -12,7 +12,10 @@ class Em.Auth.Module.UrlAuthenticatable
       @canonicalizeParams()
       return resolve() if $.isEmptyObject @params
       opts.data = $.extend true, @params, (opts.data || {})
-      @auth.signIn(opts).then -> resolve(), -> reject()
+      # still resolve on failure:
+      # - it means a signInError, let error handling proceed from that
+      # - allows other codes to continue
+      @auth.signIn(opts).then -> resolve(), -> resolve()
 
   retrieveParams: ->
     @params = $.url().param(@config.paramsKey)
