@@ -2,7 +2,7 @@
 
 * [`ember-model`][ember-model] support (#53)
 * `auth.createSession()` and `auth.destroySession()`: manually injecting and
-  clearing auth sessions without hitting the server
+  clearing auth sessions without hitting the server (#67)
 * `auth.startTime`: start time of the current session (cleared on sign out)
 * `auth.endTime`: end time of the last session (cleared on sign in)
 * Bugfix: resolve promises to allow chaining (#75)
