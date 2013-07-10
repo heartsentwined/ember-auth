@@ -5,6 +5,7 @@
   clearing auth sessions without hitting the server (#67)
 * `auth.startTime`: start time of the current session (cleared on sign out)
 * `auth.endTime`: end time of the last session (cleared on sign in)
+* `timeoutable` module (#62)
 * Bugfix: resolve promises to allow chaining (#75)
 
 [ember-model]: https://github.com/ebryn/ember-model

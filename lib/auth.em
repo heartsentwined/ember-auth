@@ -83,6 +83,11 @@ class Em.Auth extends Em.Object with Em.Evented
     period: 14
     autoRecall: true
 
+  # module.timeoutable
+  timeoutable:
+    period: 20 # mins
+    callback: null # defaults to (auth).signOut()
+
   # module.urlAuthenticatable
   urlAuthenticatable:
     paramsKey: null # req
