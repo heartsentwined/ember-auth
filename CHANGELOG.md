@@ -1,4 +1,4 @@
-# master
+# 7.1.0 (10 Jul 2013)
 
 * [`ember-model`][ember-model] support (#53)
 * `auth.createSession()` and `auth.destroySession()`: manually injecting and
