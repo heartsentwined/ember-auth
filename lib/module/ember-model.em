@@ -1,10 +1,14 @@
 class Em.Auth.Module.EmberModel
-  init: -> @patch()
+  init: ->
+      @config? || (@config = @auth.emberModel || {})
+      @config.adapter? || (@config.adapter = 'Ember.RESTAdapter')
+      @patch()
 
   patch: ->
+    adapter = Ember.get @config.adapter
     self = this
-    if Ember.RESTAdapter?
-      Ember.RESTAdapter.reopen
+    if adapter?
+      adapter.reopen
         _ajax: (url, params, method) ->
           settings = this.ajaxSettings url, method
           new Ember.RSVP.Promise (resolve, reject) ->
