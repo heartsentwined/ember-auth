@@ -163,7 +163,7 @@ set$(get$(get$(Em, 'Auth'), 'Request'), 'Dummy', Ember.Object.extend({
     this.send(opts);
     switch (get$(opts, 'status')) {
     case 'success':
-      get$(this, 'auth').trigger('signInsuccess');
+      get$(this, 'auth').trigger('signInSuccess');
       break;
     case 'error':
       get$(this, 'auth').trigger('signInError');
@@ -176,7 +176,7 @@ set$(get$(get$(Em, 'Auth'), 'Request'), 'Dummy', Ember.Object.extend({
     this.send(opts);
     switch (get$(opts, 'status')) {
     case 'success':
-      get$(this, 'auth').trigger('signOutsuccess');
+      get$(this, 'auth').trigger('signOutSuccess');
       break;
     case 'error':
       get$(this, 'auth').trigger('signOutError');
