@@ -17,6 +17,8 @@ test/version_tmp
 tmp
 log
 .rvmrc
+.ruby-version
+.ruby-gemset
 *.bpkg
 .jhw-cache
 .DS_Store
