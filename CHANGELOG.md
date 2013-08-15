@@ -1,3 +1,9 @@
+# 7.1.1 (15 Aug 2013)
+
+* Added tests for ember `1.0.0.rc6.4` and `1.0.0.rc7`
+* Fix typo in dummy request adapter (#86) (@zeppelin)
+* Updated `emberModel` module to work with latest api (#84) (@maoe)
+
 # 7.1.0 (10 Jul 2013)
 
 * [`ember-model`][ember-model] support (#53)
