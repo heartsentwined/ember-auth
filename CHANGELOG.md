@@ -1,3 +1,7 @@
+# 7.1.2 (22 Aug 2013)
+
+* Updated `$.url`/`purl` library version (#92)
+
 # 7.1.1 (15 Aug 2013)
 
 * Added tests for ember `1.0.0.rc6.4` and `1.0.0.rc7`
