@@ -2,7 +2,7 @@
 
 * Updated `$.url`/`purl` library version (#92)
 
-# 7.1.1 (15 Aug 2013)
+# 7.1.1 (15 Aug 2013) (yanked)
 
 * Added tests for ember `1.0.0.rc6.4` and `1.0.0.rc7`
 * Fix typo in dummy request adapter (#86) (@zeppelin)
