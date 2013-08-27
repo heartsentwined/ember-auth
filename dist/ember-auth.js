@@ -842,12 +842,7 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'EmberModel', Ember.Object.extend({
           settings = this.ajaxSettings(url, method);
           return new (get$(Ember.RSVP, 'Promise'))(function (resolve, reject) {
             if (params)
-              if (method === 'GET') {
-                set$(settings, 'data', params);
-              } else {
-                set$(settings, 'contentType', 'application/json; charset=utf-8');
-                set$(settings, 'data', JSON.stringify(params));
-              }
+              set$(settings, 'data', params);
             set$(settings, 'success', function (json) {
               return Ember.run(null, resolve, json);
             });

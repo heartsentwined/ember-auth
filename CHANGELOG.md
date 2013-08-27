@@ -1,3 +1,7 @@
+# 7.1.3 (28 Aug 2013)
+
+* Fixed [`ember-model`] support (#78, #94, #95) (@maoe, @flynfish)
+
 # 7.1.2 (22 Aug 2013)
 
 * Updated `$.url`/`purl` library version (#92)
