@@ -15,3 +15,8 @@ describe 'Em.Auth.Module.EmberModel', ->
         adapter = Ember.RESTAdapter.create()
         adapter.ajax '/foo'
       expect(spy).toHaveBeenCalled()
+
+  describe 'default adapter', ->
+    it 'defaults to Ember.RESTAdapter', ->
+      adapter = auth.module.emberModel.config.adapter
+      expect(adapter).toEqual 'Ember.RESTAdapter'
