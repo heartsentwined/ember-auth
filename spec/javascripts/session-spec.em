@@ -75,6 +75,14 @@ describe 'Em.Auth.Session', ->
               session.findUser()
             expect(spy).toHaveBeenCalledWithExactly(1)
 
+          it 'works with a promise', ->
+            model = { find: -> { then: (cb) -> cb({ foo: 'bar' }) } }
+            sinon.collection.stub Ember, 'get', -> model
+            Em.run ->
+              auth.userModel = 'Foo'
+              session.findUser()
+            expect(auth.user).toEqual { foo: 'bar' }
+
   describe '#start', ->
     it 'sets signedIn', ->
       expect(session.signedIn).toBeFalsy()

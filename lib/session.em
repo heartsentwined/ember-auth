@@ -21,7 +21,8 @@ class Em.Auth.Session
 
   findUser: ->
     if @userId && (modelKey = @auth.userModel) && (model = Ember.get modelKey)
-      @user = model.find @userId
+      if (@user = model.find @userId)?.then?
+        model.find(@userId).then (m) => @user = m
 
   start: ->
     @signedIn  = true
