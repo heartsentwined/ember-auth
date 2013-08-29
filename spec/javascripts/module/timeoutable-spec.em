@@ -51,7 +51,7 @@ describe 'Em.Auth.Module.Timeoutable', ->
       beforeEach ->
         Em.run ->
           auth.timeoutable.period = 2
-          twoMinutesAgo = new Date(new Date().getTime() + 2*60*1000)
+          twoMinutesAgo = new Date(new Date().getTime() + 2*60*1000 + 1)
           timeoutable.startTime = twoMinutesAgo
 
       it 'triggers callback', ->
