@@ -10,7 +10,7 @@ class Em.Auth.Module.Rememberable
       when 'signOutSuccess' then @forget()
 
   recall: (opts = {}) ->
-    @auth.wrapDeferred (resolve, reject) =>
+    @auth.wrapPromise (resolve, reject) =>
       if !@auth.signedIn && (token = @retrieveToken())
         @fromRecall = true
         opts.data ||= {}

@@ -7,7 +7,7 @@ class Em.Auth.Module.UrlAuthenticatable
     @patch()
 
   authenticate: (opts = {}) ->
-    @auth.wrapDeferred (resolve, reject) =>
+    @auth.wrapPromise (resolve, reject) =>
       return resolve() if @auth.signedIn
       @canonicalizeParams()
       return resolve() if $.isEmptyObject @params

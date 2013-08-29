@@ -21,9 +21,7 @@ class Em.Auth extends Em.Object with Em.Evented
     if (ret = callback())?.then?
       ret
     else
-      deferred = Em.Deferred.create()
-      deferred.resolve deferred
-      deferred
+      new Em.RSVP.Promise (resolve) -> resolve()
 
   followPromise: (ret, callback) ->
     if ret?.then?
@@ -31,12 +29,14 @@ class Em.Auth extends Em.Object with Em.Evented
     else
       @ensurePromise -> callback()
 
-  wrapDeferred: (callback) ->
-    deferred = Em.Deferred.create()
-    resolve  = -> deferred.resolve deferred
-    reject   = -> deferred.reject deferred
-    callback resolve, reject
-    deferred
+  wrapPromise: (callback) ->
+    res = null
+    rej = null
+    promise = new Em.RSVP.Promise (resolve, reject) ->
+      res = resolve
+      rej = reject
+    callback res, rej
+    promise
 
   # =====================
   # Config
