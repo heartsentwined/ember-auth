@@ -1,3 +1,12 @@
+# master
+
+* [`epf`][epf] support (#81)
+* auto-load current user feature now works with `model.find()` returning
+  a promise
+* promise-related features now utilize `Ember.RSVP`
+
+[epf]: http://epf.io
+
 # 7.1.3 (28 Aug 2013)
 
 * Fixed [`ember-model`] support (#78, #94, #95) (@maoe, @flynfish)
