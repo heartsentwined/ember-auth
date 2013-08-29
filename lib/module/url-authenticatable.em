@@ -15,7 +15,10 @@ class Em.Auth.Module.UrlAuthenticatable
       # still resolve on failure:
       # - it means a signInError, let error handling proceed from that
       # - allows other codes to continue
-      @auth.signIn(opts).then -> resolve(), -> resolve()
+      if @config.endPoint?
+        @auth.signIn(@config.endPoint, opts).then -> resolve(), -> resolve()
+      else
+        @auth.signIn(opts).then -> resolve(), -> resolve()
 
   retrieveParams: ->
     @params = $.url().param(@config.paramsKey)

@@ -82,6 +82,7 @@ class Em.Auth extends Em.Object with Em.Evented
     tokenKey: null # req
     period: 14
     autoRecall: true
+    endPoint: null
 
   # module.timeoutable
   timeoutable:
@@ -91,3 +92,4 @@ class Em.Auth extends Em.Object with Em.Evented
   # module.urlAuthenticatable
   urlAuthenticatable:
     paramsKey: null # req
+    endPoint: null

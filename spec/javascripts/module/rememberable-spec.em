@@ -48,9 +48,20 @@ describe 'Em.Auth.Module.Rememberable', ->
           Em.run -> auth.rememberable.tokenKey = 'key'
           sinon.collection.stub rememberable, 'retrieveToken', -> 'foo'
 
-        it 'calls signIn', ->
-          Em.run -> rememberable.recall()
-          expect(spy).toHaveBeenCalledWithExactly { data: { key: 'foo' } }
+        afterEach -> Em.run -> auth.rememberable.endPoint = null
+
+        describe 'endPoint set', ->
+          beforeEach -> Em.run -> auth.rememberable.endPoint = 'bar'
+
+          it 'calls signIn', ->
+            Em.run -> rememberable.recall()
+            expect(spy) \
+            .toHaveBeenCalledWithExactly 'bar', { data: { key: 'foo' } }
+
+        describe 'endPoint not set', ->
+          it 'calls signIn', ->
+            Em.run -> rememberable.recall()
+            expect(spy).toHaveBeenCalledWithExactly { data: { key: 'foo' } }
 
         it 'is customizable', ->
           Em.run -> rememberable.recall { foo: 'bar' }

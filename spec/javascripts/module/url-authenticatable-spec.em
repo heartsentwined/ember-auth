@@ -45,11 +45,21 @@ describe 'Em.Auth.Module.UrlAuthenticatable', ->
 
       describe 'params not empty', ->
         beforeEach -> Em.run -> urlAuth.params = { foo: 'bar' }
+        afterEach -> Em.run -> auth.urlAuthenticatable.endPoint = null
 
-        it 'delegates to auth.signIn with params as data', ->
-          Em.run -> urlAuth.authenticate()
-          expect(signInSpy).toHaveBeenCalledWithExactly
-            data: { foo: 'bar' }
+        describe 'endPoint set', ->
+          beforeEach -> Em.run -> auth.urlAuthenticatable.endPoint = 'bar'
+
+          it 'delegates to auth.signIn with params as data', ->
+            Em.run -> urlAuth.authenticate()
+            expect(signInSpy) \
+            .toHaveBeenCalledWithExactly 'bar', { data: { foo: 'bar' } }
+
+        describe 'endPoint not set', ->
+          it 'delegates to auth.signIn with params as data', ->
+            Em.run -> urlAuth.authenticate()
+            expect(signInSpy).toHaveBeenCalledWithExactly
+              data: { foo: 'bar' }
 
         it 'lets opts.data override params', ->
           Em.run -> urlAuth.authenticate { data: { foo: 'baz', bar: 'quux' } }

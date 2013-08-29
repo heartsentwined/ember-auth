@@ -28,6 +28,22 @@ describe 'Em.Auth.Request', ->
   follow 'request method', 'signOut'
   follow 'request method', 'send'
 
+  example 'request method override url', (method) ->
+    it 'allows url override by a string first argument', ->
+      spy = sinon.collection.spy request.adapter, method
+      sinon.collection.stub request, 'resolveUrl', -> 'bar'
+      Em.run -> request[method]('foo', {})
+      expect(spy).toHaveBeenCalledWithExactly('foo', {})
+
+    it 'works with opts as first argument', ->
+      spy = sinon.collection.spy request.adapter, method
+      sinon.collection.stub request, 'resolveUrl', -> 'foo'
+      Em.run -> request[method]({})
+      expect(spy).toHaveBeenCalledWithExactly('foo', {})
+
+  follow 'request method override url', 'signIn'
+  follow 'request method override url', 'signOut'
+
   example 'request server api', (type) ->
     describe "##{type}", ->
       beforeEach ->

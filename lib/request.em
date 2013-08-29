@@ -12,14 +12,20 @@ class Em.Auth.Request
   syncEvent: ->
     @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
 
-  signIn:  (opts) ->
+  signIn:  (url, opts) ->
+    if typeof opts == 'undefined'
+      opts = url
+      url  = @resolveUrl @auth.signInEndPoint
     @auth.ensurePromise =>
-      url = @resolveUrl @auth.signInEndPoint
       @adapter.signIn  url, @auth._strategy.serialize(opts)
-  signOut: (opts) ->
+
+  signOut: (url, opts) ->
+    if typeof opts == 'undefined'
+      opts = url
+      url  = @resolveUrl @auth.signOutEndPoint
     @auth.ensurePromise =>
-      url = @resolveUrl @auth.signOutEndPoint
       @adapter.signOut url, @auth._strategy.serialize(opts)
+
   send:    (opts) ->
     @auth.ensurePromise => @adapter.send @auth._strategy.serialize(opts)
 
