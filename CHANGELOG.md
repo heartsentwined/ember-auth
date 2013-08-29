@@ -4,6 +4,9 @@
 * auto-load current user feature now works with `model.find()` returning
   a promise
 * promise-related features now utilize `Ember.RSVP`
+* url end points now overridable for `signIn` and `signOut` methods,
+  along with an accompanying `endPoint` option for `rememberable` and
+  `urlAuthenticatable` (#90)
 
 [epf]: http://epf.io
 
