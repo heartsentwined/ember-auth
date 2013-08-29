@@ -11,5 +11,6 @@ gem 'guard-jasmine-headless-webkit', git: 'git://github.com/heartsentwined/guard
 gem 'ember-source',                  '~> 1.0.0.rc6.2'
 gem 'handlebars-source',             '~> 1.0.0.rc4'
 gem 'ember-data-source',             '>= 0.0.5'
+gem 'epf-source',                    '~> 0.1'
 
 gem 'appraisal',                     '~> 0.5'
