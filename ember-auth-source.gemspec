@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.description = 'Ember-auth source code wrapper for ruby libs.'
   gem.homepage    = 'https://github.com/heartsentwined/ember-auth'
 
-  gem.files       = ['dist/ember-auth.js', 'lib/ember-auth/source.rb']
+  gem.files       = ['dist/ember-auth.js', 'lib/ember/auth/source.rb']
 
   gem.add_dependency 'ember-source', '>= 1.0.0.rc6.2'
 
