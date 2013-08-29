@@ -3,6 +3,7 @@
 
 <% require 'ember/source' %>
 <% require 'ember/data/source' %>
+<% require 'epf/source' %>
 <% require 'handlebars/source' %>
 src_files:
   - 'prereq.coffee'
@@ -21,6 +22,7 @@ src_dir:
   - vendor
   - <%= ::Ember::Source.bundled_path_for(:production) %>/../
   - <%= ::Ember::Data::Source.bundled_path_for(:production) %>/../
+  - <%= ::Epf::Source.bundled_path %>/../
   - <%= ::Handlebars::Source.bundled_path %>/../
 spec_dir: spec/javascripts
 spec_helper: spec/support/jasmine_helper.rb
