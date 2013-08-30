@@ -2,6 +2,9 @@
 
 * BC Break: top level namespace is now `Ember::Auth`, and require path is now
   `require 'ember/auth/source'` (#82)
+
+# 7.2.0 (30 Aug 2013)
+
 * [`epf`][epf] support (#81)
 * auto-load current user feature now works with `model.find()` returning
   a promise
