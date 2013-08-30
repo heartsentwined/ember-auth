@@ -1,4 +1,4 @@
-# master
+# 7.2.0 (30 Aug 2013)
 
 * [`epf`][epf] support (#81)
 * auto-load current user feature now works with `model.find()` returning
