@@ -63,6 +63,7 @@ class Em.Auth extends Em.Object with Em.Evented
   tokenIdKey: null #req
   tokenLocation: 'param'
   tokenHeaderKey: null
+  tokenDomainsBlacklist: [] # list of domains which doesn't need this token
 
   # module.actionRedirectable
   actionRedirectable:

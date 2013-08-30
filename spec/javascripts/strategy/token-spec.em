@@ -31,75 +31,86 @@ describe 'Em.Auth.Strategy.Token', ->
           auth._session.start()
           adapter.authToken = 'token'
 
-      describe 'tokenLocation = param', ->
+      describe 'domain is blacklisted', ->
         beforeEach ->
           Em.run ->
-            auth.tokenLocation = 'param'
-            auth.tokenKey = 'key'
+            auth.tokenDomainsBlacklist = ['foo.bar']
+            output = adapter.serialize { url: 'http://foo.bar/test', data: { foo: 'bar'} }
+        it '', -> follow 'token in param', output
+        it '', -> follow 'token in auth header', output
+        it '', -> follow 'token in custom header', output
+ 
+      describe 'domain is not blacklisted', ->
 
-        describe 'overriding auth token key', ->
+        describe 'tokenLocation = param', ->
           beforeEach ->
-            output = adapter.serialize { data: { foo: 'bar', key: 'baz' } }
-          it '', -> follow 'token location', output, 'param', 'baz'
+            Em.run ->
+              auth.tokenLocation = 'param'
+              auth.tokenKey = 'key'
 
-        describe 'does not override auth token key', ->
-
-          describe 'data = object', ->
+          describe 'overriding auth token key', ->
             beforeEach ->
-              output = adapter.serialize { data: { foo: 'bar' } }
-            it '', -> follow 'token location', output, 'param'
+              output = adapter.serialize { data: { foo: 'bar', key: 'baz' } }
+            it '', -> follow 'token location', output, 'param', 'baz'
 
-          describe 'data = null', ->
-            beforeEach ->
-              output = adapter.serialize { data: null }
-            it '', -> follow 'token location', output, 'param'
+          describe 'does not override auth token key', ->
 
-      describe 'tokenLocation = authHeader', ->
-        beforeEach ->
-          Em.run ->
-            auth.tokenLocation = 'authHeader'
-            auth.tokenHeaderKey = 'key'
+            describe 'data = object', ->
+              beforeEach ->
+                output = adapter.serialize { data: { foo: 'bar' } }
+              it '', -> follow 'token location', output, 'param'
 
-        describe 'overriding Authorization header', ->
+            describe 'data = null', ->
+              beforeEach ->
+                output = adapter.serialize { data: null }
+              it '', -> follow 'token location', output, 'param'
+
+        describe 'tokenLocation = authHeader', ->
           beforeEach ->
-            output = adapter.serialize \
-            { headers: { foo: 'bar', Authorization: 'baz' } }
-          it '', -> follow 'token location', output, 'auth header', 'baz'
+            Em.run ->
+              auth.tokenLocation = 'authHeader'
+              auth.tokenHeaderKey = 'key'
 
-        describe 'does not override Authorization header', ->
-
-          describe 'headers = object', ->
+          describe 'overriding Authorization header', ->
             beforeEach ->
-              output = adapter.serialize { headers: { foo: 'bar' } }
-            it '', -> follow 'token location', output, 'auth header'
+              output = adapter.serialize \
+              { headers: { foo: 'bar', Authorization: 'baz' } }
+            it '', -> follow 'token location', output, 'auth header', 'baz'
 
-          describe 'headers = null', ->
-            beforeEach ->
-              output = adapter.serialize { headers: null }
-            it '', -> follow 'token location', output, 'auth header'
+          describe 'does not override Authorization header', ->
 
-      describe 'tokenLocation = customHeader', ->
-        beforeEach ->
-          Em.run ->
-            auth.tokenLocation = 'customHeader'
-            auth.tokenHeaderKey = 'key'
+            describe 'headers = object', ->
+              beforeEach ->
+                output = adapter.serialize { headers: { foo: 'bar' } }
+              it '', -> follow 'token location', output, 'auth header'
 
-        describe 'overriding custom auth header', ->
+            describe 'headers = null', ->
+              beforeEach ->
+                output = adapter.serialize { headers: null }
+              it '', -> follow 'token location', output, 'auth header'
+
+        describe 'tokenLocation = customHeader', ->
           beforeEach ->
-            output = adapter.serialize { headers: { foo: 'bar', key: 'baz' } }
-          it '', -> follow 'token location', output, 'custom header', 'baz'
+            Em.run ->
+              auth.tokenLocation = 'customHeader'
+              auth.tokenHeaderKey = 'key'
 
-        describe 'does not override custom auth header', ->
-
-          describe 'headers = object', ->
+          describe 'overriding custom auth header', ->
             beforeEach ->
-              output = adapter.serialize { headers: { foo: 'bar' } }
-            it '', -> follow 'token location', output, 'custom header'
+              output = adapter.serialize { headers: { foo: 'bar', key: 'baz' } }
+            it '', -> follow 'token location', output, 'custom header', 'baz'
 
-          describe 'headers = null', ->
-            beforeEach ->
-              output = adapter.serialize { headers: null }
-            it '', -> follow 'token location', output, 'custom header'
+          describe 'does not override custom auth header', ->
+
+            describe 'headers = object', ->
+              beforeEach ->
+                output = adapter.serialize { headers: { foo: 'bar' } }
+              it '', -> follow 'token location', output, 'custom header'
+
+            describe 'headers = null', ->
+              beforeEach ->
+                output = adapter.serialize { headers: null }
+              it '', -> follow 'token location', output, 'custom header'
 
   describe '#deserialize', ->
     it 'sets authToken at tokenKey', ->
