@@ -1,5 +1,6 @@
 # we now require features at rc6
 EMBER_VERSIONS = %w(
+1.0.0
 1.0.0.rc8
 1.0.0.rc7
 1.0.0.rc6.4 1.0.0.rc6.2
@@ -7,7 +8,8 @@ EMBER_VERSIONS = %w(
 
 PERSISTENT_LIBS = {
   'ember-data' => %w(
-    0.13 0.0.5
+    1.0.0.beta.2 1.0.0.beta.1
+    0.14 0.13 0.0.5
   ),
   'epf' => %w(
     0.1.3 0.1.2 0.1.1 0.1.0
