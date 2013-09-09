@@ -1,3 +1,7 @@
+# master
+
+* fix a failing `actionRedirectable` spec
+
 # 8.0.0 (30 Aug 2013)
 
 * BC Break: top level namespace is now `Ember::Auth`, and require path is now
