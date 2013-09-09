@@ -116,6 +116,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
         beforeEach -> Em.run -> auth._session.start()
 
         it 'delegates to #resolveRedirect', ->
+          Em.run -> actionRedir.redirect()
           expect(spy).toHaveBeenCalledWithExactly 'signIn'
 
       describe 'on sign out', ->
@@ -125,6 +126,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
             auth._session.clear()
 
         it 'delegates to #resolveRedirect', ->
+          Em.run -> actionRedir.redirect()
           expect(spy).toHaveBeenCalledWithExactly 'signOut'
 
     describe 'redirect integration', ->
