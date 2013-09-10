@@ -828,11 +828,7 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'EmberData', Ember.Object.extend({
     if ('undefined' !== typeof DS && null != DS && null != get$(DS, 'RESTAdapter'))
       return get$(DS, 'RESTAdapter').reopen({
         ajax: function (url, type, settings) {
-          settings || (settings = {});
-          set$(settings, 'url', url);
-          set$(settings, 'type', type);
-          set$(settings, 'context', this);
-          return get$(get$(self, 'auth'), '_request').send(settings);
+          return this._super(url, type, get$(get$(self, 'auth'), '_strategy').serialize(settings || {}));
         }
       });
   }
@@ -878,11 +874,7 @@ set$(get$(get$(Em, 'Auth'), 'Module'), 'Epf', Ember.Object.extend({
     if ('undefined' !== typeof Ep && null != Ep && null != get$(Ep, 'RestAdapter'))
       return get$(Ep, 'RestAdapter').reopen({
         ajax: function (url, type, settings) {
-          settings || (settings = {});
-          set$(settings, 'url', url);
-          set$(settings, 'type', type);
-          set$(settings, 'context', this);
-          return get$(get$(self, 'auth'), '_request').send(settings);
+          return this._super(url, type, get$(get$(self, 'auth'), '_strategy').serialize(settings || {}));
         }
       });
   }

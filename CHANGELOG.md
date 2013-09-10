@@ -1,6 +1,8 @@
-# master
+# 8.0.1 (10 Sep 2013)
 
 * fix a failing `actionRedirectable` spec
+* `emberData` and `epf` will now delegate to their own `ajax` methods
+  instead of going through `ember-auth`'s'
 
 # 8.0.0 (30 Aug 2013)
 
