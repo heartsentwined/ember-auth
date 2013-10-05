@@ -1,4 +1,4 @@
-class Em.Auth extends Em.Object with Em.Evented
+class Em.Auth
   init: ->
     # initialize the adapters
     for type in ['request', 'response', 'strategy', 'session']
