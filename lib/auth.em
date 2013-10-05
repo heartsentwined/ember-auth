@@ -26,27 +26,6 @@ class Em.Auth
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
 
-  ensurePromise: (callback) ->
-    if (ret = callback())?.then?
-      ret
-    else
-      new Em.RSVP.Promise (resolve) -> resolve()
-
-  followPromise: (ret, callback) ->
-    if ret?.then?
-      ret.then -> callback()
-    else
-      @ensurePromise -> callback()
-
-  wrapPromise: (callback) ->
-    res = null
-    rej = null
-    promise = new Em.RSVP.Promise (resolve, reject) ->
-      res = resolve
-      rej = reject
-    callback res, rej
-    promise
-
   # =====================
   # Config
   # =====================
