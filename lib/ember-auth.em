@@ -1,3 +1,4 @@
+#= require      initializer
 #= require      auth
 #= require      request
 #= require_tree ./request
