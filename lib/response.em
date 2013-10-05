@@ -1,4 +1,4 @@
-class Em.Auth.Response
+class Em.Auth.AuthResponse
   init: ->
     @response? || (@response = {})
 

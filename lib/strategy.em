@@ -1,4 +1,4 @@
-class Em.Auth.Strategy
+class Em.Auth.AuthStrategy
   init: ->
     unless @adapter?
       adapter = Em.String.capitalize Em.String.camelize @auth.strategyAdapter

@@ -1,4 +1,4 @@
-class Em.Auth.Session
+class Em.Auth.AuthSession
   init: ->
     @signedIn? || (@signedIn = false)
     @userId?   || (@userId   = null)

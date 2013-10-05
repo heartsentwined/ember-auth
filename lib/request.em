@@ -1,4 +1,4 @@
-class Em.Auth.Request
+class Em.Auth.AuthRequest
   init: ->
     unless @adapter?
       adapter = Em.String.capitalize Em.String.camelize @auth.requestAdapter
