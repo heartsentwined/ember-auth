@@ -42,10 +42,10 @@ class Em.Auth extends Em.Object with Em.Evented
   # Config
   # =====================
 
-  requestAdapter:  'jquery'
-  responseAdapter: 'json'
-  strategyAdapter: 'token'
-  sessionAdapter:  'cookie'
+  request:  'jquery'
+  response: 'json'
+  strategy: 'token'
+  session:  'cookie'
 
   # module
   modules: ['emberData']
