@@ -26,17 +26,6 @@ class Em.Auth extends Em.Object with Em.Evented
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
 
-  trigger: ->
-    @syncEvent.apply this, arguments
-    super.apply this, arguments
-
-  syncEvent: ->
-    @_request.syncEvent.apply @_request, arguments
-    @_response.syncEvent.apply @_response, arguments
-    @_strategy.syncEvent.apply @_strategy, arguments
-    @_session.syncEvent.apply @_session, arguments
-    @_module.syncEvent.apply @_module, arguments
-
   ensurePromise: (callback) ->
     if (ret = callback())?.then?
       ret
