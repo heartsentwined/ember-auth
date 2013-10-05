@@ -1,33 +1,13 @@
 class Em.Auth.AuthRequest
   init: ->
-    unless @adapter?
-      adapter = Em.String.capitalize Em.String.camelize @auth.requestAdapter
-      if Em.Auth.Request[adapter]?
-        @adapter = Em.Auth.Request[adapter].create { auth: @auth }
-      else
-        throw "Adapter not found: Em.Auth.Request.#{adapter}"
+    @auth.reopen
+      signIn:  Em.computed.alias '_request.signIn'
+      signOut: Em.computed.alias '_request.signOut'
+      send:    Em.computed.alias '_request.send'
 
-    @inject()
-
-  syncEvent: ->
-    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
-
-  signIn:  (url, opts) ->
-    if typeof opts == 'undefined'
-      opts = url
-      url  = @resolveUrl @auth.signInEndPoint
-    @auth.ensurePromise =>
-      @adapter.signIn  url, @auth._strategy.serialize(opts)
-
-  signOut: (url, opts) ->
-    if typeof opts == 'undefined'
-      opts = url
-      url  = @resolveUrl @auth.signOutEndPoint
-    @auth.ensurePromise =>
-      @adapter.signOut url, @auth._strategy.serialize(opts)
-
-  send:    (opts) ->
-    @auth.ensurePromise => @adapter.send @auth._strategy.serialize(opts)
+  signIn:  mustImplement 'signIn'
+  signOut: mustImplement 'signOut'
+  send:    mustImplement 'send'
 
   # different base url support
   # @param {path} string the path for resolving full URL
@@ -39,8 +19,6 @@ class Em.Auth.AuthRequest
       path = path.substr(1, path.length)
     [base, path].join('/')
 
-  inject: ->
-    @auth.reopen
-      signIn:  (opts) => @signIn  opts
-      signOut: (opts) => @signOut opts
-      send:    (opts) => @send    opts
+mustImplement = (method) ->
+  ->
+    throw new Em.Error "Your request adapter #{@toString()} must implement the required method `#{method}`"
