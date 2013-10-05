@@ -1,10 +1,30 @@
 class Em.Auth extends Em.Object with Em.Evented
   init: ->
-    @_request?  || (@_request  = Em.Auth.Request.create  { auth: this })
-    @_response? || (@_response = Em.Auth.Response.create { auth: this })
-    @_strategy? || (@_strategy = Em.Auth.Strategy.create { auth: this })
-    @_session?  || (@_session  = Em.Auth.Session.create  { auth: this })
-    @_module?   || (@_module   = Em.Auth.Module.create   { auth: this })
+    # initialize the adapters
+    for type in ['request', 'response', 'strategy', 'session']
+      # allow only a string as config value
+      msg    = "The `#{type}` config should be a string"
+      config = @get type
+      Em.assert msg, typeof config == 'string'
+
+      # lookup the adapter
+      containerType = "auth#{Em.string.classify type}"
+      containerKey  = "#{containerType}:#{config}"
+      adapter       = @container.lookup containerKey
+
+      baseKlass = Em.string.classify containerType
+      klass     = "#{Em.string.classify config}#{baseKlass}"
+
+      # helpful error msg if not found in container
+      msg = "The requested `#{config}` #{type}Adapter cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
+      Em.assert msg, adapter
+
+      # helpful error msg if not extending from base class
+      msg = "The requested `#{config}` #{type}Adapter must extend from Ember.Auth.#{baseKlass}"
+      Em.assert msg, Em.Auth.get(baseKlass).detect adapter
+
+      # initialize the adapter
+      @set "_#{type}", adapter.create { auth: this }
 
   trigger: ->
     @syncEvent.apply this, arguments
