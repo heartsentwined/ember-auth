@@ -26,6 +26,8 @@ class Em.Auth
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
 
+    null # suppress CS comprehension
+
   # =====================
   # Config
   # =====================
