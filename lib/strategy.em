@@ -1,16 +1,7 @@
 class Em.Auth.AuthStrategy
-  init: ->
-    unless @adapter?
-      adapter = Em.String.capitalize Em.String.camelize @auth.strategyAdapter
-      if Em.Auth.Strategy[adapter]?
-        @adapter = Em.Auth.Strategy[adapter].create { auth: @auth }
-      else
-        throw "Adapter not found: Em.Auth.Strategy.#{adapter}"
+  serialize:   mustImplement 'serialize'
+  deserialize: mustImplement 'deserialize'
 
-  syncEvent: (name, args...) ->
-    switch name
-      when 'signInSuccess' then @deserialize()
-    @adapter.syncEvent.apply @adapter, arguments if @adapter.syncEvent?
-
-  serialize:   (opts) -> @adapter.serialize   opts
-  deserialize:        -> @adapter.deserialize @auth.response
+mustImplement = (method) ->
+  ->
+    throw new Em.Error "Your request adapter #{@toString()} must implement the required method `#{method}`"
