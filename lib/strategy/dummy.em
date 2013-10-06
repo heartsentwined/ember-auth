@@ -1,4 +1,4 @@
-class Em.Auth.Strategy.Dummy
+class Em.Auth.DummyAuthStrategy
   serialize: (opts = {}) ->
     opts
 

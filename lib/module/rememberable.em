@@ -1,4 +1,4 @@
-class Em.Auth.Module.Rememberable
+class Em.Auth.RememberableAuthModule
   init: ->
     @config? || (@config = @auth.rememberable)
     @patch()

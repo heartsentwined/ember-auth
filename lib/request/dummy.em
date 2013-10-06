@@ -1,4 +1,4 @@
-class Em.Auth.Request.Dummy
+class Em.Auth.DummyAuthRequest
   signIn: (url, opts = {}) ->
     @send opts
     switch opts.status

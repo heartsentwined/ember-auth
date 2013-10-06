@@ -1,5 +1,5 @@
 $ = jQuery
-class Em.Auth.Module.ActionRedirectable
+class Em.Auth.ActionRedirectableAuthModule
   init: ->
     @config? || (@config = @auth.actionRedirectable)
 

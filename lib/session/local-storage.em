@@ -1,4 +1,4 @@
-class Em.Auth.Session.LocalStorage
+class Em.Auth.LocalStorageAuthSession
   retrieve: (key) ->
     localStorage.getItem key
   store: (key, value) ->

@@ -1,5 +1,5 @@
 $ = jQuery
-class Em.Auth.Request.Jquery
+class Em.Auth.JqueryAuthRequest
   init: ->
     @jqxhr? || (@jqxhr = null)
     @inject()

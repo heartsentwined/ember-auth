@@ -1,4 +1,4 @@
-class Em.Auth.Module.Epf
+class Em.Auth.EpfAuthModule
   init: -> @patch()
 
   patch: ->

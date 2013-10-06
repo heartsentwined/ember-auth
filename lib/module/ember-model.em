@@ -1,4 +1,4 @@
-class Em.Auth.Module.EmberModel
+class Em.Auth.EmberModelAuthModule
   init: -> @patch()
 
   patch: ->

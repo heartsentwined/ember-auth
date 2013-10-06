@@ -1,4 +1,4 @@
-class Em.Auth.Strategy.Token
+class Em.Auth.TokenAuthStrategy
   init: ->
     @authToken? || (@authToken = null)
     @inject()

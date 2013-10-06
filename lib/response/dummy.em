@@ -1,2 +1,2 @@
-class Em.Auth.Response.Dummy
+class Em.Auth.DummyAuthResponse
   canonicalize: (input) -> input

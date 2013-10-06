@@ -1,4 +1,4 @@
-class Em.Auth.Session.Dummy
+class Em.Auth.DummyAuthSession
   init: ->
     @session = {}
 

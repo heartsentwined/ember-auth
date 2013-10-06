@@ -1,6 +1,6 @@
 #= require jquery.cookie
 $ = jQuery
-class Em.Auth.Session.Cookie
+class Em.Auth.CookieAuthSession
   retrieve: (key, opts) ->
     $.cookie key
   store: (key, value, opts) ->

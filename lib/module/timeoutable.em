@@ -1,4 +1,4 @@
-class Em.Auth.Module.Timeoutable
+class Em.Auth.TimeoutableAuthModule
   init: ->
     @config?          || (@config = @auth.timeoutable)
     @config.callback? || (@config.callback = => @auth.signOut())

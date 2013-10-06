@@ -1,4 +1,4 @@
-class Em.Auth.Response.Json
+class Em.Auth.JsonAuthResponse
   canonicalize: (input) ->
     return {} unless input
     switch typeof input

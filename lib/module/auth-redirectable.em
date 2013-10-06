@@ -1,4 +1,4 @@
-class Em.Auth.Module.AuthRedirectable
+class Em.Auth.AuthRedirectableAuthModule
   init: ->
     @config? || (@config = @auth.authRedirectable)
     @patch()

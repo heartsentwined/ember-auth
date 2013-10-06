@@ -1,6 +1,6 @@
 #= require jquery.url
 $ = jQuery
-class Em.Auth.Module.UrlAuthenticatable
+class Em.Auth.UrlAuthenticatableAuthModule
   init: ->
     @params? || (@params = {})
     @config? || (@config = @auth.urlAuthenticatable)
