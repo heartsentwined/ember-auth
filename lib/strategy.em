@@ -4,4 +4,4 @@ class Em.Auth.AuthStrategy
 
 mustImplement = (method) ->
   ->
-    throw new Em.Error "Your request adapter #{@toString()} must implement the required method `#{method}`"
+    throw new Em.Error "Your strategy adapter #{@toString()} must implement the required method `#{method}`"
