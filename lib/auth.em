@@ -271,7 +271,7 @@ class Em.Auth
 
   # strategy.token
   tokenKey: null # req
-  tokenIdKey: null #req
+  tokenIdKey: null
   tokenLocation: 'param'
   tokenHeaderKey: null
 
