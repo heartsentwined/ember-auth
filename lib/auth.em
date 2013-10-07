@@ -296,3 +296,7 @@ class Em.Auth
   urlAuthenticatable:
     paramsKey: null # req
     endPoint: null
+
+  # module.emberData
+  emberData:
+    userModel: null # string for model type, as in store.find(userModel, id)
