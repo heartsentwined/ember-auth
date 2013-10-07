@@ -34,6 +34,18 @@ class Em.Auth
       sendSuccess:    []
       sendError:      []
 
+  # send a sign in request
+  #
+  # @overload signIn(url, opts)
+  #   @param url [string] (opt) relative url to the end point,
+  #     default: auth.signInEndPoint
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #
+  # @overload signIn(opts)
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   url will default to auth.signInEndPoint
+  #
+  # @return [Em.RSVP.Promise]
   signIn: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -55,6 +67,18 @@ class Em.Auth
         promises.push handler(data) for handler in @_handlers.signInError
         Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
 
+  # send a sign out request
+  #
+  # @overload signOut(url, opts)
+  #   @param url [string] (opt) relative url to the end point,
+  #     default: auth.signOutEndPoint
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #
+  # @overload signIn(opts)
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   url will default to auth.signOutEndPoint
+  #
+  # @return [Em.RSVP.Promise]
   signOut: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -74,6 +98,18 @@ class Em.Auth
         promises.push handler(data) for handler in @_handlers.signOutError
         Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
 
+  # send a custom request
+  #
+  # @overload send(url, opts)
+  #   @param url [string] (opt) relative url to the end point,
+  #     default: (root)
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #
+  # @overload send(opts)
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   url will default to (root)
+  #
+  # @return [Em.RSVP.Promise]
   send: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -89,6 +125,12 @@ class Em.Auth
         promises.push handler(data) for handler in @_handlers.sendError
         Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
 
+  # create a signed in session without server request
+  #
+  # @param data [string|object] object representing session information,
+  #   either raw string, or as `canonicalize`d by the response adapter
+  #
+  # @return [Em.RSVP.Promise]
   createSession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
       data     = @_response.canonicalize data if typeof data == 'string'
@@ -98,6 +140,12 @@ class Em.Auth
       promises.push handler(data) for handler in @_handlers.signInSuccess
       Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
 
+  # destroy any signed in session without server request
+  #
+  # @param data [string|object] (opt) object representing session information,
+  #   either raw string, or as `canonicalize`d by the response adapter
+  #
+  # @return [Em.RSVP.Promise]
   destroySession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
       data     = @_response.canonicalize data if typeof data == 'string'
@@ -107,6 +155,16 @@ class Em.Auth
       promises.push handler(data) for handler in @_handlers.signOutSuccess
       Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
 
+  # add a handler to be fired on specified event
+  #
+  # @param type [string] the event type, must be one of
+  #   'signInSuccess'
+  #   'signInError'
+  #   'signOutSuccess'
+  #   'signOutError'
+  #   'sendSuccess'
+  #   'sendError'
+  # @param handler [function] event handler, optionally returning a promise
   addHandler: (type, handler) ->
     # check for unrecognized handler types
     msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
@@ -126,6 +184,30 @@ class Em.Auth
 
     @_handlers[type].pushObject handler
 
+  # remove a handler, or all handlers, for the specified event
+  #
+  # @overload removeHandler(type, handler)
+  #   removes the specified handler for the specified event
+  #
+  #   @param type [string] the event type, must be one of
+  #     'signInSuccess'
+  #     'signInError'
+  #     'signOutSuccess'
+  #     'signOutError'
+  #     'sendSuccess'
+  #     'sendError'
+  #   @param handler [function] the event handler to remove
+  #
+  # @overload removeHandler(type)
+  #   removes all handlers for the specified event
+  #
+  #   @param type [string] the event type, must be one of
+  #     'signInSuccess'
+  #     'signInError'
+  #     'signOutSuccess'
+  #     'signOutError'
+  #     'sendSuccess'
+  #     'sendError'
   removeHandler: (type, handler) ->
     # check for unrecognized handler types
     msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
