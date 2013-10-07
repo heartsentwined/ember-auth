@@ -1,7 +1,3 @@
-class Em.Auth.DummyAuthStrategy
-  serialize: (opts = {}) ->
-    opts
-
-  deserialize: (data = {}) ->
-    for k, v of data
-      @auth.set k, v
+class Em.Auth.DummyAuthStrategy extends Em.Auth.AuthStrategy
+  serialize:   (opts) -> opts
+  deserialize: (data) -> @auth.set k, v for k, v of data
