@@ -3,26 +3,33 @@ class Em.Auth.TimeoutableAuthModule
     @config?          || (@config = @auth.timeoutable)
     @config.callback? || (@config.callback = => @auth.signOut())
 
-  syncEvent: (name, args...) ->
-    switch name
-      when 'signInSuccess'  then @register()
-      when 'signInError'    then @clear()
-      when 'signOutSuccess' then @clear()
+    @auth.addHandler 'signInSuccess',  @register
+    @auth.addHandler 'signInError',    @clear
+    @auth.addHandler 'signOutSuccess', @clear
 
+  # @property [Date|null] the start time of the current timeout count
+  #   ! might not be same as session start time
+  # @private
+  _startTime: null
+
+  # timeout the current session by config-ed callback
   timeout: ->
-    return if @startTime == null
+    return if @_startTime == null
     period = @config.period * 60 * 1000 # in ms
-    return if @startTime - new Date() < period
+    return if @_startTime - new Date() < period
     @config.callback()
 
+  # register a new timeout call
   register: ->
-    @startTime = @auth._session.startTime
+    @_startTime = @auth._session.startTime
     period = @config.period * 60 * 1000 # in ms
     setTimeout (=> @timeout()), period
 
+  # reset the timeout time count
   reset: ->
     @register()
-    @startTime = new Date()
+    @_startTime = new Date()
 
+  # clear any pending timeouts
   clear: ->
-    @startTime = null
+    @_startTime = null
