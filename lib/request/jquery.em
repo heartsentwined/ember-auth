@@ -29,7 +29,7 @@ class Em.Auth.JqueryAuthRequest extends Em.Auth.AuthRequest
         settings
       ).done( (json, status, jqxhr) =>
         @jqxhr = jqxhr
-        resolve json
+        resolve jqxhr.responseText
       ).fail (jqxhr) =>
         @jqxhr = jqxhr
         reject jqxhr.responseText
