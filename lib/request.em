@@ -1,10 +1,33 @@
 class Em.Auth.AuthRequest
+  # send a sign in request
+  #
+  # @param [string] url to the sign in end point
+  # @param [object] jquery.ajax(settings) -style options object
+  #
+  # @return [Em.RSVP.Promise]
   signIn:  mustImplement 'signIn'
+
+  # send a sign out request
+  #
+  # @param [string] url to the sign out end point
+  # @param [object] jquery.ajax(settings) -style options object
+  #
+  # @return [Em.RSVP.Promise]
   signOut: mustImplement 'signOut'
+
+  # send a custom request
+  #
+  # @param [string] url to the end point
+  # @param [object] jquery.ajax(settings) -style options object
+  #
+  # @return [Em.RSVP.Promise]
   send:    mustImplement 'send'
 
-  # different base url support
-  # @param {path} string the path for resolving full URL
+  # resolve url, possibly to different auth.baseUrl if set
+  #
+  # @param path [string] relative url path
+  #
+  # @return [string] the resolved url
   resolveUrl: (path) ->
     base = @auth.baseUrl
     if base && base[base.length-1] == '/'
