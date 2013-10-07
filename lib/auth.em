@@ -91,6 +91,7 @@ class Em.Auth
 
   createSession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
+      data     = @_response.canonicalize data if typeof data == 'string'
       promises = []
       promises.push @_strategy.deserialize data
       promises.push @_session.start data
@@ -99,6 +100,7 @@ class Em.Auth
 
   destroySession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
+      data     = @_response.canonicalize data if typeof data == 'string'
       promises = []
       promises.push @_strategy.deserialize data
       promises.push @_session.end data
