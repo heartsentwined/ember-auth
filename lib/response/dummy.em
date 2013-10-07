@@ -1,2 +1,2 @@
-class Em.Auth.DummyAuthResponse
-  canonicalize: (input) -> input
+class Em.Auth.DummyAuthResponse extends Em.Auth.AuthResponse
+  canonicalize: (response) -> response
