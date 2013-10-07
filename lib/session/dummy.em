@@ -1,11 +1,11 @@
 class Em.Auth.DummyAuthSession extends Em.Auth.AuthSession
-  session: {}
+  _session: {}
 
   retrieve: (key) ->
-    @get "session.#{key}"
+    @get "_session.#{key}"
 
   store: (key, value) ->
-    @set "session.#{key}", value
+    @set "_session.#{key}", value
 
   remove: (key) ->
-    delete @session[key]
+    delete @_session[key]
