@@ -26,7 +26,54 @@ class Em.Auth
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
 
-    null # suppress CS comprehension
+    @_handlers =
+      signInSuccess:  []
+      signInError:    []
+      signOutSuccess: []
+      signOutError:   []
+      sendSuccess:    []
+      sendError:      []
+
+  addHandler: (type, handler) ->
+    # check for unrecognized handler types
+    msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
+    validTypes = [
+      'signInSuccess'
+      'signInError'
+      'signOutSuccess'
+      'signOutError'
+      'sendSuccess'
+      'sendError'
+    ]
+    Em.assert msg, type in validTypes
+
+    # check for handler being a function
+    msg = 'Handler must be a function'
+    Em.assert msg, typeof handler == 'function'
+
+    @_handlers[type].pushObject handler
+
+  removeHandler: (type, handler) ->
+    # check for unrecognized handler types
+    msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
+    validTypes = [
+      'signInSuccess'
+      'signInError'
+      'signOutSuccess'
+      'signOutError'
+      'sendSuccess'
+      'sendError'
+    ]
+    Em.assert msg, type in validTypes
+
+    # check for handler being a function; or allow for undefined = remove all
+    msg = 'Handler must be a function or omitted for removing all handlers'
+    Em.assert msg, typeof handler == 'function' || typeof handler == 'undefined'
+
+    if handler?
+      @_handlers[type].removeObject handler
+    else
+      @_handlers[type] = []
 
   # =====================
   # Config
