@@ -1,17 +1,9 @@
-class Em.Auth.DummyAuthRequest
-  signIn: (url, opts = {}) ->
+class Em.Auth.DummyAuthRequest extends Em.Auth.AuthRequest
+  signIn: (url, opts) ->
     @send opts
-    switch opts.status
-      when 'success' then @auth.trigger 'signInSuccess'
-      when 'error'   then @auth.trigger 'signInError'
-    @auth.trigger 'signInComplete'
 
-  signOut: (url, opts = {}) ->
+  signOut: (url, opts) ->
     @send opts
-    switch opts.status
-      when 'success' then @auth.trigger 'signOutSuccess'
-      when 'error'   then @auth.trigger 'signOutError'
-    @auth.trigger 'signOutComplete'
 
-  send: (opts = {}) ->
-    @auth._response.canonicalize opts
+  send: (opts) ->
+    new Em.RSVP.Promise (resolve, reject) -> resolve opts
