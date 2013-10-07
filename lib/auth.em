@@ -251,7 +251,7 @@ class Em.Auth
   session:  'cookie'
 
   # module
-  modules: ['emberData']
+  modules: []
 
   # request
   signInEndPoint: null  # req
