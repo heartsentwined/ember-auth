@@ -1,6 +1,7 @@
 class Em.Auth
   init: ->
     @_initializeAdapters()
+    @_initializeModules()
 
   _handlers:
     signInSuccess:  []
@@ -9,6 +10,9 @@ class Em.Auth
     signOutError:   []
     sendSuccess:    []
     sendError:      []
+
+  # @property [object] holds instances of enabled modules
+  module: {}
 
   _initializeAdapters: ->
     for type in ['request', 'response', 'strategy', 'session']
@@ -35,6 +39,23 @@ class Em.Auth
 
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
+
+    null # suppress CS comprehension
+
+  _initializeModules: ->
+    for moduleName in @modules
+      containerKey = "authModule:#{moduleName}"
+      klass        = "#{Em.string.classify moduleName}AuthModule"
+
+      # lookup the module
+      module = @container.lookup containerKey
+
+      # helpful error msg if not found in container
+      msg = "The requested `#{config}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
+      Em.assert msg, module
+
+      # initialize the module
+      @set "module.#{moduleName}", module.create { auth: this }
 
     null # suppress CS comprehension
 
