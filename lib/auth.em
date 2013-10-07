@@ -34,6 +34,77 @@ class Em.Auth
       sendSuccess:    []
       sendError:      []
 
+  signIn: (url, opts) ->
+    if typeof opts == 'undefined'
+      opts = url
+      url  = @_request.resolveUrl @signInEndPoint
+    new Em.RSVP.Promise (resolve, reject) =>
+      @_request.signIn(url, @_strategy.serialize(opts))
+      .then( (response) =>
+        data     = @_response.canonicalize response
+        promises = []
+        promises.push @_strategy.deserialize data
+        promises.push @_session.start data
+        promises.push handler(data) for handler in @_handlers.signInSuccess
+        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+      ).fail (response) =>
+        data     = @_response.canonicalize response
+        promises = []
+        promises.push @_strategy.deserialize data
+        promises.push @_session.end data
+        promises.push handler(data) for handler in @_handlers.signInError
+        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+
+  signOut: (url, opts) ->
+    if typeof opts == 'undefined'
+      opts = url
+      url  = @_request.resolveUrl @signOutEndPoint
+    new Em.RSVP.Promise (resolve, reject) =>
+      @_request.signOut(url, @_strategy.serialize(opts))
+      .then( (response) =>
+        data     = @_response.canonicalize response
+        promises = []
+        promises.push @_strategy.deserialize data
+        promises.push @_session.end data
+        promises.push handler(data) for handler in @_handlers.signOutSuccess
+        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+      ).fail (response) =>
+        data     = @_response.canonicalize response
+        promises = []
+        promises.push handler(data) for handler in @_handlers.signOutError
+        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+
+  send: (url, opts) ->
+    if typeof opts == 'undefined'
+      opts = url
+      url  = @_request.resolveUrl ''
+    new Em.RSVP.Promise (resolve, reject) =>
+      @_request.send(url, @_strategy.serialize(opts))
+      .then( (response) =>
+        promises = []
+        promises.push handler(data) for handler in @_handlers.sendSuccess
+        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+      ).fail (response) =>
+        promises = []
+        promises.push handler(data) for handler in @_handlers.sendError
+        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+
+  createSession: (data) ->
+    new Em.RSVP.Promise (resolve, reject) =>
+      promises = []
+      promises.push @_strategy.deserialize data
+      promises.push @_session.start data
+      promises.push handler(data) for handler in @_handlers.signInSuccess
+      Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+
+  destroySession: (data) ->
+    new Em.RSVP.Promise (resolve, reject) =>
+      promises = []
+      promises.push @_strategy.deserialize data
+      promises.push @_session.end data
+      promises.push handler(data) for handler in @_handlers.signOutSuccess
+      Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+
   addHandler: (type, handler) ->
     # check for unrecognized handler types
     msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
