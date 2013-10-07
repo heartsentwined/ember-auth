@@ -26,13 +26,15 @@ class Em.Auth
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
 
-    @_handlers =
-      signInSuccess:  []
-      signInError:    []
-      signOutSuccess: []
-      signOutError:   []
-      sendSuccess:    []
-      sendError:      []
+    null # suppress CS comprehension
+
+  _handlers:
+    signInSuccess:  []
+    signInError:    []
+    signOutSuccess: []
+    signOutError:   []
+    sendSuccess:    []
+    sendError:      []
 
   # send a sign in request
   #
