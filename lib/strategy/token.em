@@ -1,9 +1,12 @@
-class Em.Auth.TokenAuthStrategy
+class Em.Auth.TokenAuthStrategy extends Em.Auth.AuthStrategy
   init: ->
-    @authToken? || (@authToken = null)
-    @inject()
+    @auth.reopen
+      authToken: Em.computed.alias '_strategy.authToken'
 
-  serialize: (opts = {}) ->
+  # @property [string|null] the auth token, if signed in; otherwise null
+  authToken: null
+
+  serialize: (opts) ->
     return opts unless @auth.signedIn
 
     switch @auth.tokenLocation
@@ -22,11 +25,6 @@ class Em.Auth.TokenAuthStrategy
 
     return opts
 
-  deserialize: (data = {}) ->
+  deserialize: (data) ->
     @authToken            = data[@auth.tokenKey]
     @auth._session.userId = data[@auth.tokenIdKey] if @auth.tokenIdKey
-
-  inject: ->
-    # TODO make these two-way bindings instead of read-only from auth side
-    @auth.reopen
-      authToken: Em.computed(=> @authToken).property('_strategy.adapter.authToken')
