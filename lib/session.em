@@ -1,10 +1,10 @@
 class Em.Auth.AuthSession
   init: ->
     @auth.reopen
-      signedIn:       Em.computed.alias '_session.signedIn'
-      userId:         Em.computed.alias '_session.userId'
-      startTime:      Em.computed.alias '_session.startTime'
-      endTime:        Em.computed.alias '_session.endTime'
+      signedIn:  Em.computed.alias '_session.signedIn'
+      userId:    Em.computed.alias '_session.userId'
+      startTime: Em.computed.alias '_session.startTime'
+      endTime:   Em.computed.alias '_session.endTime'
 
     @signedIn  = false
     @userId    = null
