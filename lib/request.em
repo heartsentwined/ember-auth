@@ -1,10 +1,4 @@
 class Em.Auth.AuthRequest
-  init: ->
-    @auth.reopen
-      signIn:  Em.computed.alias '_request.signIn'
-      signOut: Em.computed.alias '_request.signOut'
-      send:    Em.computed.alias '_request.send'
-
   signIn:  mustImplement 'signIn'
   signOut: mustImplement 'signOut'
   send:    mustImplement 'send'
