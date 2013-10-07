@@ -1,6 +1,16 @@
 class Em.Auth
   init: ->
-    # initialize the adapters
+    @initializeAdapters()
+
+  _handlers:
+    signInSuccess:  []
+    signInError:    []
+    signOutSuccess: []
+    signOutError:   []
+    sendSuccess:    []
+    sendError:      []
+
+  initializeAdapters: ->
     for type in ['request', 'response', 'strategy', 'session']
       # allow only a string as config value
       msg    = "The `#{type}` config should be a string"
@@ -27,14 +37,6 @@ class Em.Auth
       @set "_#{type}", adapter.create { auth: this }
 
     null # suppress CS comprehension
-
-  _handlers:
-    signInSuccess:  []
-    signInError:    []
-    signOutSuccess: []
-    signOutError:   []
-    sendSuccess:    []
-    sendError:      []
 
   # send a sign in request
   #
