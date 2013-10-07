@@ -3,6 +3,7 @@ class Em.Auth
     @_initializeAdapters()
     @_initializeModules()
 
+  # @private
   _handlers:
     signInSuccess:  []
     signInError:    []
@@ -14,6 +15,7 @@ class Em.Auth
   # @property [object] holds instances of enabled modules
   module: {}
 
+  # @private
   _initializeAdapters: ->
     for type in ['request', 'response', 'strategy', 'session']
       # allow only a string as config value
@@ -42,6 +44,7 @@ class Em.Auth
 
     null # suppress CS comprehension
 
+  # @private
   _initializeModules: ->
     for moduleName in @modules
       containerKey = "authModule:#{moduleName}"

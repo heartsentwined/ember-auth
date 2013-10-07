@@ -1,4 +1,5 @@
 class Em.Auth.DummyAuthSession extends Em.Auth.AuthSession
+  # @private
   _session: {}
 
   retrieve: (key) ->
