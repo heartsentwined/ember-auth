@@ -1,6 +1,6 @@
 class Em.Auth
   init: ->
-    @initializeAdapters()
+    @_initializeAdapters()
 
   _handlers:
     signInSuccess:  []
@@ -10,7 +10,7 @@ class Em.Auth
     sendSuccess:    []
     sendError:      []
 
-  initializeAdapters: ->
+  _initializeAdapters: ->
     for type in ['request', 'response', 'strategy', 'session']
       # allow only a string as config value
       msg    = "The `#{type}` config should be a string"
