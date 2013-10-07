@@ -16,6 +16,7 @@ class Em.Auth.EmberDataAuthModule
 
   # find the current signed in user
   findUser: ->
+    return unless @auth.userId? && @config.userModel
     @store.find(@config.userModel, @auth.userId).then (user) => @user = user
 
   # clear any current signed in user
