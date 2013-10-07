@@ -300,3 +300,7 @@ class Em.Auth
   # module.emberData
   emberData:
     userModel: null # string for model type, as in store.find(userModel, id)
+
+  # module.emberModel
+  emberModel:
+    userModel: null # e.g. 'App.User' (string), not App.User (the class)
