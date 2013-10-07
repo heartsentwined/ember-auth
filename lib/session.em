@@ -6,6 +6,9 @@ class Em.Auth.AuthSession
       startTime: Em.computed.alias '_session.startTime'
       endTime:   Em.computed.alias '_session.endTime'
 
+    @auth.addHandler 'signInSuccess',  @start
+    @auth.addHandler 'signOutSuccess', @end
+
   # @property [bool] whether a user has signed in
   signedIn:  false
 
