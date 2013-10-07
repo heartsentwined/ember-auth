@@ -39,10 +39,12 @@ class Em.Auth
   # @overload signIn(url, opts)
   #   @param url [string] (opt) relative url to the end point,
   #     default: auth.signInEndPoint
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #
   # @overload signIn(opts)
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #   url will default to auth.signInEndPoint
   #
   # @return [Em.RSVP.Promise]
@@ -50,6 +52,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl @signInEndPoint
+    opts ||= {}
+
     new Em.RSVP.Promise (resolve, reject) =>
       @_request.signIn(url, @_strategy.serialize(opts))
       .then( (response) =>
@@ -72,10 +76,12 @@ class Em.Auth
   # @overload signOut(url, opts)
   #   @param url [string] (opt) relative url to the end point,
   #     default: auth.signOutEndPoint
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #
   # @overload signIn(opts)
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #   url will default to auth.signOutEndPoint
   #
   # @return [Em.RSVP.Promise]
@@ -83,6 +89,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl @signOutEndPoint
+    opts ||= {}
+
     new Em.RSVP.Promise (resolve, reject) =>
       @_request.signOut(url, @_strategy.serialize(opts))
       .then( (response) =>
@@ -103,10 +111,12 @@ class Em.Auth
   # @overload send(url, opts)
   #   @param url [string] (opt) relative url to the end point,
   #     default: (root)
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #
   # @overload send(opts)
-  #   @param opts [object] (opt) jquery.ajax(settings) -style options object
+  #   @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #     default: {}
   #   url will default to (root)
   #
   # @return [Em.RSVP.Promise]
@@ -114,6 +124,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl ''
+    opts ||= {}
+
     new Em.RSVP.Promise (resolve, reject) =>
       @_request.send(url, @_strategy.serialize(opts))
       .then( (response) =>
