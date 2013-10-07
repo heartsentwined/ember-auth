@@ -16,7 +16,7 @@ class Em.Auth.AuthSession
     @startTime = new Date()
     @endTime   = null
 
-  clear: ->
+  end: ->
     @signedIn  = false
     @userId    = null
     @startTime = null
