@@ -47,7 +47,8 @@ class Em.Auth
   #     default: {}
   #   url will default to auth.signInEndPoint
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   `canonicalize`d data object
   signIn: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -84,7 +85,8 @@ class Em.Auth
   #     default: {}
   #   url will default to auth.signOutEndPoint
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   `canonicalize`d data object
   signOut: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -119,7 +121,8 @@ class Em.Auth
   #     default: {}
   #   url will default to (root)
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   `canonicalize`d data object
   send: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -142,7 +145,8 @@ class Em.Auth
   # @param data [string|object] object representing session information,
   #   either raw string, or as `canonicalize`d by the response adapter
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   `canonicalize`d data object
   createSession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
       data     = @_response.canonicalize data if typeof data == 'string'
@@ -157,7 +161,8 @@ class Em.Auth
   # @param data [string|object] (opt) object representing session information,
   #   either raw string, or as `canonicalize`d by the response adapter
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   `canonicalize`d data object
   destroySession: (data) ->
     new Em.RSVP.Promise (resolve, reject) =>
       data     = @_response.canonicalize data if typeof data == 'string'

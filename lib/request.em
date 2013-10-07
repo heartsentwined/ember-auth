@@ -4,7 +4,8 @@ class Em.Auth.AuthRequest
   # @param [string] url to the sign in end point
   # @param [object] jquery.ajax(settings) -style options object
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   response body as expected by the response adapter
   signIn:  mustImplement 'signIn'
 
   # send a sign out request
@@ -12,7 +13,8 @@ class Em.Auth.AuthRequest
   # @param [string] url to the sign out end point
   # @param [object] jquery.ajax(settings) -style options object
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   response body as expected by the response adapter
   signOut: mustImplement 'signOut'
 
   # send a custom request
@@ -20,7 +22,8 @@ class Em.Auth.AuthRequest
   # @param [string] url to the end point
   # @param [object] jquery.ajax(settings) -style options object
   #
-  # @return [Em.RSVP.Promise]
+  # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
+  #   response body as expected by the response adapter
   send:    mustImplement 'send'
 
   # resolve url, possibly to different auth.baseUrl if set
