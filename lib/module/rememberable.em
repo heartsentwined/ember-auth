@@ -3,45 +3,59 @@ class Em.Auth.RememberableAuthModule
     @config? || (@config = @auth.rememberable)
     @patch()
 
-  syncEvent: (name, args...) ->
-    switch name
-      when 'signInSuccess'  then @remember()
-      when 'signInError'    then @forget()
-      when 'signOutSuccess' then @forget()
+    @auth.addHandler 'signInSuccess',  @remember
+    @auth.addHandler 'signInError',    @forget
+    @auth.addHandler 'signOutSuccess', @forget
 
+  # try to recall a remembered session, if any
+  #
+  # @param opts [object] (opt) jquery.ajax(settings) -style options object,
+  #   default: {}
+  #
+  # @return [Em.RSVP.Promise]
+  #   if a remembered session is found, returns the auth.signIn() promise
+  #   else returns an empty promise that rejects with no argument / undefined
   recall: (opts = {}) ->
-    @auth.wrapPromise (resolve, reject) =>
-      if !@auth.signedIn && (token = @retrieveToken())
-        @fromRecall = true
-        opts.data ||= {}
-        opts.data[@config.tokenKey] = token
-        # still resolve on failure:
-        # - it means a signInError, let error handling proceed from that
-        # - allows other codes to continue
-        if @config.endPoint?
-          @auth.signIn(@config.endPoint, opts).then -> resolve(), -> resolve()
-        else
-          @auth.signIn(opts).then -> resolve(), -> resolve()
+    if !@auth.signedIn && (token = @retrieveToken())
+      opts.data ||= {}
+      opts.data[@config.tokenKey] = token
+      if @config.endPoint?
+        url = @auth._request.resolveUrl @config.endPoint
+        @auth.signIn url, opts
       else
-        resolve()
-
-  remember: ->
-    if token = @auth.response?[@config.tokenKey]
-      @storeToken(token) unless token == @retrieveToken()
+        @auth.signIn opts
     else
-      @forget() unless @fromRecall
-    @fromRecall = false
+      new Em.RSVP.reject
 
+  # clear any existing remembered session,
+  # then extract any rememberable session info from sign in payload
+  #
+  # @param data [object] the `canonicalize`d data object
+  remember: (data) ->
+    # clear any existing remembered session first
+    @forget()
+
+    if token = data[@config.tokenKey]
+      @storeToken(token) unless token == @retrieveToken()
+
+  # clear any existing remembered session
   forget: ->
     @removeToken()
 
+  # retreive the rememberable token from session storage
+  #
+  # @return [string|null|undefined] the rememberable token, or null/undef
   retrieveToken: ->
     @auth._session.retrieve 'ember-auth-rememberable'
 
+  # store the rememberable token into session storage
+  #
+  # @param token [string] the rememberable token
   storeToken: (token) ->
     @auth._session.store 'ember-auth-rememberable', token,
       expires: @config.period
 
+  # remove any rememberable token from session storage
   removeToken: ->
     @auth._session.remove 'ember-auth-rememberable'
 
@@ -49,5 +63,10 @@ class Em.Auth.RememberableAuthModule
     self = this
     Em.Route.reopen
       beforeModel: ->
-        self.auth.followPromise super.apply(this, arguments), ->
-          self.recall() if self.config.autoRecall && !self.auth.signedIn
+        ret = super.apply this, arguments
+        return ret unless self.config.autoRecall && !self.auth.signedIn
+
+        if typeof ret.then == 'function'
+          ret.then -> self.recall()
+        else
+          self.recall()
