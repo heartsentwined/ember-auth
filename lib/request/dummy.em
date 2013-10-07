@@ -6,4 +6,4 @@ class Em.Auth.DummyAuthRequest extends Em.Auth.AuthRequest
     @send opts
 
   send: (opts) ->
-    new Em.RSVP.Promise (resolve, reject) -> resolve opts
+    new Em.RSVP.Promise (resolve, reject) -> resolve JSON.stringify opts
