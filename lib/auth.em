@@ -202,26 +202,12 @@ class Em.Auth
 
   # add a handler to be fired on specified event
   #
-  # @param type [string] the event type, must be one of
-  #   'signInSuccess'
-  #   'signInError'
-  #   'signOutSuccess'
-  #   'signOutError'
-  #   'sendSuccess'
-  #   'sendError'
+  # @param type [string] the event type
   # @param handler [function] event handler, optionally returning a promise
   addHandler: (type, handler) ->
     # check for unrecognized handler types
-    msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
-    validTypes = [
-      'signInSuccess'
-      'signInError'
-      'signOutSuccess'
-      'signOutError'
-      'sendSuccess'
-      'sendError'
-    ]
-    Em.assert msg, type in validTypes
+    msg = "Handler type unrecognized; you passed in `#{type}`"
+    Em.assert msg, @_handlers[type]?
 
     # check for handler being a function
     msg = 'Handler must be a function'
@@ -234,37 +220,17 @@ class Em.Auth
   # @overload removeHandler(type, handler)
   #   removes the specified handler for the specified event
   #
-  #   @param type [string] the event type, must be one of
-  #     'signInSuccess'
-  #     'signInError'
-  #     'signOutSuccess'
-  #     'signOutError'
-  #     'sendSuccess'
-  #     'sendError'
+  #   @param type [string] the event type
   #   @param handler [function] the event handler to remove
   #
   # @overload removeHandler(type)
   #   removes all handlers for the specified event
   #
-  #   @param type [string] the event type, must be one of
-  #     'signInSuccess'
-  #     'signInError'
-  #     'signOutSuccess'
-  #     'signOutError'
-  #     'sendSuccess'
-  #     'sendError'
+  #   @param type [string] the event type
   removeHandler: (type, handler) ->
     # check for unrecognized handler types
-    msg = "Handler type must be one of `signInSuccess`, `signInError`, `signOutSuccess`, `signOutError`, `sendSuccess`, `sendError`; you passed in `#{type}`"
-    validTypes = [
-      'signInSuccess'
-      'signInError'
-      'signOutSuccess'
-      'signOutError'
-      'sendSuccess'
-      'sendError'
-    ]
-    Em.assert msg, type in validTypes
+    msg = "Handler type unrecognized; you passed in `#{type}`"
+    Em.assert msg, @_handlers[type]?
 
     # check for handler being a function; or allow for undefined = remove all
     msg = 'Handler must be a function or omitted for removing all handlers'
