@@ -150,7 +150,7 @@ class Em.Auth
   #   url will default to (root)
   #
   # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
-  #   `canonicalize`d data object
+  #   raw response
   send: (url, opts) ->
     if typeof opts == 'undefined'
       opts = url
@@ -161,11 +161,11 @@ class Em.Auth
       @_request.send(url, @_strategy.serialize(opts))
       .then( (response) =>
         promises = []
-        promises.push handler(data) for handler in @_handlers.sendSuccess
+        promises.push handler(response) for handler in @_handlers.sendSuccess
         Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
       ).fail (response) =>
         promises = []
-        promises.push handler(data) for handler in @_handlers.sendError
+        promises.push handler(response) for handler in @_handlers.sendError
         Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
 
   # create a signed in session without server request
