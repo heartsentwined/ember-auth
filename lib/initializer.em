@@ -31,3 +31,5 @@ Em.onLoad 'Ember.Application', (application) ->
       app.inject 'route',      'auth', 'auth:main'
       app.inject 'controller', 'auth', 'auth:main'
       app.inject 'view',       'auth', 'auth:main'
+
+      container.lookup 'auth:main' # eager-load to force init call
