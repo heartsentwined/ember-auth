@@ -14,7 +14,7 @@ class Em.Auth.RememberableAuthModule
   #
   # @return [Em.RSVP.Promise]
   #   if a remembered session is found, returns the auth.signIn() promise
-  #   else returns an empty promise that rejects with no argument / undefined
+  #   else returns a resolved empty promise
   recall: (opts = {}) ->
     if !@auth.signedIn && (token = @retrieveToken())
       opts.data ||= {}
@@ -25,7 +25,7 @@ class Em.Auth.RememberableAuthModule
       else
         @auth.signIn opts
     else
-      new Em.RSVP.reject
+      new Em.RSVP.resolve
 
   # clear any existing remembered session,
   # then extract any rememberable session info from sign in payload
