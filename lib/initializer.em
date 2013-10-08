@@ -27,3 +27,7 @@ Em.onLoad 'Ember.Application', (application) ->
       app.register 'authModule:emberData',  Em.Auth.EmberDataAuthModule
       app.register 'authModule:epf',        Em.Auth.EpfAuthModule
       app.register 'authModule:emberModel', Em.Auth.EmberModelAuthModule
+
+      app.inject 'route',      'auth', 'auth:main'
+      app.inject 'controller', 'auth', 'auth:main'
+      app.inject 'view',       'auth', 'auth:main'
