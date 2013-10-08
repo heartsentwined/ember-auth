@@ -8,117 +8,223 @@ describe 'Em.Auth', ->
     auth.destroy() if auth
     sinon.collection.restore()
 
-  it 'supports events', -> expect(auth.on).toBeDefined()
+  describe '#signIn', ->
+    it 'returns a promise', ->
+      expect(auth.signIn() instanceof Em.RSVP.Promise).toBe true
 
-  example 'auth initializer', (obj) ->
-    klass = Em.String.classify obj
+    it 'delegates to request#signIn', ->
+      spy = sinon.collection.spy auth._request, 'signIn'
+      Em.run -> auth.signIn 'foo', {}
+      expect(spy).toHaveBeenCalledWith 'foo', {}
 
-    it "initializes a #{obj}", ->
-      spy = sinon.collection.spy Em.Auth[klass], 'create'
-      auth = authTest.create()
-      expect(spy).toHaveBeenCalledWithExactly { auth: auth }
-      expect(auth.get("_#{obj}")).not.toBeNull()
+    it 'delegates opts to strategy#serialize', ->
+      spy = sinon.collection.spy auth._strategy, 'serialize'
+      Em.run -> auth.signIn {}
+      expect(spy).toHaveBeenCalledWith {}
 
-    it "allows override with given #{obj}", ->
-      sinon.collection.stub Em.Auth[klass], 'create', ->
-      override = null
-      Em.run ->
-        override = Em.Auth[klass].create
-        data = {}
-        data["_#{obj}"] = override
-        auth = authTest.create data
-      expect(auth.get("_#{obj}")).toEqual override
+    it 'delegates response payload to response#canonicalize', ->
+      sinon.collection.stub auth._request, 'signIn', -> new Em.RSVP.resolve {}
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> auth.signIn()
+      expect(spy).toHaveBeenCalledWith {}
 
-  follow 'auth initializer', 'request'
-  follow 'auth initializer', 'response'
-  follow 'auth initializer', 'strategy'
-  follow 'auth initializer', 'session'
-  follow 'auth initializer', 'module'
+    it 'delegates canonicalized data to strategy#deserialize', ->
+      sinon.collection.stub auth._response, 'canonicalize', -> {}
+      spy = sinon.collection.spy auth._strategy, 'deserialize'
+      Em.run -> auth.signIn()
+      expect(spy).toHaveBeenCalledWith {}
 
-  describe '#trigger', ->
-    it 'triggers event', ->
-      listener = { foo: -> }
-      spy      = sinon.collection.spy listener, 'foo'
-      auth.on 'foo', -> listener.foo()
-      auth.trigger 'foo'
-      expect(spy).toHaveBeenCalled()
+    describe 'success', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'signIn', -> new Em.RSVP.resolve
+        sinon.collection.stub auth._response, 'canonicalize', -> {}
 
-    follow 'delegation', 'trigger', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth
+      it 'delegates canonicalized data to session#start', ->
+        spy = sinon.collection.spy auth._session, 'start'
+        Em.run -> auth.signIn()
+        expect(spy).toHaveBeenCalledWith {}
 
-  describe '#syncEvent', ->
-    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth._request
+      it 'delegates data to registered `signInSuccess` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'signInSuccess', spy
+        Em.run -> auth.signIn()
+        expect(spy).toHaveBeenCalledWith {}
 
-    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth._response
+    describe 'error', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'signIn', -> new Em.RSVP.reject
+        sinon.collection.stub auth._response, 'canonicalize', -> {}
 
-    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth._strategy
+      it 'delegates canonicalized data to session#end', ->
+        spy = sinon.collection.spy auth._session, 'end'
+        Em.run -> auth.signIn()
+        expect(spy).toHaveBeenCalledWith {}
 
-    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth._session
+      it 'delegates data to registered `signInError` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'signInError', spy
+        Em.run -> auth.signIn()
+        expect(spy).toHaveBeenCalledWith {}
 
-    follow 'delegation', 'syncEvent', ['foo'], 'syncEvent', ['foo'], ->
-      beforeEach -> @from = auth; @to = auth._module
+  describe '#signOut', ->
+    it 'returns a promise', ->
+      expect(auth.signOut() instanceof Em.RSVP.Promise).toBe true
 
-  describe 'promises', ->
-    promiseFactory =
-      create: ->
-        new Em.RSVP.Promise (resolve) =>
-          @resolve = resolve
+    it 'delegates to request#signOut', ->
+      spy = sinon.collection.spy auth._request, 'signOut'
+      Em.run -> auth.signOut 'foo', {}
+      expect(spy).toHaveBeenCalledWith 'foo', {}
 
-    describe '#ensurePromise', ->
+    it 'delegates opts to strategy#serialize', ->
+      spy = sinon.collection.spy auth._strategy, 'serialize'
+      Em.run -> auth.signOut {}
+      expect(spy).toHaveBeenCalledWith {}
 
-      describe 'callback returns promise', ->
-        it "returns callback's promise", ->
-          promise = promiseFactory.create()
-          ret = auth.ensurePromise -> promise
-          expect(ret).toEqual promise
+    it 'delegates response payload to response#canonicalize', ->
+      sinon.collection.stub auth._request, 'signOut', -> new Em.RSVP.resolve {}
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> auth.signOut()
+      expect(spy).toHaveBeenCalledWith {}
 
-      describe 'callback does not return promise', ->
-        it 'returns new promise', ->
-          ret = auth.ensurePromise -> null
-          expect(ret.then).toBeDefined()
+    it 'delegates canonicalized data to strategy#deserialize', ->
+      sinon.collection.stub auth._response, 'canonicalize', -> {}
+      spy = sinon.collection.spy auth._strategy, 'deserialize'
+      Em.run -> auth.signOut()
+      expect(spy).toHaveBeenCalledWith {}
 
-    describe '#followPromise', ->
+    describe 'success', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'signOut', -> new Em.RSVP.resolve
+        sinon.collection.stub auth._response, 'canonicalize', -> {}
 
-      it 'returns a promise', ->
-        expect(auth.followPromise(null, ->)?.then).toBeDefined()
+      it 'delegates canonicalized data to session#end', ->
+        spy = sinon.collection.spy auth._session, 'end'
+        Em.run -> auth.signOut()
+        expect(spy).toHaveBeenCalledWith {}
 
-      describe 'other return is a promise', ->
-        it 'executes callback only when promise resolves', ->
-          promise = promiseFactory.create()
-          count = 0
-          auth.followPromise promise, -> count++
-          expect(count).toEqual 0
-          Em.run -> promiseFactory.resolve()
-          expect(count).toEqual 1
+      it 'delegates data to registered `signOutSuccess` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'signOutSuccess', spy
+        Em.run -> auth.signOut()
+        expect(spy).toHaveBeenCalledWith {}
 
-      describe 'other return is not a promise', ->
-        it 'executes callback immediately', ->
-          count = 0
-          auth.followPromise null, -> count++
-          expect(count).toEqual 1
+    describe 'error', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'signOut', -> new Em.RSVP.reject
+        sinon.collection.stub auth._response, 'canonicalize', -> {}
 
-    describe '#wrapPromise', ->
-      it 'returns a promise', ->
-        expect(auth.wrapPromise(->).then).toBeDefined()
+      it 'delegates data to registered `signOutError` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'signOutError', spy
+        Em.run -> auth.signOut()
+        expect(spy).toHaveBeenCalledWith {}
 
-      it 'can resolve', ->
-        promise = promiseFactory.create()
-        count = 0
-        callback = (resolve) -> promise.then -> resolve()
-        auth.wrapPromise(callback).then -> count++
-        expect(count).toEqual 0
-        Em.run -> promiseFactory.resolve()
-        expect(count).toEqual 1
+  describe '#send', ->
+    it 'returns a promise', ->
+      expect(auth.send() instanceof Em.RSVP.Promise).toBe true
 
-      it 'can reject', ->
-        promise = promiseFactory.create()
-        count = 0
-        callback = (resolve, reject) -> promise.then -> reject()
-        auth.wrapPromise(callback).then null, -> count++
-        expect(count).toEqual 0
-        Em.run -> promiseFactory.resolve()
-        expect(count).toEqual 1
+    it 'delegates to request#send', ->
+      spy = sinon.collection.spy auth._request, 'send'
+      Em.run -> auth.send 'foo', {}
+      expect(spy).toHaveBeenCalledWith 'foo', {}
+
+    it 'delegates opts to strategy#serialize', ->
+      spy = sinon.collection.spy auth._strategy, 'serialize'
+      Em.run -> auth.send {}
+      expect(spy).toHaveBeenCalledWith {}
+
+    describe 'success', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'send', -> new Em.RSVP.resolve {}
+
+      it 'delegates data to registered `sendSuccess` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'sendSuccess', spy
+        Em.run -> auth.send()
+        expect(spy).toHaveBeenCalledWith {}
+
+    describe 'error', ->
+      beforeEach ->
+        sinon.collection.stub auth._request, 'send', -> new Em.RSVP.reject {}
+
+      it 'delegates data to registered `sendError` handlers', ->
+        spy = sinon.collection.spy { foo: -> }, 'foo'
+        auth.addHandler 'sendError', spy
+        Em.run -> auth.send()
+        expect(spy).toHaveBeenCalledWith {}
+
+  describe '#createSession', ->
+    it 'returns a promise', ->
+      expect(auth.createSession() instanceof Em.RSVP.Promise).toBe true
+
+    it 'delegates data to response#canonicalize', ->
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> auth.createSession 'foo'
+      expect(spy).toHaveBeenCalledWith 'foo'
+
+    it 'delegates data to strategy#deserialize', ->
+      sinon.collection.stub auth._response, 'canonicalize', -> {}
+      spy = sinon.collection.spy auth._strategy, 'deserialize'
+      Em.run -> auth.createSession 'foo'
+      expect(spy).toHaveBeenCalledWith {}
+
+    it 'delegates data to session#start', ->
+      spy = sinon.collection.spy auth._session, 'start'
+      Em.run -> auth.createSession {}
+      expect(spy).toHaveBeenCalledWith {}
+
+    it 'delegates data to registered `signInSuccess` handlers', ->
+      spy = sinon.collection.spy { foo: -> }, 'foo'
+      auth.addHandler 'signInSuccess', spy
+      Em.run -> auth.createSession {}
+      expect(spy).toHaveBeenCalledWith {}
+
+  describe '#destroySession', ->
+    it 'returns a promise', ->
+      expect(auth.destroySession() instanceof Em.RSVP.Promise).toBe true
+
+    it 'delegates data to response#canonicalize', ->
+      spy = sinon.collection.spy auth._response, 'canonicalize'
+      Em.run -> auth.destroySession 'foo'
+      expect(spy).toHaveBeenCalledWith 'foo'
+
+    it 'delegates data to strategy#deserialize', ->
+      sinon.collection.stub auth._response, 'canonicalize', -> {}
+      spy = sinon.collection.spy auth._strategy, 'deserialize'
+      Em.run -> auth.destroySession 'foo'
+      expect(spy).toHaveBeenCalledWith {}
+
+    it 'delegates data to session#end', ->
+      spy = sinon.collection.spy auth._session, 'end'
+      Em.run -> auth.destroySession {}
+      expect(spy).toHaveBeenCalledWith {}
+
+    it 'delegates data to registered `signOutSuccess` handlers', ->
+      spy = sinon.collection.spy { foo: -> }, 'foo'
+      auth.addHandler 'signOutSuccess', spy
+      Em.run -> auth.destroySession {}
+      expect(spy).toHaveBeenCalledWith {}
+
+  describe '#addHandler', ->
+    it 'adds a handler to specified event type', ->
+      handler = ->
+      auth._handlers.foo = []
+      auth.addHandler 'foo', handler
+      expect(auth._handlers.foo).toEqual [handler]
+
+  describe '#removeHandler', ->
+    describe '(type, handler) ->', ->
+      it 'removes the specified handler from specified event type', ->
+        handler = ->
+        otherHandler = ->
+        auth._handlers.foo = [handler, otherHandler]
+        auth.removeHandler 'foo', handler
+        expect(auth._handlers.foo).toEqual [otherHandler]
+
+    describe '(type) ->', ->
+      it 'removes all handlers from specified event type', ->
+        handler = ->
+        otherHandler = ->
+        auth._handlers.foo = [handler, otherHandler]
+        auth.removeHandler 'foo'
+        expect(auth._handlers.foo).toEqual []
