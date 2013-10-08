@@ -90,5 +90,5 @@ Em.onLoad 'Ember.Application', (application) ->
       Em.Route.reopen
         beforeModel: (queryParams, transition) ->
           transition = queryParams unless transition?
-          @auth.registerRedirect transition
+          @auth.module.actionRedirectable.registerRedirect transition
           super.apply this, arguments
