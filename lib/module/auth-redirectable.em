@@ -9,10 +9,10 @@ class Em.Auth.AuthRedirectableAuthModule
 
   patch: ->
     self = this
-    mixin @AuthRedirectable
+    Em.Route.reopen
       beforeModel: (transition) ->
         ret = super.apply this, arguments
-        return ret if self.auth.signedIn
+        return ret if self.auth.signedIn || !@authRedirectable
 
         promises = []
         promises.push handler(transition) for handler in @_handlers.authAccess
@@ -22,5 +22,3 @@ class Em.Auth.AuthRedirectableAuthModule
             Em.RSVP.all(promises).then => @transitionTo self.config.route
         else
           Em.RSVP.all(promises).then => @transitionTo self.config.route
-
-    @auth.AuthRedirectable = @AuthRedirectable
