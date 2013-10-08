@@ -1,14 +1,35 @@
-$ = jQuery
 class Em.Auth.ActionRedirectableAuthModule
   init: ->
     @config? || (@config = @auth.actionRedirectable)
 
-    @signInRedir?  || (@signInRedir  = null)
-    @signOutRedir? || (@signOutRedir = null)
-    @router?       || (@router       = null)
+    @auth.addHandler 'signInSuccess',  @redirect
+    @auth.addHandler 'signOutSuccess', @redirect
 
-    @patch()
+  # @property [Transition|null] a transition representing last app route state,
+  #   given that the last route state is not blacklisted for sign in redirect;
+  #   null otherwise
+  signInRedir:  null
 
+  # @property [Transition|null] a transition representing last app route state,
+  #   given that the last route state is not blacklisted for sign out redirect;
+  #   null otherwise
+  signOutRedir: null
+
+  # register a transition for redirect upon sign in / out
+  #
+  # @param transition [Transition] the transition to redirect to
+  registerRedirect: (transition) ->
+    routeName = @canonicalizeRoute transition.targetName
+    unless routeName in @getBlacklist('signIn')
+      @signInRedir  = transition
+    unless routeName in @getBlacklist('signOut')
+      @signOutRedir = transition
+
+  # normalize 'foo.index' routes to 'foo' for comparison
+  #
+  # @param route [string] the route name
+  #
+  # @return [string] the route name, with any trailing '.index' stripped
   canonicalizeRoute: (route) ->
     return '' unless typeof route == 'string'
 
@@ -19,14 +40,21 @@ class Em.Auth.ActionRedirectableAuthModule
     return route unless endsWith(route, '.index')
     route.substr(0, route.lastIndexOf('.index'))
 
+  # get the sign in / out route blacklist, each route being canonicalized
+  #
+  # @param env [string] either 'signIn' or 'signOut'
+  #
+  # @return [array<string>] array of routes, each route being canonicalized
   getBlacklist: (env) ->
     return [] unless blacklist = @config["#{env}Blacklist"]
-    @canonicalizeRoute r for r in blacklist
+    @canonicalizeRoute route for route in blacklist
 
-  # returns
-  #   - object = a Transition
-  #   - string as path
-  #   - null otherwise (no redir plz)
+  # resolve the redirect destination for sign in / out
+  #
+  # @param env [string] either 'signIn' or 'signOut'
+  #
+  # @return [Transition|string|null]
+  #   a Transition, or a string being the route name, or null (no redirect)
   resolveRedirect: (env) ->
     return null unless env in ['signIn', 'signOut'] # unknown arg
 
@@ -36,33 +64,31 @@ class Em.Auth.ActionRedirectableAuthModule
     # redirect turned off
     return null     unless fallback
     # smart mode turned off, use static redirect
-    return fallback unless isSmart  # smart mode turned off, just fallback
+    return fallback unless isSmart
     # use fallback if there is no valid (non-blacklist) redir reg-ed
     return @get("#{env}Redir") || fallback
 
-  registerRedirect: (transition) ->
-    routeName = @canonicalizeRoute transition.targetName
-    if $.inArray(routeName, @getBlacklist('signIn')) == -1
-      @signInRedir  = transition
-    if $.inArray(routeName, @getBlacklist('signOut')) == -1
-      @signOutRedir = transition
-
-  +observer auth.signedIn
+  # perform a post- sign in / out redirect
+  #
+  # works with the polymorphic redirect destinations from resolveRedirect(),
+  # including 'no redirect'
   redirect: ->
     env = if @auth.signedIn then 'signIn' else 'signOut'
     return unless result = @resolveRedirect env
     switch typeof result
-      when 'object' then result.retry()
-      when 'string' then @router.transitionTo result
+      when 'object' then result.retry()              # object = a Transition
+      when 'string' then @router.transitionTo result # string = a route name
 
-  patch: ->
-    self = this
-    Em.Route.reopen
-      init: ->
-        self.router ||= @router
-        super.apply this, arguments
+Em.onLoad 'Ember.Application', (application) ->
+  application.initializer
+    name: 'ember-auth.action-redirectable'
+    after: 'ember-auth'
 
-      beforeModel: (transition) ->
-        self.auth.followPromise super.apply(this, arguments), =>
-          self.registerRedirect transition
-          null # make sure it doesn't return any transition
+    initialize: (container, app) ->
+      app.inject 'authModule:actionRedirectable', 'router', 'router:main'
+
+      Em.Route.reopen
+        beforeModel: (queryParams, transition) ->
+          transition = queryParams unless transition?
+          @auth.registerRedirect transition
+          super.apply this, arguments
