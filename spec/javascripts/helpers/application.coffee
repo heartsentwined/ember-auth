@@ -9,7 +9,7 @@ app = -> apps[uuid]
 create = (callback) ->
   Em.run ->
     apps[uuid] = Em.Application.create()
-    app().Store = DS.Store.extend({ revision: 11 })
+    app().Store = DS.Store.extend()
     app().deferReadiness()
     app().Router.reopen { location: 'none' }
     callback.apply(this, [app()]) if typeof callback == 'function'
