@@ -13,7 +13,9 @@ class Em.Auth.RememberableAuthModule
   #   default: {}
   #
   # @return [Em.RSVP.Promise]
-  #   if a remembered session is found, returns the auth.signIn() promise
+  #   if there is no active signed in session,
+  #     and if a remembered session is found,
+  #     returns the auth.signIn() promise;
   #   else returns a resolved empty promise
   recall: (opts = {}) ->
     if !@auth.signedIn && (token = @retrieveToken())
