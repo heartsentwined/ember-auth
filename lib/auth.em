@@ -26,7 +26,7 @@ class Em.Auth
       # lookup the adapter
       containerType = "auth#{Em.String.classify type}"
       containerKey  = "#{containerType}:#{config}"
-      adapter       = @container.lookup containerKey
+      adapter       = @container.lookupFactory containerKey
 
       baseKlass = Em.String.classify containerType
       klass     = "#{Em.String.classify config}#{baseKlass}"
@@ -37,7 +37,7 @@ class Em.Auth
 
       # helpful error msg if not extending from base class
       msg = "The requested `#{config}` #{type}Adapter must extend from Ember.Auth.#{baseKlass}"
-      Em.assert msg, Em.Auth.get(baseKlass).detect adapter
+      Em.assert msg, Em.Auth[baseKlass].detect adapter
 
       # initialize the adapter
       @set "_#{type}", adapter.create { auth: this }
@@ -51,7 +51,7 @@ class Em.Auth
       klass        = "#{Em.String.classify moduleName}AuthModule"
 
       # lookup the module
-      module = @container.lookup containerKey
+      module = @container.lookupFactory containerKey
 
       # helpful error msg if not found in container
       msg = "The requested `#{moduleName}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
