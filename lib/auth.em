@@ -294,7 +294,7 @@ class Em.Auth
 
   # module.urlAuthenticatable
   urlAuthenticatable:
-    paramsKey: null # req
+    params: [] # req, array of params to use for authentication
     endPoint: null
 
   # module.emberData
