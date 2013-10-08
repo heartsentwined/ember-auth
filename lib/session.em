@@ -1,3 +1,7 @@
+mustImplement = (method) ->
+  ->
+    throw new Em.Error "Your session adapter #{@toString()} must implement the required method `#{method}`"
+
 class Em.Auth.AuthSession
   init: ->
     @auth.reopen
@@ -60,7 +64,3 @@ class Em.Auth.AuthSession
   # @param [string] key to the variable
   # @param [object] (opt) adapter-specific options
   remove:   mustImplement 'remove'
-
-mustImplement = (method) ->
-  ->
-    throw new Em.Error "Your session adapter #{@toString()} must implement the required method `#{method}`"

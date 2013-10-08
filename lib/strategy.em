@@ -1,3 +1,7 @@
+mustImplement = (method) ->
+  ->
+    throw new Em.Error "Your strategy adapter #{@toString()} must implement the required method `#{method}`"
+
 class Em.Auth.AuthStrategy
   # inject the current session into a request options object
   #
@@ -13,7 +17,3 @@ class Em.Auth.AuthStrategy
   #
   # @return [Em.RSVP.Promise] (opt)
   deserialize: mustImplement 'deserialize'
-
-mustImplement = (method) ->
-  ->
-    throw new Em.Error "Your strategy adapter #{@toString()} must implement the required method `#{method}`"

@@ -1,3 +1,7 @@
+mustImplement = (method) ->
+  ->
+    throw new Em.Error "Your request adapter #{@toString()} must implement the required method `#{method}`"
+
 class Em.Auth.AuthRequest
   # send a sign in request
   #
@@ -38,7 +42,3 @@ class Em.Auth.AuthRequest
     if path?[0] == '/'
       path = path.substr(1, path.length)
     [base, path].join('/')
-
-mustImplement = (method) ->
-  ->
-    throw new Em.Error "Your request adapter #{@toString()} must implement the required method `#{method}`"
