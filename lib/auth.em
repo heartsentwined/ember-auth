@@ -54,7 +54,7 @@ class Em.Auth
       module = @container.lookup containerKey
 
       # helpful error msg if not found in container
-      msg = "The requested `#{config}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
+      msg = "The requested `#{moduleName}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
       Em.assert msg, module
 
       # initialize the module
