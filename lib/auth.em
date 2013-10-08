@@ -301,6 +301,10 @@ class Em.Auth
   emberData:
     userModel: null # string for model type, as in store.find(userModel, id)
 
+  # module.epf
+  epf:
+    userModel: null # string for model type, as in session.find(userModel, id)
+
   # module.emberModel
   emberModel:
     userModel: null # e.g. 'App.User' (string), not App.User (the class)
