@@ -32,12 +32,18 @@ class Em.Auth.AuthSession
   endTime:   null
 
   # start a session
+  #
+  # @param [object] object representing response payload, as `canonicalize`d
+  #   by the response adapter
   start: ->
     @signedIn  = true
     @startTime = new Date()
     @endTime   = null
 
   # end/clear a session
+  #
+  # @param [object] object representing response payload, as `canonicalize`d
+  #   by the response adapter
   end: ->
     @signedIn  = false
     @userId    = null
