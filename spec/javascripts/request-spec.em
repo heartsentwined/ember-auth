@@ -10,75 +10,6 @@ describe 'Em.Auth.Request', ->
     auth.destroy() if auth
     sinon.collection.restore()
 
-  follow 'adapter init', 'request'
-
-  example 'request method', (method) ->
-    it "injects #{method} method to Auth", ->
-      expect(auth[method]).toBeDefined()
-
-    it 'preserves args', ->
-      spy = sinon.collection.spy request, method
-      Em.run -> auth[method]('foo')
-      expect(spy).toHaveBeenCalledWithExactly('foo')
-
-    follow 'return promise', ->
-      beforeEach -> @return = auth[method]()
-
-  follow 'request method', 'signIn'
-  follow 'request method', 'signOut'
-  follow 'request method', 'send'
-
-  example 'request method override url', (method) ->
-    it 'allows url override by a string first argument', ->
-      spy = sinon.collection.spy request.adapter, method
-      sinon.collection.stub request, 'resolveUrl', -> 'bar'
-      Em.run -> request[method]('foo', {})
-      expect(spy).toHaveBeenCalledWithExactly('foo', {})
-
-    it 'works with opts as first argument', ->
-      spy = sinon.collection.spy request.adapter, method
-      sinon.collection.stub request, 'resolveUrl', -> 'foo'
-      Em.run -> request[method]({})
-      expect(spy).toHaveBeenCalledWithExactly('foo', {})
-
-  follow 'request method override url', 'signIn'
-  follow 'request method override url', 'signOut'
-
-  example 'request server api', (type) ->
-    describe "##{type}", ->
-      beforeEach ->
-        opts = { responseAdapter: 'dummy', strategyAdapter: 'dummy' }
-        opts["#{type}EndPoint"] = '/foo'
-        auth = authTest.create opts
-        request = auth._request
-
-      it 'resolves url', ->
-        spy = sinon.collection.spy request, 'resolveUrl'
-        request[type]('bar')
-        expect(spy).toHaveBeenCalledWithExactly('/foo')
-
-      it 'delegates to adapter', ->
-        spy = sinon.collection.spy request.adapter, type
-        request[type]('bar')
-        expect(spy).toHaveBeenCalledWithExactly('/foo', 'bar')
-
-      it 'serializes opts', ->
-        spy = sinon.collection.spy auth._strategy, 'serialize'
-        request[type]('foo')
-        expect(spy).toHaveBeenCalledWithExactly('foo')
-
-  follow 'request server api', 'signIn'
-  follow 'request server api', 'signOut'
-
-  describe '#send', ->
-    follow 'adapter delegation', 'send', ['foo'], ->
-      beforeEach -> @type = request
-
-    it 'serializes opts', ->
-      spy = sinon.collection.spy auth._strategy, 'serialize'
-      request.send('foo')
-      expect(spy).toHaveBeenCalledWithExactly('foo')
-
   describe '#resolveUrl', ->
 
     example 'request resolve url', ({ input, output, isAppend }) ->
@@ -106,6 +37,3 @@ describe 'Em.Auth.Request', ->
       beforeEach -> auth = authTest.create { baseUrl: '' }
       follow 'request resolve url',
       { input: 'bar', output: '/bar', isAppend: false }
-
-  follow 'adapter sync event', ->
-    beforeEach -> @type = request
