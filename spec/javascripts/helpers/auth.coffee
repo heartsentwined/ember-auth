@@ -1,7 +1,7 @@
 exports = exports ? this
 
-create = (opts) ->
-  container = new Em.Container()
+extend = (opts) ->
+  container = if opts.container? then opts.container else new Em.Container()
 
   container.register 'authRequest:jquery', Em.Auth.JqueryAuthRequest
   container.register 'authRequest:dummy',  Em.Auth.DummyAuthRequest
@@ -33,6 +33,9 @@ create = (opts) ->
     session:  'dummy'
     modules:  []
     container: container
-  Em.run -> Em.Auth.create jQuery.extend true, def, opts
+  Em.Auth.extend jQuery.extend true, def, opts
 
-exports.authTest = { create: create }
+create = (opts) ->
+  extend(opts).create()
+
+exports.authTest = { create: create, extend: extend }
