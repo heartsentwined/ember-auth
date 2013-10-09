@@ -80,8 +80,8 @@ describe 'Em.Auth.JqueryAuthRequest', ->
               follow 'content type', 'application/json; charset=utf-8'
               follow 'data', '{"foo":"bar"}', true
 
-    it 'returns a promise', ->
-      expect(jquery.send({}) instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = jquery.send {}
 
     it 'is customizable', ->
       spy = sinon.collection.spy jQuery, 'ajax'

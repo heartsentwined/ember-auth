@@ -9,8 +9,8 @@ describe 'Em.Auth', ->
     sinon.collection.restore()
 
   describe '#signIn', ->
-    it 'returns a promise', ->
-      expect(auth.signIn() instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = auth.signIn()
 
     it 'delegates to request#signIn', ->
       spy = sinon.collection.spy auth._request, 'signIn'
@@ -80,8 +80,8 @@ describe 'Em.Auth', ->
         expect(spy).toHaveBeenCalledWith {}
 
   describe '#signOut', ->
-    it 'returns a promise', ->
-      expect(auth.signOut() instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = auth.signOut()
 
     it 'delegates to request#signOut', ->
       spy = sinon.collection.spy auth._request, 'signOut'
@@ -146,8 +146,8 @@ describe 'Em.Auth', ->
         expect(spy).toHaveBeenCalledWith {}
 
   describe '#send', ->
-    it 'returns a promise', ->
-      expect(auth.send() instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = auth.send()
 
     it 'delegates to request#send', ->
       spy = sinon.collection.spy auth._request, 'send'
@@ -192,8 +192,8 @@ describe 'Em.Auth', ->
         expect(spy).toHaveBeenCalledWith {}
 
   describe '#createSession', ->
-    it 'returns a promise', ->
-      expect(auth.createSession() instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = auth.createSession()
 
     it 'delegates data to response#canonicalize', ->
       spy = sinon.collection.spy auth._response, 'canonicalize'
@@ -218,8 +218,8 @@ describe 'Em.Auth', ->
       expect(spy).toHaveBeenCalledWith {}
 
   describe '#destroySession', ->
-    it 'returns a promise', ->
-      expect(auth.destroySession() instanceof Em.RSVP.Promise).toBe true
+    follow 'return promise', ->
+      beforeEach -> @return = auth.destroySession()
 
     it 'delegates data to response#canonicalize', ->
       spy = sinon.collection.spy auth._response, 'canonicalize'
