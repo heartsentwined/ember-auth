@@ -32,4 +32,9 @@ Em.onLoad 'Ember.Application', (application) ->
       app.inject 'controller', 'auth', 'auth:main'
       app.inject 'view',       'auth', 'auth:main'
 
+  application.initializer
+    name: 'ember-auth-load'
+    after: 'ember-auth'
+
+    initialize: (container, app) ->
       container.lookup 'auth:main' # eager-load to force init call
