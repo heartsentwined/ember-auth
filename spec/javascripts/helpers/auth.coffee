@@ -1,6 +1,6 @@
 exports = exports ? this
 
-extend = (opts) ->
+extend = (opts = {}) ->
   container = if opts.container? then opts.container else new Em.Container()
 
   container.register 'authRequest:jquery', Em.Auth.JqueryAuthRequest
