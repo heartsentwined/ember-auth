@@ -49,7 +49,7 @@ describe 'Em.Auth.RememberableAuthModule', ->
           it 'calls signIn', ->
             Em.run -> rememberable.recall()
             expect(spy) \
-            .toHaveBeenCalledWithExactly '/bar', { data: { key: 'foo' } }
+            .toHaveBeenCalledWithExactly 'bar', { data: { key: 'foo' } }
 
         describe 'endPoint not set', ->
           it 'calls signIn', ->
