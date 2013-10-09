@@ -1,4 +1,4 @@
-describe 'Em.Auth.Module.Rememberable', ->
+describe 'Em.Auth.RememberableAuthModule', ->
   auth         = null
   spy          = null
   rememberable = null
@@ -10,13 +10,6 @@ describe 'Em.Auth.Module.Rememberable', ->
     # for some reason, if we destroy() it, it will break other suites
     #auth.destroy() if auth
     sinon.collection.restore()
-
-  follow 'events', 'signInSuccess', 'remember', ->
-    beforeEach -> @emitter = auth; @listener = rememberable
-  follow 'events', 'signInError', 'forget', ->
-    beforeEach -> @emitter = auth; @listener = rememberable
-  follow 'events', 'signOutSuccess', 'forget', ->
-    beforeEach -> @emitter = auth; @listener = rememberable
 
   describe '#recall', ->
     beforeEach ->
@@ -41,7 +34,7 @@ describe 'Em.Auth.Module.Rememberable', ->
         expect(spy).not.toHaveBeenCalled()
 
     describe 'not signed in', ->
-      beforeEach -> Em.run -> auth._session.clear()
+      beforeEach -> Em.run -> auth._session.end()
 
       describe 'retrieveToken succeeds', ->
         beforeEach ->
@@ -56,7 +49,7 @@ describe 'Em.Auth.Module.Rememberable', ->
           it 'calls signIn', ->
             Em.run -> rememberable.recall()
             expect(spy) \
-            .toHaveBeenCalledWithExactly 'bar', { data: { key: 'foo' } }
+            .toHaveBeenCalledWithExactly '/bar', { data: { key: 'foo' } }
 
         describe 'endPoint not set', ->
           it 'calls signIn', ->
@@ -69,10 +62,6 @@ describe 'Em.Auth.Module.Rememberable', ->
             foo: 'bar'
             data: { key: 'foo' }
 
-        it 'marks sign in as originating from recall', ->
-          Em.run -> rememberable.recall()
-          expect(rememberable.fromRecall).toBeTruthy()
-
   describe '#remember', ->
     storeTokenSpy = null
     forgetSpy     = null
@@ -82,55 +71,33 @@ describe 'Em.Auth.Module.Rememberable', ->
       forgetSpy     = sinon.collection.spy rememberable, 'forget'
       Em.run -> auth.rememberable.tokenKey = 'key'
 
-    it 'resets fromRecall marker', ->
-      Em.run -> rememberable.remember()
-      expect(rememberable.fromRecall).toBeFalsy()
+    it 'delegates to #forget', ->
+      Em.run -> rememberable.remember {}
+      expect(forgetSpy).toHaveBeenCalled()
 
     describe 'remember token found from response', ->
-      beforeEach -> Em.run -> auth._response.response = { key: 'foo' }
 
       describe 'same as existing token', ->
         beforeEach ->
           sinon.collection.stub rememberable, 'retrieveToken', -> 'foo'
 
         it 'does nothing', ->
-          Em.run -> rememberable.remember()
+          Em.run -> rememberable.remember { key: 'foo' }
           expect(storeTokenSpy).not.toHaveBeenCalled()
-          expect(forgetSpy).not.toHaveBeenCalled()
 
       describe 'different from existing token', ->
         beforeEach ->
           sinon.collection.stub rememberable, 'retrieveToken', -> 'bar'
 
         it 'delegates to #storeToken', ->
-          Em.run -> rememberable.remember()
+          Em.run -> rememberable.remember { key: 'foo' }
           expect(storeTokenSpy).toHaveBeenCalledWithExactly('foo')
 
-        it 'does not forget', ->
-          Em.run -> rememberable.remember()
-          expect(forgetSpy).not.toHaveBeenCalled()
-
     describe 'remember token unavailable', ->
-      beforeEach -> Em.run -> auth._response.response = {}
 
-      describe 'sign in originating from recall', ->
-        beforeEach -> Em.run -> rememberable.fromRecall = true
-
-        it 'does nothing', ->
-          Em.run -> rememberable.remember()
-          expect(storeTokenSpy).not.toHaveBeenCalled()
-          expect(forgetSpy).not.toHaveBeenCalled()
-
-      describe 'sign in not originating from recall', ->
-        beforeEach -> Em.run -> rememberable.fromRecall = false
-
-        it 'delegates to #forget', ->
-          Em.run -> rememberable.remember()
-          expect(forgetSpy).toHaveBeenCalled()
-
-        it 'does not store token', ->
-          Em.run -> rememberable.remember()
-          expect(storeTokenSpy).not.toHaveBeenCalled()
+      it 'does nothing', ->
+        Em.run -> rememberable.remember {}
+        expect(storeTokenSpy).not.toHaveBeenCalled()
 
   follow 'delegation', 'forget', [], 'removeToken', [], ->
     beforeEach -> @from = rememberable; @to = rememberable
@@ -149,7 +116,7 @@ describe 'Em.Auth.Module.Rememberable', ->
   'remove', ['ember-auth-rememberable'], ->
     beforeEach -> @from = rememberable; @to = auth._session
 
-  describe 'auto recall', ->
+  xdescribe 'auto recall', ->
     beforeEach ->
       appTest.create (app) ->
         app.Auth = authTest.create { modules: ['rememberable'] }
