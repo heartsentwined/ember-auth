@@ -1,4 +1,4 @@
-describe 'Em.Auth.Module.Timeoutable', ->
+describe 'Em.Auth.TimeoutableAuthModule', ->
   auth        = null
   spy         = null
   timeoutable = null
@@ -16,21 +16,14 @@ describe 'Em.Auth.Module.Timeoutable', ->
       Em.run -> auth.timeoutable.callback()
       expect(spy).toHaveBeenCalled()
 
-  follow 'events', 'signInSuccess', 'register', ->
-    beforeEach -> @emitter = auth; @listener = timeoutable
-  follow 'events', 'signInError', 'clear', ->
-    beforeEach -> @emitter = auth; @listener = timeoutable
-  follow 'events', 'signOutSuccess', 'clear', ->
-    beforeEach -> @emitter = auth; @listener = timeoutable
-
   describe '#timeout', ->
     beforeEach ->
       spy = sinon.collection.spy()
       Em.run -> auth.timeoutable.callback = -> spy()
 
-    describe 'startTime = null', ->
+    describe '_startTime = null', ->
       beforeEach ->
-        Em.run -> timeoutable.startTime = null
+        Em.run -> timeoutable._startTime = null
 
       it 'does not trigger callback', ->
         Em.run -> timeoutable.timeout()
@@ -41,7 +34,7 @@ describe 'Em.Auth.Module.Timeoutable', ->
         Em.run ->
           auth.timeoutable.period = 2
           oneMinuteAgo = new Date(new Date().getTime() + 1*60*1000)
-          timeoutable.startTime = oneMinuteAgo
+          timeoutable._startTime = oneMinuteAgo
 
       it 'does not trigger callback', ->
         Em.run -> timeoutable.timeout()
@@ -52,20 +45,20 @@ describe 'Em.Auth.Module.Timeoutable', ->
         Em.run ->
           auth.timeoutable.period = 2
           twoMinutesAgo = new Date(new Date().getTime() + 2*60*1000 + 1)
-          timeoutable.startTime = twoMinutesAgo
+          timeoutable._startTime = twoMinutesAgo
 
       it 'triggers callback', ->
         Em.run -> timeoutable.timeout()
         expect(spy).toHaveBeenCalled()
 
   describe '#register', ->
-    it 'sets startTime to current session startTime', ->
+    it 'sets _startTime to current session startTime', ->
       Em.run ->
         auth._session.start()
-        timeoutable.startTime = null
-      expect(timeoutable.startTime).toBeFalsy()
+        timeoutable._startTime = null
+      expect(timeoutable._startTime).toBeFalsy()
       Em.run -> timeoutable.register()
-      expect(timeoutable.startTime).toBe auth.startTime
+      expect(timeoutable._startTime).toBe auth.startTime
 
     it 'delegates to timeout after specified period', ->
       jasmine.Clock.useMock()
@@ -82,11 +75,11 @@ describe 'Em.Auth.Module.Timeoutable', ->
       expect(spy).toHaveBeenCalled()
 
   describe '#reset', ->
-    it 'sets new startTime', ->
-      Em.run -> timeoutable.startTime = null
-      expect(timeoutable.startTime).toBeFalsy()
+    it 'sets new _startTime', ->
+      Em.run -> timeoutable._startTime = null
+      expect(timeoutable._startTime).toBeFalsy()
       Em.run -> timeoutable.reset()
-      expect(timeoutable.startTime instanceof Date).toBeTruthy()
+      expect(timeoutable._startTime instanceof Date).toBeTruthy()
 
     it 're-registers timeout', ->
       spy = sinon.collection.spy timeoutable, 'register'
@@ -94,8 +87,8 @@ describe 'Em.Auth.Module.Timeoutable', ->
       expect(spy).toHaveBeenCalled()
 
   describe '#clear', ->
-    it 'clears startTime', ->
-      Em.run -> timeoutable.startTime = new Date()
-      expect(timeoutable.startTime).toBeTruthy()
+    it 'clears _startTime', ->
+      Em.run -> timeoutable._startTime = new Date()
+      expect(timeoutable._startTime).toBeTruthy()
       Em.run -> timeoutable.clear()
-      expect(timeoutable.startTime).toBeFalsy()
+      expect(timeoutable._startTime).toBeFalsy()
