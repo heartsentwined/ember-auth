@@ -15,7 +15,8 @@ class Em.Auth.AuthRedirectableAuthModule
         return ret if self.auth.signedIn || !@authRedirectable
 
         promises = []
-        promises.push handler(transition) for handler in @_handlers.authAccess
+        for handler in self.auth._handlers.authAccess
+          promises.push handler(transition)
 
         if typeof ret.then == 'function'
           ret.then =>
