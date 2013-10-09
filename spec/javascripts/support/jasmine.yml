@@ -1,7 +1,6 @@
 <% require 'ember_script' %>
 <% Sprockets.register_engine '.em', EmberScript::EmberScriptTemplate %>
 
-<% require 'ember/source' %>
 <% require 'ember/data/source' %>
 <% require 'epf/source' %>
 <% require 'handlebars/source' %>
@@ -20,7 +19,6 @@ spec_files:
 src_dir:
   - lib
   - vendor
-  - <%= ::Ember::Source.bundled_path_for(:production) %>/../
   - <%= ::Ember::Data::Source.bundled_path_for(:production) %>/../
   - <%= ::Epf::Source.bundled_path %>/../
   - <%= ::Handlebars::Source.bundled_path %>/../
