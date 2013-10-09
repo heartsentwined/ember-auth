@@ -35,7 +35,7 @@ class Em.Auth.UrlAuthenticatableAuthModule
     opts.data = $.extend true, data, (opts.data || {})
 
     if @config.endPoint?
-      url = @auth._request.resolveUrl @config.endPoint
+      url = @config.endPoint
       @auth.signIn(url, opts).then => @redirect queryParams, routeName
     else
       @auth.signIn(opts).then => @redirect queryParams, routeName

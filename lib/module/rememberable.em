@@ -22,8 +22,7 @@ class Em.Auth.RememberableAuthModule
       opts.data ||= {}
       opts.data[@config.tokenKey] = token
       if @config.endPoint?
-        url = @auth._request.resolveUrl @config.endPoint
-        @auth.signIn url, opts
+        @auth.signIn @config.endPoint, opts
       else
         @auth.signIn opts
     else
