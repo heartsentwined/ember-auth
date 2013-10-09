@@ -40,10 +40,12 @@ describe 'Em.Auth.EmberModelAuthModule', ->
       beforeEach -> Em.run -> auth.userId = 1
 
       describe 'userModel set', ->
-        beforeEach -> Em.run -> auth.emberModel.userModel = 'foo'
+        beforeEach ->
+          Em.run ->
+            auth.emberModel.userModel = 'foo'
+            sinon.collection.stub Em, 'get', -> foo
 
         it 'delegates to (user model)#fetch', ->
-          sinon.collection.stub Em, 'get', -> foo
           Em.run -> emberModel.findUser()
           expect(spy).toHaveBeenCalledWith 'foo', 1
 
