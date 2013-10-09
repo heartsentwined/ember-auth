@@ -32,7 +32,7 @@ class Em.Auth.EmberDataAuthModule
 Em.onLoad 'Ember.Application', (application) ->
   application.initializer
     name: 'ember-auth.ember-data'
-    after: 'ember-auth'
+    before: 'ember-auth-load'
 
     initialize: (container, app) ->
       app.inject 'authModule:emberData', 'store', 'store:main'

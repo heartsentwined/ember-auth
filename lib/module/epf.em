@@ -32,7 +32,7 @@ class Em.Auth.EpfAuthModule
 Em.onLoad 'Ember.Application', (application) ->
   application.initializer
     name: 'ember-auth.epf'
-    after: 'ember-auth'
+    before: 'ember-auth-load'
 
     initialize: (container, app) ->
       app.inject 'authModule:epf', 'session', 'session:main'
