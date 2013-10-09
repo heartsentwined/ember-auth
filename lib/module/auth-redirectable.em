@@ -10,9 +10,11 @@ class Em.Auth.AuthRedirectableAuthModule
   patch: ->
     self = this
     Em.Route.reopen
-      beforeModel: (transition) ->
+      beforeModel: (queryParams, transition) ->
         ret = super.apply this, arguments
         return ret if self.auth.signedIn || !@authRedirectable
+
+        transition = queryParams unless transition?
 
         promises = []
         for handler in self.auth._handlers.authAccess
