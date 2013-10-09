@@ -15,7 +15,20 @@ describe 'Em.Auth', ->
     it 'delegates to request#signIn', ->
       spy = sinon.collection.spy auth._request, 'signIn'
       Em.run -> auth.signIn 'foo', {}
-      expect(spy).toHaveBeenCalledWith 'foo', {}
+      expect(spy).toHaveBeenCalledWith '/foo', {}
+
+    describe '(url, opts) ->', ->
+      it 'delegates url to request#resolveUrl', ->
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.signIn 'foo', {}
+        expect(spy).toHaveBeenCalledWith 'foo'
+
+    describe '(opts) ->', ->
+      it 'delegates signInEndPoint to request#resolveUrl', ->
+        Em.run -> auth.signInEndPoint = 'foo'
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.signIn {}
+        expect(spy).toHaveBeenCalledWith 'foo'
 
     it 'delegates opts to strategy#serialize', ->
       spy = sinon.collection.spy auth._strategy, 'serialize'
@@ -73,7 +86,20 @@ describe 'Em.Auth', ->
     it 'delegates to request#signOut', ->
       spy = sinon.collection.spy auth._request, 'signOut'
       Em.run -> auth.signOut 'foo', {}
-      expect(spy).toHaveBeenCalledWith 'foo', {}
+      expect(spy).toHaveBeenCalledWith '/foo', {}
+
+    describe '(url, opts) ->', ->
+      it 'delegates url to request#resolveUrl', ->
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.signOut 'foo', {}
+        expect(spy).toHaveBeenCalledWith 'foo'
+
+    describe '(opts) ->', ->
+      it 'delegates signOutEndPoint to request#resolveUrl', ->
+        Em.run -> auth.signOutEndPoint = 'foo'
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.signOut {}
+        expect(spy).toHaveBeenCalledWith 'foo'
 
     it 'delegates opts to strategy#serialize', ->
       spy = sinon.collection.spy auth._strategy, 'serialize'
@@ -126,7 +152,19 @@ describe 'Em.Auth', ->
     it 'delegates to request#send', ->
       spy = sinon.collection.spy auth._request, 'send'
       Em.run -> auth.send 'foo', {}
-      expect(spy).toHaveBeenCalledWith 'foo', {}
+      expect(spy).toHaveBeenCalledWith '/foo', {}
+
+    describe '(url, opts) ->', ->
+      it 'delegates url to request#resolveUrl', ->
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.send 'foo', {}
+        expect(spy).toHaveBeenCalledWith 'foo'
+
+    describe '(opts) ->', ->
+      it 'delegates root url to request#resolveUrl', ->
+        spy = sinon.collection.spy auth._request, 'resolveUrl'
+        Em.run -> auth.send {}
+        expect(spy).toHaveBeenCalledWith ''
 
     it 'delegates opts to strategy#serialize', ->
       spy = sinon.collection.spy auth._strategy, 'serialize'

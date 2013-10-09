@@ -81,6 +81,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl @signInEndPoint
+    else
+      url  = @_request.resolveUrl url
     opts ||= {}
 
     new Em.RSVP.Promise (resolve, reject) =>
@@ -119,6 +121,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl @signOutEndPoint
+    else
+      url  = @_request.resolveUrl url
     opts ||= {}
 
     new Em.RSVP.Promise (resolve, reject) =>
@@ -155,6 +159,8 @@ class Em.Auth
     if typeof opts == 'undefined'
       opts = url
       url  = @_request.resolveUrl ''
+    else
+      url  = @_request.resolveUrl url
     opts ||= {}
 
     new Em.RSVP.Promise (resolve, reject) =>
