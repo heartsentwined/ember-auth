@@ -1,23 +1,20 @@
-describe 'Em.Auth.Response.Json', ->
-  auth    = null
-  adapter = null
+describe 'Em.Auth.JsonAuthResponse', ->
+  auth = null
+  json = null
 
   beforeEach ->
-    auth = authTest.create { responseAdapter: 'json' }
-    adapter = auth._response.adapter
+    auth = authTest.create { response: 'json' }
+    json = auth._response
   afterEach ->
     auth.destroy() if auth
 
   describe '#canonicalize', ->
 
-    it 'works with object', ->
-      expect(adapter.canonicalize { foo: 'bar' }).toEqual { foo: 'bar' }
-
     it 'works with JSON string', ->
-      expect(adapter.canonicalize '{"foo":"bar"}').toEqual { foo: 'bar' }
+      expect(json.canonicalize '{"foo":"bar"}').toEqual { foo: 'bar' }
 
     it 'throws on invalid JSON', ->
-      expect(-> adapter.canonicalize '<!DOCTYPE html>').toThrow()
+      expect(-> json.canonicalize '<!DOCTYPE html>').toThrow()
 
     it 'throws on invalid JSON', ->
-      expect(-> adapter.canonicalize 'foo').toThrow()
+      expect(-> json.canonicalize 'foo').toThrow()
