@@ -35,12 +35,7 @@ describe 'Em.Auth.AuthRedirectableAuthModule', ->
         app.Router.map ->
           @route 'protected'
           @route 'sign-in'
-        app.ProtectedRoute = Em.Route.extend {
-          init: ->
-            super.apply this, arguments
-            console.log "in route #{@auth.signedIn}"
-          authRedirectable: true
-        }
+        app.ProtectedRoute = Em.Route.extend { authRedirectable: true }
         app.SignInRoute = Em.Route.extend()
 
     describe 'not signed in', ->

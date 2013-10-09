@@ -1,4 +1,4 @@
-describe 'Em.Auth.Module.ActionRedirectable', ->
+describe 'Em.Auth.ActionRedirectableAuthModule', ->
   auth        = null
   spy         = null
   actionRedir = null
@@ -123,7 +123,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
         beforeEach ->
           Em.run ->
             auth._session.start() # need to sign in first to trigger change
-            auth._session.clear()
+            auth._session.end()
 
         it 'delegates to #resolveRedirect', ->
           Em.run -> actionRedir.redirect()
@@ -132,7 +132,9 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
     describe 'redirect integration', ->
       beforeEach ->
         appTest.create (app) ->
-          app.Auth = Em.Auth.create { modules: ['actionRedirectable'] }
+          app.Auth = authTest.extend
+            container: app.__container__
+            modules: ['actionRedirectable']
           app.Router.map ->
             @route 'foo', { path: '/foo/:foo_id' }
             @route 'bar'
@@ -140,18 +142,12 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
             model: (params) -> app.Foo.find(params.foo_id)
           app.BarRoute = Em.Route.extend()
           app.Foo = { find: (arg) -> Em.Object.create { _id: arg } }
-          actionRedir = app.Auth.module.actionRedirectable
+        appTest.run (app) ->
+          auth = appTest.lookup 'auth:main'
+          actionRedir = auth.module.actionRedirectable
+          actionRedir.router = appTest.lookup 'router:main'
       afterEach ->
         appTest.destroy()
-
-      # TODO
-      xit 'supports redirect by transition', ->
-        appTest.run (app) ->
-          sinon.collection.stub actionRedir, 'resolveRedirect', \
-          -> ['foo', app.Foo.find(1)]
-        appTest.ready()
-        Em.run -> actionRedir.redirect()
-        expect(appTest.currentPath()).toEqual 'foo'
 
       it 'supports redirect by transition', ->
         # grab an instance of a real transition
@@ -159,9 +155,8 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
         appTest.run (app) ->
           app.BarRoute.reopen
             beforeModel: (transition) ->
-              auth.followPromise super.apply(this, arguments), ->
-                barTransition = transition
-                null # don't return transition!
+              barTransition = transition
+              super.apply this, arguments
         appTest.ready()
         appTest.toRoute 'bar'
         expect(barTransition).not.toBeNull() # now barTransition is populated
@@ -175,7 +170,7 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
         expect(appTest.currentPath()).toEqual 'bar'
 
       it 'supports redirect by path', ->
-        sinon.collection.stub actionRedir, 'resolveRedirect', -> '/foo/1'
+        sinon.collection.stub actionRedir, 'resolveRedirect', -> 'foo'
         appTest.ready()
         Em.run -> actionRedir.redirect()
         expect(appTest.currentPath()).toEqual 'foo'
@@ -183,18 +178,16 @@ describe 'Em.Auth.Module.ActionRedirectable', ->
   describe 'patch', ->
     beforeEach ->
       appTest.create (app) ->
-        app.Auth = Em.Auth.create { modules: ['actionRedirectable'] }
         app.Router.map -> @route 'foo'
         app.FooRoute = Em.Route.extend()
-        actionRedir = app.Auth.module.actionRedirectable
+        app.Auth = authTest.extend
+          container: app.__container__
+          modules: ['actionRedirectable']
+      appTest.run (app) ->
+        auth = appTest.lookup 'auth:main'
+        actionRedir = auth.module.actionRedirectable
     afterEach ->
       appTest.destroy()
-
-    it 'registers router instance', ->
-      expect(actionRedir.router).toBeNull()
-      appTest.ready()
-      appTest.toRoute 'foo'
-      expect(actionRedir.router).not.toBeNull()
 
     it 'registers redirect', ->
       spy = sinon.collection.spy actionRedir, 'registerRedirect'
