@@ -1,11 +1,6 @@
-#= require      initializer
-#= require      auth
-#= require      request
-#= require_tree ./request
-#= require      response
-#= require_tree ./response
-#= require      strategy
-#= require_tree ./strategy
-#= require      session
-#= require_tree ./session
-#= require_tree ./module
+#= require initializer
+#= require auth
+#= require request
+#= require response
+#= require strategy
+#= require session
