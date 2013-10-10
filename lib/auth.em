@@ -13,7 +13,28 @@ class Em.Auth
     sendError:      []
 
   # @property [object] holds instances of enabled modules
-  module: {}
+  +computed modules.@each
+  module: ->
+    modules = {}
+    for moduleName in @modules
+      modules[moduleName] = @container.lookup "authModule:#{moduleName}"
+    modules
+
+  # @property [object] the request adapter instance
+  +computed request
+  _request:  -> @container.lookup "authRequest:#{@request}"
+
+  # @property [object] the response adapter instance
+  +computed response
+  _response: -> @container.lookup "authResponse:#{@response}"
+
+  # @property [object] the strategy adapter instance
+  +computed strategy
+  _strategy: -> @container.lookup "authStrategy:#{@strategy}"
+
+  # @property [object] the session adapter instance
+  +computed session
+  _session:  -> @container.lookup "authSession:#{@session}"
 
   # @private
   _initializeAdapters: ->
