@@ -4,7 +4,7 @@ Em.onLoad('Ember.Application', function (application) {
   application.initializer({
     name: 'ember-auth',
     initialize: function (container, app) {
-      app.register('auth:main', get$(app, 'Auth') || get$(Em, 'Auth'));
+      app.register('auth:main', get$(app, 'Auth') || get$(Em, 'Auth'), { singleton: true });
       app.inject('route', 'auth', 'auth:main');
       app.inject('controller', 'auth', 'auth:main');
       return app.inject('view', 'auth', 'auth:main');
@@ -21,10 +21,6 @@ Em.onLoad('Ember.Application', function (application) {
 var get$ = Ember.get;
 var set$ = Ember.set;
 set$(Em, 'Auth', Ember.Object.extend({
-  init: function () {
-    this._initializeAdapters();
-    return this._initializeModules();
-  },
   _handlers: {
     signInSuccess: [],
     signInError: [],
@@ -33,7 +29,27 @@ set$(Em, 'Auth', Ember.Object.extend({
     sendSuccess: [],
     sendError: []
   },
-  module: {},
+  module: Ember.computed(function () {
+    var moduleName, modules;
+    modules = {};
+    for (var i$ = 0, length$ = get$(this, 'modules').length; i$ < length$; ++i$) {
+      moduleName = get$(this, 'modules')[i$];
+      modules[moduleName] = get$(this, 'container').lookup('authModule:' + moduleName);
+    }
+    return modules;
+  }).property('modules.@each'),
+  _request: Ember.computed(function () {
+    return get$(this, 'container').lookup('authRequest:' + get$(this, 'request'));
+  }).property('request'),
+  _response: Ember.computed(function () {
+    return get$(this, 'container').lookup('authResponse:' + get$(this, 'response'));
+  }).property('response'),
+  _strategy: Ember.computed(function () {
+    return get$(this, 'container').lookup('authStrategy:' + get$(this, 'strategy'));
+  }).property('strategy'),
+  _session: Ember.computed(function () {
+    return get$(this, 'container').lookup('authSession:' + get$(this, 'session'));
+  }).property('session'),
   _initializeAdapters: function () {
     var adapter, baseKlass, config, containerKey, containerType, klass, msg, type;
     for (var cache$ = [
@@ -55,7 +71,6 @@ set$(Em, 'Auth', Ember.Object.extend({
       Em.assert(msg, adapter);
       msg = 'The requested `' + config + '` ' + type + 'Adapter must extend from Ember.Auth.' + baseKlass;
       Em.assert(msg, get$(Em, 'Auth')[baseKlass].detect(adapter));
-      this.set('_' + type, adapter.create({ auth: this }));
     }
     return null;
   },
@@ -68,7 +83,6 @@ set$(Em, 'Auth', Ember.Object.extend({
       module = get$(this, 'container').lookupFactory(containerKey);
       msg = 'The requested `' + moduleName + '` module cannot be found. Either name it (YourApp).' + klass + ', or register it in the container under `' + containerKey + '`.';
       Em.assert(msg, module);
-      this.set('module.' + moduleName, module.create({ auth: this }));
     }
     return null;
   },
