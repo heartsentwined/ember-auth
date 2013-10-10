@@ -1,8 +1,4 @@
 class Em.Auth
-  init: ->
-    @_initializeAdapters()
-    @_initializeModules()
-
   # @private
   _handlers:
     signInSuccess:  []
@@ -60,9 +56,6 @@ class Em.Auth
       msg = "The requested `#{config}` #{type}Adapter must extend from Ember.Auth.#{baseKlass}"
       Em.assert msg, Em.Auth[baseKlass].detect adapter
 
-      # initialize the adapter
-      @set "_#{type}", adapter.create { auth: this }
-
     null # suppress CS comprehension
 
   # @private
@@ -77,9 +70,6 @@ class Em.Auth
       # helpful error msg if not found in container
       msg = "The requested `#{moduleName}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
       Em.assert msg, module
-
-      # initialize the module
-      @set "module.#{moduleName}", module.create { auth: this }
 
     null # suppress CS comprehension
 
