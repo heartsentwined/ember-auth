@@ -3,7 +3,7 @@ Em.onLoad 'Ember.Application', (application) ->
     name: 'ember-auth'
 
     initialize: (container, app) ->
-      app.register 'auth:main', app.Auth || Em.Auth
+      app.register 'auth:main', (app.Auth || Em.Auth), { singleton: true }
 
       app.inject 'route',      'auth', 'auth:main'
       app.inject 'controller', 'auth', 'auth:main'
