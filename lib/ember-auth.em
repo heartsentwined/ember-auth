@@ -4,3 +4,4 @@
 #= require response
 #= require strategy
 #= require session
+#= require config
