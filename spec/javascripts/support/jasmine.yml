@@ -1,17 +1,15 @@
 <% require 'ember_script' %>
 <% Sprockets.register_engine '.em', EmberScript::EmberScriptTemplate %>
 
-<% require 'ember/data/source' %>
-<% require 'epf/source' %>
+<% require 'ember/source' %>
 <% require 'handlebars/source' %>
+<% require 'ember/auth/request/dummy/source' %>
+<% require 'ember/auth/response/dummy/source' %>
+<% require 'ember/auth/strategy/dummy/source' %>
+<% require 'ember/auth/session/dummy/source' %>
 src_files:
   - 'prereq.coffee'
-  - 'ember-auth.em'
 helpers:
-  - 'helpers/sinon.js'
-  - 'helpers/jasmine-sinon.js'
-  - 'helpers/jquery.mockjax.js'
-  - 'helpers/underscore.js'
   - 'helpers/**/*'
   - 'examples/**/*'
 spec_files:
@@ -19,8 +17,10 @@ spec_files:
 src_dir:
   - lib
   - vendor
-  - <%= ::Ember::Data::Source.bundled_path_for(:production) %>/../
-  - <%= ::Epf::Source.bundled_path %>/../
+  - <%= ::Ember::Source.bundled_path_for(:production) %>/../
   - <%= ::Handlebars::Source.bundled_path %>/../
+  - <%= ::Ember::Auth::Request::Dummy::Source.bundled_path %>/../
+  - <%= ::Ember::Auth::Response::Dummy::Source.bundled_path %>/../
+  - <%= ::Ember::Auth::Strategy::Dummy::Source.bundled_path %>/../
+  - <%= ::Ember::Auth::Session::Dummy::Source.bundled_path %>/../
 spec_dir: spec/javascripts
-spec_helper: spec/support/jasmine_helper.rb

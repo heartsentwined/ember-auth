@@ -1,8 +1,5 @@
 exports = exports ? this
 
-# TODO remove this when query params merged into stable release
-Em.FEATURES['query-params'] = true
-
 uuid = 1
 apps = {}
 currentPath = null
@@ -12,7 +9,6 @@ app = -> apps[uuid]
 create = (callback) ->
   Em.run ->
     apps[uuid] = Em.Application.create()
-    app().Store = DS.Store.extend()
     app().deferReadiness()
     app().Router.reopen { location: 'none' }
     callback.apply(this, [app()]) if typeof callback == 'function'

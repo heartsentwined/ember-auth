@@ -10,13 +10,13 @@ describe 'Em.Auth.Session', ->
     auth.destroy() if auth
     sinon.collection.restore()
 
-  follow 'property injection', 'signedIn', ->
+  follow 'property alias', 'signedIn', ->
     beforeEach -> @from = session; @to = auth
-  follow 'property injection', 'userId', ->
+  follow 'property alias', 'userId', ->
     beforeEach -> @from = session; @to = auth
-  follow 'property injection', 'startTime', ->
+  follow 'property alias', 'startTime', ->
     beforeEach -> @from = session; @to = auth
-  follow 'property injection', 'endTime', ->
+  follow 'property alias', 'endTime', ->
     beforeEach -> @from = session; @to = auth
 
   describe '#start', ->
