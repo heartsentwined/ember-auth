@@ -7,8 +7,10 @@ class Em.Auth
       else
         @set k, v unless @get k
 
+  # @private
   _defaults: {}
 
+  # @private
   _defaultConfig: (namespace, defaults) ->
     for k, v of defaults
       if namespace
