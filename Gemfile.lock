@@ -46,7 +46,7 @@ GEM
     ember-auth-session-dummy-source (1.0.1)
       ember-auth-source (~> 9.0)
       ember-source (~> 1.0)
-    ember-auth-source (9.0.1)
+    ember-auth-source (9.0.2)
       ember-source (>= 1.0.0.rc6.2)
     ember-auth-strategy-dummy-source (1.0.1)
       ember-auth-source (~> 9.0)
