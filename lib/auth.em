@@ -1,22 +1,16 @@
+$ = jQuery
 class Em.Auth
-  init: ->
-    for k, v of @_defaults
-      if typeof v == 'object' && @get k
-        for k2, v2 of v
-          @set "#{k}.#{k2}", v2 unless @get "#{k}.#{k2}"
-      else
-        @set k, v unless @get k
-
   # @private
   _defaults: {}
 
   # @private
-  _defaultConfig: (namespace, defaults) ->
-    for k, v of defaults
-      if namespace
+  _config: (namespace, defaults) ->
+    if defaults? # setter
+      for k, v of defaults
+        @_defaults[namespace] ||= {}
         @_defaults[namespace][k] = v
-      else
-        @_defaults[k] = v
+    else # getter
+      $.extend true, {}, @_defaults[namespace], @get(namespace)
 
   # @private
   _handlers:

@@ -8,32 +8,28 @@ describe 'Em.Auth', ->
     auth.destroy() if auth
     sinon.collection.restore()
 
-  describe '#_defaultConfig', ->
+  describe '#_config', ->
     afterEach -> auth._defaults = {}
 
-    it 'registers default configs in root namespace', ->
-      Em.run -> auth._defaultConfig '', { foo: 'bar' }
-      expect(auth._defaults).toEqual { foo: 'bar' }
+    describe 'setter', ->
+      it 'registers default configs in given namespace', ->
+        Em.run -> auth._config 'foo', { bar: 'baz' }
+        expect(auth._defaults).toEqual { foo: { bar: 'baz' } }
 
-    it 'merges default configs into named namespace', ->
-      Em.run -> auth._defaults = { foo: { bar: 'baz' } }
-      Em.run -> auth._defaultConfig 'foo', { foo: 'bar' }
-      expect(auth._defaults).toEqual { foo: { foo: 'bar', bar: 'baz' } }
+      it 'merges default configs into given namespace', ->
+        Em.run -> auth._defaults = { foo: { bar: 'baz' } }
+        Em.run -> auth._config 'foo', { foo: 'bar' }
+        expect(auth._defaults).toEqual { foo: { foo: 'bar', bar: 'baz' } }
 
-  describe '#init', ->
-    it 'merges default configs', ->
-      auth2 = Em.Auth.extend(
-        foo: 'baz'
-        bar:
-          bar2: 'bar3'
-        _defaults:
-          foo: 'bar'
+    describe 'getter', ->
+      it 'merges default configs', ->
+        auth = Em.Auth.extend(
+          foo: 'baz'
           bar:
-            bar1: 'bar1'
-            bar2: 'bar2'
-      ).create()
-      expect(auth2.foo).toEqual 'baz'
-      expect(auth2.bar).toEqual { bar1: 'bar1', bar2: 'bar3' }
+            bar2: 'bar3'
+        ).create()
+        Em.run -> auth._config 'bar', { bar1: 'bar1', bar2: 'bar2' }
+        expect(auth._config 'bar').toEqual { bar1: 'bar1', bar2: 'bar3' }
 
   describe '#signIn', ->
     follow 'return promise', ->
