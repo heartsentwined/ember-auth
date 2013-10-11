@@ -21,6 +21,34 @@ Em.onLoad('Ember.Application', function (application) {
 var get$ = Ember.get;
 var set$ = Ember.set;
 set$(Em, 'Auth', Ember.Object.extend({
+  init: function () {
+    return function (accum$) {
+      var k, v;
+      for (k in get$(this, '_defaults')) {
+        v = get$(this, '_defaults')[k];
+        accum$.push(typeof v === 'object' && this.get(k) ? function (accum$1) {
+          var k2, v2;
+          for (k2 in v) {
+            v2 = v[k2];
+            accum$1.push(!this.get('' + k + '.' + k2) ? this.set('' + k + '.' + k2, v2) : void 0);
+          }
+          return accum$1;
+        }.call(this, []) : !this.get(k) ? this.set(k, v) : void 0);
+      }
+      return accum$;
+    }.call(this, []);
+  },
+  _defaults: {},
+  _defaultConfig: function (namespace, defaults) {
+    return function (accum$) {
+      var k, v;
+      for (k in defaults) {
+        v = defaults[k];
+        accum$.push(namespace ? get$(this, '_defaults')[namespace][k] = v : get$(this, '_defaults')[k] = v);
+      }
+      return accum$;
+    }.call(this, []);
+  },
   _handlers: {
     signInSuccess: [],
     signInError: [],
