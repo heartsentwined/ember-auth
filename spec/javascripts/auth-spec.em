@@ -8,6 +8,33 @@ describe 'Em.Auth', ->
     auth.destroy() if auth
     sinon.collection.restore()
 
+  describe '#_defaultConfig', ->
+    afterEach -> auth._defaults = {}
+
+    it 'registers default configs in root namespace', ->
+      Em.run -> auth._defaultConfig '', { foo: 'bar' }
+      expect(auth._defaults).toEqual { foo: 'bar' }
+
+    it 'merges default configs into named namespace', ->
+      Em.run -> auth._defaults = { foo: { bar: 'baz' } }
+      Em.run -> auth._defaultConfig 'foo', { foo: 'bar' }
+      expect(auth._defaults).toEqual { foo: { foo: 'bar', bar: 'baz' } }
+
+  describe '#init', ->
+    it 'merges default configs', ->
+      auth2 = Em.Auth.extend(
+        foo: 'baz'
+        bar:
+          bar2: 'bar3'
+        _defaults:
+          foo: 'bar'
+          bar:
+            bar1: 'bar1'
+            bar2: 'bar2'
+      ).create()
+      expect(auth2.foo).toEqual 'baz'
+      expect(auth2.bar).toEqual { bar1: 'bar1', bar2: 'bar3' }
+
   describe '#signIn', ->
     follow 'return promise', ->
       beforeEach -> @return = auth.signIn()
