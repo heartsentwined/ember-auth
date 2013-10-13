@@ -1,3 +1,39 @@
+# 9.0.0 - 9.0.4 (13 Oct 2013)
+
+* BC Break: (Major rewrite)
+* rewrite: use injection pattern (#70)
+* rewrite: `ember-auth` now fully modular:
+  - this repo now only contains core
+  - easier upgrades: use semver on individual adapters and modules
+* rewrite: elevate glue code for core method to `auth` object:
+  `signIn`, `signOut`, `send`, `createSession`, `destroySession`
+* rewrite: move from `trigger`-based events to promise-pattern handlers (#99)
+* rewrite: adapters and modules now have base classes and namespaces
+  - `Em.Auth.AuthRequest`, `Em.Auth.*AuthRequest`
+  - `Em.Auth.AuthResponse`, `Em.Auth.*AuthResponse`
+  - `Em.Auth.AuthStrategy`, `Em.Auth.*AuthStrategy`
+  - `Em.Auth.AuthSessiong`, `Em.Auth.*AuthRequest`
+  - `Em.Auth.AuthModule`, `Em.Auth.*AuthModule`
+* enforce `Em.RSVP.Promise` support throughout (#99)
+* `createSession` and `destroySession` now accept `canonicalize`d object
+* `(session adapter).clear()` renamed to `(session adapter).end()`
+* persistence lib modules: individual auto-load current user support (#107)
+* `authRedirectable`: remove mixin in favor of flag declared in route
+* `urlAuthenticatable`: use ember's [query params support][query params PR]
+  (#98, #102, #104, #105)
+* config renaming: `*Adapter` > `*` (`-Adapter` suffix dropped)
+* config change: `urlAuthenticatable.params` is now an array of params
+* default change: the `emberData` module is no longer enabled by default
+* `json` response adapter no longer accepts an object; input must be a JSON
+  string (or empty string)
+* `dummy` response adapter now expects a JSON input string, and will return
+  a `JSON.parse`d object
+* better doc the source code
+* drop ember pre-`1.0` support
+* misc: fix #92, due to `urlAuthenticatable` no longer bundling `$.url`
+
+[query params PR]: https://github.com/emberjs/ember.js/pull/3182
+
 # 8.0.1 (10 Sep 2013)
 
 * fix a failing `actionRedirectable` spec
