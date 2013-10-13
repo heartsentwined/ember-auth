@@ -83,7 +83,7 @@ The `ember-auth` core (this repo) will continue at `9.x`; but all other repos
 
 ### Upgrade ember libs
 
-Next, ember pre-`1.0` support has been dropped. Upgrade ember to latest stable
+Ember pre-`1.0` support has been dropped. Upgrade ember to latest stable
 version. But if you use `urlAuthenticatable`, then you'll need latest master
 build - at least one that includes [#3182][query params PR] and
 [#3383][query params order change PR].
@@ -176,7 +176,7 @@ register it on both `*Success` and `*Error`.
 
 ### Config renaming
 
-Remove the '-Adapter' suffix.
+Remove the `-Adapter` suffix.
 
 Before:
 
