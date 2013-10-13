@@ -34,6 +34,387 @@
 
 [query params PR]: https://github.com/emberjs/ember.js/pull/3182
 
+Upgrade Guide
+-------------
+
+This is a major rewrite on the architectural level. Most changes will require
+a change in approach, instead of a one-liner one-to-one corresponding change.
+You are encouraged to use both the [docs] and this upgrade guide for reference.
+
+### Modular adapters and modules
+
+First, everything has been broken down into its own module. You now need to
+require every single `adapter` and `module` explicitly. Example: you had been
+using the `jquery` request adapter, and the `rememberable` module, in node.
+
+```sh
+$ npm install ember-auth-request-jquery
+$ npm install ember-auth-module-rememberable
+```
+
+(And remember to require / include the individual files.)
+
+Refer to the [docs] for names of each adapter and module.
+
+This should help keep your code size small. Now you will only include what
+you actually use in code base, not, e.g. the `dummy` adapters intended for
+unit-testing, or those modules that you don't use.
+
+This should also allow you to pull in the latest upgrades, e.g. a BC Break on
+module A won't stop you from upgrade other parts - it would only trigger a
+major version bump on module A.
+
+[docs]: http://ember-auth.herokuapp.com/docs
+
+### Versioning
+
+You should use the [pessimistic version constraint operator][pessi ver op] -
+(`~> 1.2`) for rubygems, or `>= 1.2 && < 2.0` for other dependency managers -
+on each adapter, module, and `ember-auth` core itself. (The `1.2` and `2.0`
+versions are just dummy examples.)
+
+Each adapter, module, and the core, will adhere to semantic versioning
+*individually*. You can safely upgrade their minor versions and patches.
+
+The `ember-auth` core (this repo) will continue at `9.x`; but all other repos
+(all adapters and modules) (re)start at version `1.x`.
+
+[pessi ver op]: http://docs.rubygems.org/read/chapter/16#page74
+
+### Upgrade ember libs
+
+Next, ember pre-`1.0` support has been dropped. Upgrade ember to latest stable
+version. But if you use `urlAuthenticatable`, then you'll need latest master
+build - at least one that includes [#3182][query params PR] and
+[#3383][query params order change PR].
+
+[query params order change PR]: https://github.com/emberjs/ember.js/pull/3383
+
+If you are using `ember-data`, upgrade also to latest. At the time of writing,
+`1.0.x` is still in beta, so just grab the latest beta, or latest master.
+
+If you are using `ember-model`, you'll need at least `0.0.10`.
+
+### `extend` from `Em.Auth`
+
+Before:
+
+```coffeescript
+App.Auth = Em.Auth.create()
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.extend()
+```
+
+### Injected `auth` object
+
+By default, you can access `this.auth` from routes, controllers, and views.
+(Hence also from templates.)
+
+Change `App.Auth.*` references to `this.auth.*`.
+
+Before:
+
+```coffeescript
+# inside route, controller, or view
+App.Auth.signIn()
+App.Auth.get('signedIn')
+```
+
+```text
+{{App.Auth.signedIn}}
+```
+
+After:
+
+```coffeescript
+# inside route, controller, or view
+@auth.signIn()
+@auth.get('signedIn')
+```
+
+```text
+{{auth.signedIn}}
+```
+
+If you need to access them elsewhere, the `auth` object is registered in the
+container as `auth:main`. Just inject it into wherever you want.
+
+### Event handlers
+
+Before:
+
+```coffeescript
+App.Auth.on 'signInSuccess', doSomething()
+```
+
+After:
+
+You can now register `promise` handlers for each individual server request:
+
+```coffeescript
+@auth.signIn().then -> doSomething()
+```
+
+Or register a handler for all requests:
+
+```coffeescript
+@auth.addHandler 'signInSuccess', doSomething()
+```
+
+`doSomething()` can also return a promise - such that `ember-auth` won't
+proceed until your promise resolves / rejects.
+
+Refer to the [docs] for full details on this pattern.
+
+The `*Complete` event has been removed; it has no equivalent in the new
+architecture. You'll have to repeat it in both `.then()` and `.fail()`, or
+register it on both `*Success` and `*Error`.
+
+### Config renaming
+
+Remove the '-Adapter' suffix.
+
+Before:
+
+```coffeescript
+App.Auth = Em.Auth.create { requestAdapter: 'jquery' }
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.extend { request: 'jquery' }
+```
+
+### `urlAuthenticatable`
+
+**Pre-req**: `urlAuthenticatable` now uses ember's own query params support.
+You'll need an ember build that includes at least [#3182][query params PR] and
+[#3383][query params order change PR].
+Also note [#3350][global query params issue].
+
+[global query params issue]: https://github.com/emberjs/ember.js/issues/3550
+
+Enable the query params feature.
+
+```coffeescript
+Em.FEATURES['query-params'] = true
+```
+
+Define your params.
+[#3182][query params PR] and [#3350][global query params issue] for syntax.
+
+Params are no longer required to be scoped inside another root level param.
+
+Before:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  urlAuthenticatable:
+    paramsKey: 'auth'
+
+# capturing all `?auth[email]=xxx&auth[password]=xxx` params
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.extend
+  urlAuthenticatable:
+    params: ['email', 'password']
+
+# capturing all `?email=xxx&password=xxx` params
+```
+
+This might necessitate change on your server end point, or code that generate
+the url itself.
+
+`urlAuthenticatable` no longer needs `$.url` / `purl` , and the library is no
+longer bundled with the module. Include the module yourself if you need to
+use it. - Although you shouldn't have relied on `ember-auth` bundling a lib
+in the first place anyway.
+
+### `emberData` no longer included by default
+
+Before:
+
+```coffeescript
+App.Auth = Em.Auth.create
+  # rely on the default `modules: ['emberData']`
+```
+
+After:
+
+```coffeescript
+App.Auth = Em.Auth.extend
+  modules: ['emberData'] # declare explicitly
+```
+
+### Auto-load current user
+
+The `emberData`, `epf`, and `emberModel` modules now support auto-load
+current user according to the api of each of the persistence libs. You can
+remove userland code patches that provide this behavior.
+
+`emberData`:
+
+```coffeescript
+App.Auth = Em.Auth.extend
+  modules: ['emberData']
+  emberData:
+    userModel: 'member'
+
+# will call store.find('member', id)
+```
+
+`epf`:
+
+```coffeescript
+App.Auth = Em.Auth.extend
+  modules: ['epf']
+  epf:
+    userModel: 'member'
+
+# will call session.load('member', id)
+```
+
+`emberModel`:
+
+```coffeescript
+App.Auth = Em.Auth.extend
+  modules: ['emberModel']
+  emberModel:
+    userModel: 'App.Member'
+
+# will call App.Member.fetch(id)
+```
+
+### `authRedirectable`
+
+The `App.Auth.AuthRedirectable` mixin is gone. You can now simply declare an
+`authRedirectable` property to be `true` on the route.
+
+Before:
+
+```coffeescript
+App.ProtectedRoute = Em.Route.extend(App.Auth.Authredirectable, {})
+```
+
+After:
+
+```coffeescript
+App.ProtectedRoute = Em.Route.extend
+  authRedirectable: true
+```
+
+### `createSession` and `destroySession`
+
+They now accept an object, which should be the object that would have returned
+from calling `(response adapter).canonicalize()` on the raw text response.
+
+For most use cases, that just means you can rewrite the code more clearly by:
+
+Before:
+
+```coffeescript
+App.Auth.createSession '{"foo":"bar"}'
+```
+
+After:
+
+```coffeescript
+@auth.createSession { foo: 'bar' }
+```
+
+The text form is still supported, but `(response adapter).canonicalize()` will
+now be called whenever `typeof` the argument is `string`.
+
+`auth.destroySession()` now has the same signature as `auth.createSession()`.
+You can pass an empty object to it if you are just clearing the session, and
+don't need any params on it.
+
+```coffeescript
+@auth.destroySession {}
+```
+
+### `json` response adapter
+
+The `json` response adapter no longer accepts an object. The input must be a
+JSON string. Or an empty string.
+
+### `dummy` response adapter
+
+The `dummy` response adapter now expects a JSON input string, and will return
+a `JSON.parse`d object. The previous behavior was passing through the input
+unaltered.
+
+### Accessing custom response data
+
+Previously, `(auth).get('response')` holds the response data from the last
+request. This has been removed. (`auth.response` is now the config key for the
+response adapter.) Instead, access the response data through the returned
+promise.
+
+```coffeescript
+@auth.signIn().then( (response) ->
+  # `response` is the object holding response data for this request
+).fail (response) ->
+  # `response` is the object holding response data for this request
+```
+
+### Using request, response, strategy, session adapter methods directly
+
+If you had been using, e.g. `auth._response.canonicalize()`, directly,
+note that all the public API for adapters has been standardized and declared
+in both the [docs] and the source code (in the base class, e.g.
+`lib/request.em` for the request adapter base class).
+
+Make sure your calls conform to what `ember-auth` expects. Or better, try to
+use only those declared public methods on the `auth` object.
+
+`(session adapter).clear()` has been renamed to `(session adapter).end()`.
+
+### Customized adapters and modules
+
+If you had been writing customized adapters, there is now an official public
+API that your adapter is supposed to implement. This is documented in both the
+[docs] and the source code (in the base class, e.g. `lib/request.em` for the
+request adapter base class).
+
+Make sure your custom adapter conform to what `ember-auth` expects.
+
+They should also extend from the base class. e.g.
+
+```coffeescript
+App.CustomAuthRequest = Em.Auth.AuthRequest.extend()
+```
+
+You should also
+
+* either name your custom adapter like `App.FooAuthRequest`, for a
+  corresponding usage of `App.Auth = Em.Auth.extend { request: 'foo' }`
+* or register it in the container as `authRequest:foo`, for the same usage
+
+Modules should extend from `Em.Auth.AuthModule`, and
+
+* either named like `App.CustomLibAuthModule`, for
+  `App.Auth = Em.Auth.extend { modules: ['customLib'] }`
+* or registered as `authModule:customLib`, same usage
+
+Make use of the `auth._config` setter and setter for configs. It handles
+the recursive merging of namespaced configs like
+
+```coffeescript
+App.Auth = Em.Auth.extend { rememberable: { tokenKey: 'foo' } }
+```
+
+You are also encouraged to use `auth.addHandler` for most post-sign in (etc)
+logic. Refer to the offcial modules for reference implementation.
+
 # 8.0.1 (10 Sep 2013)
 
 * fix a failing `actionRedirectable` spec
