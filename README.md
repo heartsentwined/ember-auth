@@ -18,6 +18,7 @@ Documentation
 * Getting started:
   A [demo and tutorial](https://github.com/heartsentwined/ember-auth-rails-demo)
   for rails + devise + ember-auth is available.
+  **! Note !** The demo hasn't been upgraded to `9.x` yet.
 * Full docs:
   at the [ember-auth site](http://ember-auth.herokuapp.com).
 * Upgrade guide for users from previous Major Versions:
