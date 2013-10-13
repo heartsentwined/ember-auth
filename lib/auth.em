@@ -45,47 +45,6 @@ class Em.Auth
   +computed session
   _session:  -> @container.lookup "authSession:#{@session}"
 
-  # @private
-  _initializeAdapters: ->
-    for type in ['request', 'response', 'strategy', 'session']
-      # allow only a string as config value
-      msg    = "The `#{type}` config should be a string"
-      config = @get type
-      Em.assert msg, typeof config == 'string'
-
-      # lookup the adapter
-      containerType = "auth#{Em.String.classify type}"
-      containerKey  = "#{containerType}:#{config}"
-      adapter       = @container.lookupFactory containerKey
-
-      baseKlass = Em.String.classify containerType
-      klass     = "#{Em.String.classify config}#{baseKlass}"
-
-      # helpful error msg if not found in container
-      msg = "The requested `#{config}` #{type}Adapter cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
-      Em.assert msg, adapter
-
-      # helpful error msg if not extending from base class
-      msg = "The requested `#{config}` #{type}Adapter must extend from Ember.Auth.#{baseKlass}"
-      Em.assert msg, Em.Auth[baseKlass].detect adapter
-
-    null # suppress CS comprehension
-
-  # @private
-  _initializeModules: ->
-    for moduleName in @modules
-      containerKey = "authModule:#{moduleName}"
-      klass        = "#{Em.String.classify moduleName}AuthModule"
-
-      # lookup the module
-      module = @container.lookupFactory containerKey
-
-      # helpful error msg if not found in container
-      msg = "The requested `#{moduleName}` module cannot be found. Either name it (YourApp).#{klass}, or register it in the container under `#{containerKey}`."
-      Em.assert msg, module
-
-    null # suppress CS comprehension
-
   # send a sign in request
   #
   # @overload signIn(url, opts)
