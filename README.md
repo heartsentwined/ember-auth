@@ -10,8 +10,6 @@ ember-auth
 **Important!** `ember-auth` is no replacement for secure server-side API code.
 Read the [security page](https://github.com/heartsentwined/ember-auth/wiki/Security) for more information.
 
-`ember-auth` does not work with `ember-data 1.0.0` yet.
-
 Documentation
 =============
 
