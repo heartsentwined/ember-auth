@@ -69,42 +69,6 @@ void function () {
     _session: Ember.computed(function () {
       return get$(this, 'container').lookup('authSession:' + get$(this, 'session'));
     }).property('session'),
-    _initializeAdapters: function () {
-      var adapter, baseKlass, config, containerKey, containerType, klass, msg, type;
-      for (var cache$ = [
-            'request',
-            'response',
-            'strategy',
-            'session'
-          ], i$ = 0, length$ = cache$.length; i$ < length$; ++i$) {
-        type = cache$[i$];
-        msg = 'The `' + type + '` config should be a string';
-        config = this.get(type);
-        Em.assert(msg, typeof config === 'string');
-        containerType = 'auth' + get$(Em, 'String').classify(type);
-        containerKey = '' + containerType + ':' + config;
-        adapter = get$(this, 'container').lookupFactory(containerKey);
-        baseKlass = get$(Em, 'String').classify(containerType);
-        klass = '' + get$(Em, 'String').classify(config) + baseKlass;
-        msg = 'The requested `' + config + '` ' + type + 'Adapter cannot be found. Either name it (YourApp).' + klass + ', or register it in the container under `' + containerKey + '`.';
-        Em.assert(msg, adapter);
-        msg = 'The requested `' + config + '` ' + type + 'Adapter must extend from Ember.Auth.' + baseKlass;
-        Em.assert(msg, get$(Em, 'Auth')[baseKlass].detect(adapter));
-      }
-      return null;
-    },
-    _initializeModules: function () {
-      var containerKey, klass, module, moduleName, msg;
-      for (var i$ = 0, length$ = get$(this, 'modules').length; i$ < length$; ++i$) {
-        moduleName = get$(this, 'modules')[i$];
-        containerKey = 'authModule:' + moduleName;
-        klass = '' + get$(Em, 'String').classify(moduleName) + 'AuthModule';
-        module = get$(this, 'container').lookupFactory(containerKey);
-        msg = 'The requested `' + moduleName + '` module cannot be found. Either name it (YourApp).' + klass + ', or register it in the container under `' + containerKey + '`.';
-        Em.assert(msg, module);
-      }
-      return null;
-    },
     signIn: function (url, opts) {
       var this$;
       if (typeof opts === 'undefined') {
