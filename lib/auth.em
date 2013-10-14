@@ -151,11 +151,11 @@ class Em.Auth
       .then( (response) =>
         promises = []
         promises.push handler(response) for handler in @_handlers.sendSuccess
-        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+        Em.RSVP.all(promises).then(-> resolve response).fail(-> reject response)
       ).fail (response) =>
         promises = []
         promises.push handler(response) for handler in @_handlers.sendError
-        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+        Em.RSVP.all(promises).then(-> reject response).fail(-> reject response)
 
   # create a signed in session without server request
   #
