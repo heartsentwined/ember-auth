@@ -1,3 +1,7 @@
+# 9.0.5 (14 Oct 2013)
+
+* Add an `_ensurePromise` helper
+
 # 9.0.0 - 9.0.4 (13 Oct 2013)
 
 * BC Break: (Major rewrite)
