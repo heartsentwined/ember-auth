@@ -289,3 +289,11 @@ describe 'Em.Auth', ->
         auth._handlers.foo = [handler, otherHandler]
         auth.removeHandler 'foo'
         expect(auth._handlers.foo).toEqual []
+
+  describe '#_ensurePromise', ->
+    it 'wraps promise around arg if it is not a promise', ->
+      expect(auth._ensurePromise('foo').then).toBeDefined()
+
+    it 'passes through arg if it is a promise', ->
+      promise = new Em.RSVP.resolve
+      expect(auth._ensurePromise(promise)).toBe promise

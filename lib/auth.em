@@ -229,3 +229,10 @@ class Em.Auth
       @_handlers[type].removeObject handler
     else
       @_handlers[type] = []
+
+  # @private
+  _ensurePromise: (ret) ->
+    if typeof ret.then == 'function'
+      ret
+    else
+      new Em.RSVP.resolve ret
