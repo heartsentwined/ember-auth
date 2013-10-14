@@ -174,9 +174,9 @@ void function () {
             promises.push(handler(response));
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
-            return resolve(data);
+            return resolve(response);
           }).fail(function () {
-            return reject(data);
+            return reject(response);
           });
         })).fail((this$2 = this$, function (response) {
           var handler, promises;
@@ -186,9 +186,9 @@ void function () {
             promises.push(handler(response));
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
-            return reject(data);
+            return reject(response);
           }).fail(function () {
-            return reject(data);
+            return reject(response);
           });
         }));
       }));

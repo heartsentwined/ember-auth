@@ -1,3 +1,7 @@
+# 9.0.6 (14 Oct 2013)
+
+* Fixed a (serious) typo causing auth#send to never resolve or reject
+
 # 9.0.5 (14 Oct 2013)
 
 * Add an `_ensurePromise` helper
