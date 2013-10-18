@@ -215,6 +215,8 @@ void function () {
     },
     destroySession: function (data) {
       var this$;
+      if (null == data)
+        data = {};
       return new (get$(get$(Em, 'RSVP'), 'Promise'))((this$ = this, function (resolve, reject) {
         var handler, promises;
         if (typeof data === 'string')

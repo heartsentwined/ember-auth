@@ -1,3 +1,7 @@
+# 9.0.7 (19 Oct 2013)
+
+* Bugfix: `auth#destroySession` should allow no argument (#117)
+
 # 9.0.6 (14 Oct 2013)
 
 * Fixed a (serious) typo causing `auth#send` to never resolve or reject
