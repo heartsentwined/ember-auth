@@ -176,11 +176,12 @@ class Em.Auth
   # destroy any signed in session without server request
   #
   # @param data [string|object] (opt) object representing session information,
-  #   either raw string, or as `canonicalize`d by the response adapter
+  #   either raw string, or as `canonicalize`d by the response adapter;
+  #   default = {}
   #
   # @return [Em.RSVP.Promise] a promise that resolves and rejects with the
   #   `canonicalize`d data object
-  destroySession: (data) ->
+  destroySession: (data = {}) ->
     new Em.RSVP.Promise (resolve, reject) =>
       data     = @_response.canonicalize data if typeof data == 'string'
       promises = []
