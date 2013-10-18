@@ -1,3 +1,7 @@
+# master
+
+* Fix specs for `auth#destroySession` with no arg
+
 # 9.0.7 (19 Oct 2013)
 
 * Bugfix: `auth#destroySession` should allow no argument (#117)
