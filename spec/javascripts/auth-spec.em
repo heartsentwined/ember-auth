@@ -250,7 +250,7 @@ describe 'Em.Auth', ->
       expect(spy).toHaveBeenCalledWith 'foo'
 
     it 'works with no arg', ->
-      spy = sinon.collection.spy auth._response, 'canonicalize'
+      spy = sinon.collection.spy auth._strategy, 'deserialize'
       Em.run -> auth.destroySession()
       expect(spy).toHaveBeenCalledWith {}
 
