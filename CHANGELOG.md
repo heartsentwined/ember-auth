@@ -117,6 +117,19 @@ After:
 App.Auth = Em.Auth.extend()
 ```
 
+### All adapters required
+
+Previous versions allow you to rely on `ember-auth`'s defaults to use the
+default adapters:
+
+* `request`: `jquery`
+* `response`: `json`
+* `strategy`: `token`
+* `session`: `cookie`
+
+These are still the default, but you will need to expliclitly include the
+adapters. They are no longer bundled with `ember-auth`.
+
 ### Injected `auth` object
 
 By default, you can access `this.auth` from routes, controllers, and views.
