@@ -92,10 +92,10 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return resolve(data);
-          }).fail(function () {
+          }).catch(function () {
             return reject(data);
           });
-        })).fail((this$2 = this$, function (response) {
+        })).catch((this$2 = this$, function (response) {
           var data, handler, promises;
           data = get$(this$2, '_response').canonicalize(response);
           promises = [];
@@ -107,7 +107,7 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return reject(data);
-          }).fail(function () {
+          }).catch(function () {
             return reject(data);
           });
         }));
@@ -136,10 +136,10 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return resolve(data);
-          }).fail(function () {
+          }).catch(function () {
             return reject(data);
           });
-        })).fail((this$2 = this$, function (response) {
+        })).catch((this$2 = this$, function (response) {
           var data, handler, promises;
           data = get$(this$2, '_response').canonicalize(response);
           promises = [];
@@ -149,7 +149,7 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return reject(data);
-          }).fail(function () {
+          }).catch(function () {
             return reject(data);
           });
         }));
@@ -175,10 +175,10 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return resolve(response);
-          }).fail(function () {
+          }).catch(function () {
             return reject(response);
           });
-        })).fail((this$2 = this$, function (response) {
+        })).catch((this$2 = this$, function (response) {
           var handler, promises;
           promises = [];
           for (var i$ = 0, length$ = get$(get$(this$2, '_handlers'), 'sendError').length; i$ < length$; ++i$) {
@@ -187,7 +187,7 @@ void function () {
           }
           return get$(Em, 'RSVP').all(promises).then(function () {
             return reject(response);
-          }).fail(function () {
+          }).catch(function () {
             return reject(response);
           });
         }));
@@ -208,7 +208,7 @@ void function () {
         }
         return get$(Em, 'RSVP').all(promises).then(function () {
           return resolve(data);
-        }).fail(function () {
+        }).catch(function () {
           return reject(data);
         });
       }));
@@ -230,7 +230,7 @@ void function () {
         }
         return get$(Em, 'RSVP').all(promises).then(function () {
           return resolve(data);
-        }).fail(function () {
+        }).catch(function () {
           return reject(data);
         });
       }));
