@@ -1,0 +1,9 @@
+{
+  "name": "ember-auth",
+  "main": "dist/ember-auth.js",
+
+  "dependencies" : {
+    "ember": "*"
+  }
+
+}
