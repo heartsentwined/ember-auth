@@ -1,0 +1,18 @@
+{
+  "name": "ember-auth",
+  "version": "9.0.7",
+  "homepage": "http://ember-auth.herokuapp.com",
+  "authors": [
+    "Hong Kong <heartsentwined.me@gmail.com>"
+  ],
+  "description": "Authentication framework for ember.js",
+  "main": "dist/ember-auth.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
