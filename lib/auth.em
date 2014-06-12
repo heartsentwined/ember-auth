@@ -76,14 +76,14 @@ class Em.Auth
         promises.push @_strategy.deserialize data
         promises.push @_session.start data
         promises.push handler(data) for handler in @_handlers.signInSuccess
-        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
-      ).fail (response) =>
+        Em.RSVP.all(promises).then(-> resolve data).catch(-> reject data)
+      ).catch (response) =>
         data     = @_response.canonicalize response
         promises = []
         promises.push @_strategy.deserialize data
         promises.push @_session.end data
         promises.push handler(data) for handler in @_handlers.signInError
-        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+        Em.RSVP.all(promises).then(-> reject data).catch(-> reject data)
 
   # send a sign out request
   #
@@ -116,12 +116,12 @@ class Em.Auth
         promises.push @_strategy.deserialize data
         promises.push @_session.end data
         promises.push handler(data) for handler in @_handlers.signOutSuccess
-        Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
-      ).fail (response) =>
+        Em.RSVP.all(promises).then(-> resolve data).catch(-> reject data)
+      ).catch (response) =>
         data     = @_response.canonicalize response
         promises = []
         promises.push handler(data) for handler in @_handlers.signOutError
-        Em.RSVP.all(promises).then(-> reject data).fail(-> reject data)
+        Em.RSVP.all(promises).then(-> reject data).catch(-> reject data)
 
   # send a custom request
   #
@@ -151,11 +151,11 @@ class Em.Auth
       .then( (response) =>
         promises = []
         promises.push handler(response) for handler in @_handlers.sendSuccess
-        Em.RSVP.all(promises).then(-> resolve response).fail(-> reject response)
-      ).fail (response) =>
+        Em.RSVP.all(promises).then(-> resolve response).catch(-> reject response)
+      ).catch (response) =>
         promises = []
         promises.push handler(response) for handler in @_handlers.sendError
-        Em.RSVP.all(promises).then(-> reject response).fail(-> reject response)
+        Em.RSVP.all(promises).then(-> reject response).catch(-> reject response)
 
   # create a signed in session without server request
   #
@@ -171,7 +171,7 @@ class Em.Auth
       promises.push @_strategy.deserialize data
       promises.push @_session.start data
       promises.push handler(data) for handler in @_handlers.signInSuccess
-      Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+      Em.RSVP.all(promises).then(-> resolve data).catch(-> reject data)
 
   # destroy any signed in session without server request
   #
@@ -188,7 +188,7 @@ class Em.Auth
       promises.push @_strategy.deserialize data
       promises.push @_session.end data
       promises.push handler(data) for handler in @_handlers.signOutSuccess
-      Em.RSVP.all(promises).then(-> resolve data).fail(-> reject data)
+      Em.RSVP.all(promises).then(-> resolve data).catch(-> reject data)
 
   # add a handler to be fired on specified event
   #
