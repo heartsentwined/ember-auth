@@ -27,3 +27,6 @@ Em.Auth.reopen
 
   # [string|null] (opt) a different base url for all ember-auth requests
   baseUrl: null
+
+  # static data to send with every request
+  data: {}
