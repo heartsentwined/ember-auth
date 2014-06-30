@@ -67,6 +67,8 @@ class Em.Auth
     else
       url  = @_request.resolveUrl url
     opts ||= {}
+    opts.data ||= {}
+    opts.data = $.extend true, @data, opts.data
 
     new Em.RSVP.Promise (resolve, reject) =>
       @_request.signIn(url, @_strategy.serialize(opts))
@@ -145,6 +147,8 @@ class Em.Auth
     else
       url  = @_request.resolveUrl url
     opts ||= {}
+    opts.data ||= {}
+    opts.data = $.extend true, @data, opts.data
 
     new Em.RSVP.Promise (resolve, reject) =>
       @_request.send(url, @_strategy.serialize(opts))

@@ -78,6 +78,8 @@ void function () {
         url = get$(this, '_request').resolveUrl(url);
       }
       opts || (opts = {});
+      opts.data || (opts.data = {});
+      set$(opts, 'data', $.extend(true, get$(this, 'data'), get$(opts, 'data')));
       return new (get$(get$(Em, 'RSVP'), 'Promise'))((this$ = this, function (resolve, reject) {
         var this$1, this$2;
         return get$(this$, '_request').signIn(url, get$(this$, '_strategy').serialize(opts)).then((this$1 = this$, function (response) {
@@ -164,6 +166,8 @@ void function () {
         url = get$(this, '_request').resolveUrl(url);
       }
       opts || (opts = {});
+      opts.data || (opts.data = {});
+      set$(opts, 'data', $.extend(true, get$(this, 'data'), get$(opts, 'data')));
       return new (get$(get$(Em, 'RSVP'), 'Promise'))((this$ = this, function (resolve, reject) {
         var this$1, this$2;
         return get$(this$, '_request').send(url, get$(this$, '_strategy').serialize(opts)).then((this$1 = this$, function (response) {
@@ -365,5 +369,6 @@ get$(Em, 'Auth').reopen({
   modules: [],
   signInEndPoint: null,
   signOutEndPoint: null,
-  baseUrl: null
+  baseUrl: null,
+  data: {}
 });
