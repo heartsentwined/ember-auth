@@ -53,7 +53,7 @@ Tests
 You can be lazy and just open a PR.
 [Travis](https://travis-ci.org) will run the tests.
 
-`ember-auth` tests are written in [jasmine](http://pivotal.github.com/jasmine/).
+`ember-auth` tests are written in [jasmine](https://jasmine.github.io/).
 
 1. Grab a copy of ruby. [RVM](http://rvm.io/) recommended.
 2. `bundle install` to install dependencies.
